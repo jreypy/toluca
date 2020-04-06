@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editmodel:ClassDiagramEditModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:editmodel="editmodel.xmi" size="466,317" id="REICHUPABLOJAVIERTolucaFresco0" metadata="nsuml-1.4" initialized="true" showWireOptions="1" scrolledY="95">
+  <children xsi:type="editmodel:ClassEditModel" location="50,50" size="143,247" id="REICHUPABLOJAVIERTolucaFresco1" runTimeClassModel="REICHUPABLOJAVIERTolucaFresco16;REICHUPABLOJAVIERTolucaFresco9;REICHUPABLOJAVIERTolucaFresco41;REICHUPABLOJAVIERTolucaFresco24;REICHUPABLOJAVIERTolucaFresco29;REICHUPABLOJAVIERTolucaFresco35;REICHUPABLOJAVIERTolucaFresco39;REICHUPABLOJAVIERTolucaFresco6;REICHUPABLOJAVIERTolucaFresco47;REICHUPABLOJAVIERTolucaFresco2;REICHUPABLOJAVIERTolucaFresco32;REICHUPABLOJAVIERTolucaFresco44;REICHUPABLOJAVIERTolucaFresco21">
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="120,198">
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco47"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco35"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco24"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco9"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco16"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco44"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco39"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco32"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco41"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco29"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco21"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showPublicMethods="true" showPackageMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true"/>
+  </children>
+  <classDiagramPreferences xsi:type="editmodel:UMLClassDiagramPreference" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showPublicMethods="true" showPackageMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showInterfaceStereotype="true" showClassStereotype="true" showPackageStereotype="true"/>
+</editmodel:ClassDiagramEditModel>
