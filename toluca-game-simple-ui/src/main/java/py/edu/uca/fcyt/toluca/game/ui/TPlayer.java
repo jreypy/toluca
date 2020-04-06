@@ -1,25 +1,14 @@
-package py.edu.uca.fcyt.toluca.game;
-
-import java.awt.Dimension;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import javax.imageio.ImageIO;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+package py.edu.uca.fcyt.toluca.game.ui;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.spi.LoggerFactory;
 import py.edu.uca.fcyt.game.Card;
 import py.edu.uca.fcyt.toluca.event.TrucoEvent;
 import py.edu.uca.fcyt.toluca.event.TrucoListener;
+import py.edu.uca.fcyt.toluca.game.*;
+
+import javax.swing.*;
+import java.awt.*;
+import java.net.URL;
 //import java.*;
 
 public class TPlayer extends JFrame

@@ -4,10 +4,11 @@
  * Created on 8 de abril de 2002, 10:42 PM
  */
 
-package py.edu.uca.fcyt.toluca.game;
+package py.edu.uca.fcyt.toluca.game.ui;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
 /**
  *
  * @author  Julio Rey
