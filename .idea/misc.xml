@@ -10,6 +10,9 @@
         <option value="$PROJECT_DIR$/toluca-table-ui/pom.xml" />
         <option value="$PROJECT_DIR$/toluca-server/pom.xml" />
         <option value="$PROJECT_DIR$/toluca-game-simple-ui/pom.xml" />
+        <option value="$PROJECT_DIR$/truco-websocket/pom.xml" />
+        <option value="$PROJECT_DIR$/toluca-gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/toluca-registry/pom.xml" />
       </list>
     </option>
   </component>

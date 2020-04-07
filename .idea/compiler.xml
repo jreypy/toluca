@@ -9,9 +9,12 @@
         <module name="toluca-api" />
         <module name="toluca-game" />
         <module name="toluca-game-simple-ui" />
+        <module name="toluca-gateway" />
         <module name="toluca-gui" />
+        <module name="toluca-registry" />
         <module name="toluca-server" />
         <module name="toluca-table-ui" />
+        <module name="truco-websocket" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

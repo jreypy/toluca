@@ -1,0 +1,32 @@
+server:
+  port: 8090
+
+zuul:
+  ignoredServices: '*'
+  prefix: /
+  routes:
+    echo:
+      path: /es/**
+      url: http://localhost:9200
+      stripPrefix: true
+    solofutbol-mobile-noti:
+      path: /api/noti
+      serviceId: solofutbol-mobile-noti
+      strip-prefix: false
+    solofutbol-ws:
+      path: /ws/**
+      serviceId: solofutbol-ws
+      strip-prefix: false
+
+
+endpoints:
+  routes:
+    sensitive: false
+  trace:
+    sensitive: false
+
+eureka:
+  client:
+    service-url:
+      default-zone: http://localhost:8761/eureka/
+
