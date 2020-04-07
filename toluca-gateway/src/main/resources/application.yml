@@ -10,8 +10,12 @@ zuul:
   ignoredServices: '*'
   prefix:
   routes:
-    multiplications:
+    api:
       path: /api/room/**
+      serviceId: tolucaserver
+      strip-prefix: false
+    auth:
+      path: /auth/**
       serviceId: tolucaserver
       strip-prefix: false
 
