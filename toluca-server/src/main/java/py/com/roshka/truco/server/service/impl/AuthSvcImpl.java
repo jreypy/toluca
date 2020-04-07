@@ -20,6 +20,8 @@ public class AuthSvcImpl implements AuthSvc {
     @Override
     public AuthResponse login(String username, String password) throws LoginException {
         // Notificar Nuevo Usuario
-        return new AuthResponse(UUID.randomUUID().toString());
+        return new AuthResponse(username + "-" + UUID.randomUUID().toString());
     }
+
+
 }

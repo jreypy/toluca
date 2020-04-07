@@ -22,11 +22,15 @@ public class RoomHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         logger.debug("HandleTextMessage", message);
         super.handleTextMessage(session, message);
-        session.sendMessage(new TextMessage("Hello!"));
+        session.sendMessage(new TextMessage("Hello! " + session.getUri()));
     }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+        String auth = session.getHandshakeHeaders().get("Authentication").get(0);
+        String query = session.getUri().getQuery();
+        String message = "Hello! " + auth.split("-")[0] + " requesting [" + query + "]";
+        session.sendMessage(new TextMessage(message));
         logger.debug("afterConnectionEstablished [" + session.getId() + "]");
         super.afterConnectionEstablished(session);
     }
