@@ -79,13 +79,7 @@ public class TrucoCard extends Card {
 	    else 
 	    	return false;
 	}
-	public static void main(String[] args) {
-		TrucoCard card=new TrucoCard(Card.BASTO,7);
-		Card a=new Card(Card.COPA,2);
-		XMLEncoder e=new XMLEncoder(new BufferedOutputStream(System.out));
-		e.writeObject(card);
-		e.close();
-	}
+
 	/**
 	 * @param valueInGame The valueInGame to set.
 	 */

@@ -143,4 +143,13 @@ public class Card
 		value = b;
 	}
 
+
+	@Override
+	public String toString() {
+		return "Card{" +
+				"value=" + value +
+				", kind=" + kind +
+				", flipped=" + flipped +
+				'}';
+	}
 }

@@ -10,10 +10,12 @@
         <module name="toluca-game" />
         <module name="toluca-game-simple-ui" />
         <module name="toluca-gui" />
-        <module name="toluca-room" />
         <module name="toluca-server" />
         <module name="toluca-table-ui" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="toluca-room" target="1.5" />
+    </bytecodeTargetLevel>
   </component>
 </project>

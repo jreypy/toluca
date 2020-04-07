@@ -13,9 +13,10 @@ import java.net.URL;
 
 public class TPlayer extends JFrame
         implements TrucoListener {
-    static String DORSO = "dorso.gif";
 
-    static Logger logger = Logger.getLogger(TPlayer.class);
+    Logger logger = Logger.getLogger(TPlayer.class);
+
+    static String DORSO = "dorso.gif";
 
     TrucoPlayer asociado;
     TrucoGame TG;
@@ -47,7 +48,7 @@ public class TPlayer extends JFrame
     int cartasAJugar = 0;
     JSpinner elSpinner = new JSpinner();
 
-    public TPlayer(TrucoPlayer pl, TrucoGame TG, TrucoTeam team, TrucoTeam team2) {
+    public TPlayer(TrucoPlayer pl, TrucoGame TG, TrucoTeam team, TrucoTeam team2) throws Exception {
         this.team = team;
         this.team2 = team2;
         int i = 0;
@@ -71,14 +72,11 @@ public class TPlayer extends JFrame
         elPanel.add(textfield);
 
         for (i = 0; i < cartasAJugar; i++) {
-            try {
-                Icon icon = getImage(DORSO);
-                logger.debug("icon image  is [" + ((ImageIcon) icon).getImage() + "]");
-                cartasJugadas[i] = new JButton(icon);
-                elPanel.add(cartasJugadas[i]);
-            } catch (Exception e) {
-                logger.error("Error gettting Icon", e);
-            }
+
+            Icon icon = getImage(DORSO);
+            cartasJugadas[i] = new JButton(icon);
+            elPanel.add(cartasJugadas[i]);
+
 
         }
         losbotones();
@@ -152,22 +150,40 @@ public class TPlayer extends JFrame
     }
 
     public void play(TrucoEvent event) {
-        System.out.println("Void play method in " + this.getClass().getName());
-    }
+        logger.debug("[" + asociado.getName() + "]TrucoEvent received [" + event + "]");
 
-    public void playResponse(TrucoEvent event) {
-//        System.out.println(elSpinner.getValue());
         if (event.getTypeEvent() == TrucoEvent.JUGAR_CARTA) {
-            System.out.println("queria jugar carta" + event.getTypeEvent());
-            icon = aIcono(event.getCard());
+            Icon icon = aIcono(event.getCard());
+            logger.debug("Set Icon [" + nCartasJugadas + "][" + icon + "]");
             cartasJugadas[nCartasJugadas++].setIcon(icon);
         } else {
             textfield.setText(textfield.getText() + "\ntype" + event.getTypeEvent());
             System.out.println(event.getTypeEvent());
         }
+
+
     }
 
-    public void turn(TrucoEvent event) {
+    public void playResponse(TrucoEvent event) {
+        logger.debug("Receiving PlayResponse [" + event + "]");
+//        System.out.println(elSpinner.getValue());
+        if (event.getTypeEvent() == TrucoEvent.JUGAR_CARTA) {
+            Icon icon = aIcono(event.getCard());
+            logger.debug("Set Icon [" + nCartasJugadas + "][" + icon + "]");
+            cartasJugadas[nCartasJugadas++].setIcon(icon);
+        } else {
+            textfield.setText(textfield.getText() + "\ntype" + event.getTypeEvent());
+            System.out.println(event.getTypeEvent());
+            //
+            if (asociado.equals(event.getPlayer())) {
+                JOptionPane.showMessageDialog(elPanel, "Jugada", "[" + event.getPlayer().getName() + "]: [" + event.description() + "]", JOptionPane.PLAIN_MESSAGE);
+            }
+
+        }
+    }
+
+    public void turn(final TrucoEvent event) {
+        logger.debug("turnevent received [" + event.getPlayer() + "]");
 //        System.out.println(asociado.getName());
         turno.setText((event.getPlayer()).getName());
 
@@ -175,12 +191,35 @@ public class TPlayer extends JFrame
             textfield.setText(textfield.getText() + "\n***** " + asociado.getName() + " *****");
         else
             textfield.setText(textfield.getText() + "\n" + event.getPlayer().getName());
+
         textfield.setText(textfield.getText() + " ~ " + event.getTypeEvent());
+
+        //
+        if (asociado.equals(event.getPlayer())) {
+            final JFrame frame = this;
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    frame.pack();
+                    frame.setVisible(true);
+//                    frame.setAlwaysOnTop(true);
+                    frame.toFront();
+                    frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                    frame.repaint();
+                    frame.requestFocus();
+                    logger.info("Request Focus");
+                    JOptionPane.showMessageDialog(elPanel, "Es tu turno", "Turno de [" + event.getPlayer().getName() + "]", JOptionPane.PLAIN_MESSAGE);
+
+                }
+            });
+        }
 
     }
 
     public void endOfHand(TrucoEvent event) {
         textfield.setText(textfield.getText() + "\nfin de mano");
+        JOptionPane.showMessageDialog(null, "Mano Finalizada", "Mano Finalizada", JOptionPane.PLAIN_MESSAGE);
+        logger.debug("Fire new Hand");
+        TG.startHand(asociado);
     }
 
     public void endOfGame(TrucoEvent event) {
@@ -188,18 +227,26 @@ public class TPlayer extends JFrame
 //        System.out.println("end of game");
     }
 
+    /**
+     * Receiving Card to play
+     *
+     * @param event
+     */
     public void cardsDeal(TrucoEvent event) {
+        logger.debug("[" + asociado.getName() + "] -> receiving [" + event.getPlayer().getName() + "]Cards [" + event.getCards() + "]");
         TrucoCard[] Tcards = event.getCards();
         textfield.setText(textfield.getText() + "\nrecibiendo cartas...");
-        if (Tcards == null) System.out.println("TCARD ES NULO!!!!!");
-        for (int i = 0; i < 3; i++) {
-            cards[i] = Tcards[i];
-            logger.debug("[" + asociado.getName() + "] Receiving Cards [" + cards[i] + "]");
-            miscartas[i].setIcon(aIcono(cards[i]));
 
-
-            botones[i].setCard(cards[i]);
+        if (Tcards == null) throw new IllegalArgumentException("Cards could not be null");
+        if (asociado.equals(event.getPlayer())) {
+            logger.debug("Rendering Card if is mine [" + asociado.getName() + "]");
+            for (int i = 0; i < 3; i++) {
+                cards[i] = Tcards[i];
+                miscartas[i].setIcon(aIcono(cards[i]));
+                botones[i].setCard(cards[i]);
+            }
         }
+
     }
 
     public void handStarted(TrucoEvent event) {
@@ -263,22 +310,28 @@ public class TPlayer extends JFrame
     }
 
     public void cantar(byte type) {
+        logger.debug("Cantar [ " + type + "]");
         try {
             if (type != TrucoPlay.CANTO_ENVIDO) {
+
                 TrucoPlay tp = new TrucoPlay(asociado, type);
+                logger.debug("[" + this.getAssociatedPlayer().getName() + " ] plays [" + tp.description() + "]");
                 if (!TG.esPosibleJugar(tp))
-                    System.out.println("epa un error posiblemente" + tp.getType());
+                    logger.warn("epa un error posiblemente" + tp.getType());
                 else
                     TG.play(tp);
+
             } else {
-                TrucoPlay tp = new TrucoPlay(asociado, type, tanto());
+                int envido = tanto();
+                TrucoPlay tp = new TrucoPlay(asociado, type, envido);
+                logger.info("Cantar Envido [" + asociado.getName() + "][" + tp.description() + "][" + envido + "]");
                 if (!TG.esPosibleJugar(tp))
-                    System.out.println("epa un error posiblemente" + tp.getType());
+                    logger.warn("epa un error posiblemente" + tp.getType());
                 else
                     TG.play(tp);
             }
         } catch (InvalidPlayExcepcion e) {
-            System.out.println(e.toString());
+            logger.error(e.getMessage(), e);
         }
     }
 

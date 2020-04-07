@@ -10,24 +10,6 @@
 package py.edu.uca.fcyt.toluca.game;
 
 public class TrucoDeck {
-    
-    public static void main(String[] args) {
-        long veces = 1000000;
-        int aux;
-        long cantidades[] = new long[40];
-        for(long i=0; i<veces; i++)
-        {            
-            cantidades[(int)(Math.random()*40)]++;
-            /*int girar = (int)(Math.random()*100);
-            for(int j=0; j< girar; j++)
-                Math.random();*/
-        }
-        for (int i = 0; i < cantidades.length; i++) {
-            System.out.print(i + " : " + cantidades[i] + " veces. ");
-            System.out.println(i + " : " + (cantidades[i]-(veces/40)) + " de diferencia con el promedio");
-        }
-    }
-    
     private byte indiceArriba;
     private byte indiceAbajo;
     private TrucoCard[] elMazo;
