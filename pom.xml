@@ -9,8 +9,12 @@
     <packaging>pom</packaging>
     <version>2.0.0</version>
     <modules>
-        <module>toluca-gui</module>
+        <module>toluca-api</module>
+        <module>toluca-game</module>
+        <module>toluca-game-simple-ui</module>
+        <module>toluca-registry</module>
+        <module>toluca-gateway</module>
+        <module>toluca-server</module>
     </modules>
-
 
 </project>

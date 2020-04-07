@@ -1,23 +1,19 @@
 server:
   port: 8090
 
+#echo:
+#      path: /es/**
+#      url: http://localhost:9200
+#      stripPrefix: true
+
 zuul:
   ignoredServices: '*'
-  prefix: /
+  prefix:
   routes:
-    echo:
-      path: /es/**
-      url: http://localhost:9200
-      stripPrefix: true
-    solofutbol-mobile-noti:
-      path: /api/noti
-      serviceId: solofutbol-mobile-noti
+    multiplications:
+      path: /api/room/**
+      serviceId: tolucaserver
       strip-prefix: false
-    solofutbol-ws:
-      path: /ws/**
-      serviceId: solofutbol-ws
-      strip-prefix: false
-
 
 endpoints:
   routes:
