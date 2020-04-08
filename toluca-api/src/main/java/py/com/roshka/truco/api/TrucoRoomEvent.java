@@ -4,6 +4,7 @@ public class TrucoRoomEvent {
     private String eventName;
     private String message;
     private TrucoUser user;
+    private TrucoRoom trucoRoom;
 
     public String getEventName() {
         return eventName;
@@ -27,5 +28,13 @@ public class TrucoRoomEvent {
 
     public void setUser(TrucoUser user) {
         this.user = user;
+    }
+
+    public TrucoRoom getTrucoRoom() {
+        return trucoRoom;
+    }
+
+    public void setTrucoRoom(TrucoRoom trucoRoom) {
+        this.trucoRoom = trucoRoom;
     }
 }
