@@ -3,10 +3,7 @@ package py.com.roshka.truco.server.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
-import py.com.roshka.truco.api.Chair;
-import py.com.roshka.truco.api.RabbitRequest;
-import py.com.roshka.truco.api.TrucoRoom;
-import py.com.roshka.truco.api.TrucoRoomTable;
+import py.com.roshka.truco.api.*;
 import py.com.roshka.truco.server.service.TrucoRoomSvc;
 
 import java.util.*;
@@ -37,7 +34,7 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
         trucoRoom.setId(UUID.randomUUID().toString());
         rooms.add(trucoRoom);
         // Notify was created
-        rabbitTemplate.convertAndSend("truco_event", "room", new RabbitRequest(trucoRoom.getClass().getCanonicalName(), objectMapper.convertValue(trucoRoom, HashMap.class)));
+        rabbitTemplate.convertAndSend("truco_event", "room", new RabbitResponse(Event.ROOM_CREATED, trucoRoom.getClass().getCanonicalName(), objectMapper.convertValue(trucoRoom, HashMap.class)));
         return trucoRoom;
     }
 

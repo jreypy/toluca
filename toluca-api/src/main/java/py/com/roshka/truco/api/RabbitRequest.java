@@ -3,6 +3,7 @@ package py.com.roshka.truco.api;
 import java.util.Map;
 
 public class RabbitRequest {
+    private String eventName;
     private String type;
     private Map data;
 

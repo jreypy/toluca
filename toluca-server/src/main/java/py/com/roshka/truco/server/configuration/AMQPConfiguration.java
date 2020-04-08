@@ -24,7 +24,7 @@ public class AMQPConfiguration implements RabbitListenerConfigurer {
     }
 
     @Bean
-    public Queue gamificationMultiplicationQueue(@Value("truco_server") final String queueName) {
+    public Queue trucoServerQueue(@Value("truco_server") final String queueName) {
         return new Queue(queueName, true);
     }
 
