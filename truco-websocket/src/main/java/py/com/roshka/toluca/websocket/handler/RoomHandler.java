@@ -7,26 +7,22 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
-import org.springframework.web.socket.handler.TextWebSocketHandler;
 import py.com.roshka.toluca.websocket.beans.Command;
 import py.com.roshka.toluca.websocket.beans.Event;
+import py.com.roshka.toluca.websocket.global.Events;
 import py.com.roshka.toluca.websocket.service.CommandProcessor;
-import py.com.roshka.toluca.websocket.service.WebSocketSessionManager;
+import py.com.roshka.toluca.websocket.service.EventProcessor;
+import py.com.roshka.toluca.websocket.service.TrucoRoomListener;
+import py.com.roshka.truco.api.TrucoRoom;
 
 @Component
-public class RoomHandler extends TextWebSocketHandler {
+public class RoomHandler extends WebSocketHandler implements TrucoRoomListener {
     Logger logger = LoggerFactory.getLogger(RoomHandler.class);
 
-    ObjectMapper objectMapper;
-    CommandProcessor commandProcessor;
-    WebSocketSessionManager webSocketSessionManager;
 
-    int count;
-
-    public RoomHandler(ObjectMapper objectMapper, CommandProcessor commandProcessor, WebSocketSessionManager webSocketSessionManager) {
-        this.objectMapper = objectMapper;
-        this.commandProcessor = commandProcessor;
-        this.webSocketSessionManager = webSocketSessionManager;
+    public RoomHandler(ObjectMapper objectMapper, EventProcessor eventProcessor, CommandProcessor commandProcessor) {
+        super(objectMapper, eventProcessor, commandProcessor);
+        this.logger = logger;
     }
 
     @Override
@@ -45,18 +41,15 @@ public class RoomHandler extends TextWebSocketHandler {
                 session.sendMessage(new TextMessage(objectMapper.writeValueAsString(event)));
             }
         }
-
         //
     }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        count++;
         String auth = session.getHandshakeHeaders().get("Authentication").get(0);
         String query = session.getUri().getQuery();
         String message = "Hello! " + auth.split("-")[0] + " requesting [" + query + "]";
         session.sendMessage(new TextMessage(message));
-        logger.debug("afterConnectionEstablished [" + session.getId() + "][" + count + "]");
         super.afterConnectionEstablished(session);
 
         // roomService.connect(auth.split("-")[0]);
@@ -64,10 +57,12 @@ public class RoomHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        count--;
-        logger.debug("afterConnectionClosed [" + session.getId() + "][" + count + "]");
         super.afterConnectionClosed(session, status);
 
     }
 
+    @Override
+    public void roomCreated(TrucoRoom trucoRoom) {
+        super.sendEvent(eventProcessor.sendEvent(Events.ROOM_CREATED, trucoRoom));
+    }
 }

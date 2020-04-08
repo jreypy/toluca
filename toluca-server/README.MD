@@ -9,9 +9,9 @@ Login
 Get Rooms
 --------
 
-    $ curl http://localhost:8090/api/room -H 'Authentication: 12345'
+    $ curl http://localhost:8091/api/room -H 'Authentication: 12345'
 
 Create Room
 --------
 
-    $ curl -X POST http://localhost:8090/api/room -H 'Content-Type: application/json' -d '{"name":"UCA"}'
+    $ curl -X POST http://localhost:8091/api/room -H 'Content-Type: application/json' -d '{"name":"UCA"}'

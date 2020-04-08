@@ -29,9 +29,9 @@ public class AMQPReceiverImpl implements AMQPReceiver {
     @RabbitListener(queues = "truco_client")
     void trucoServerEvent(final RabbitResponse rabbitResponse) {
         logger.debug("Receiving [" + rabbitResponse + "]");
-        System.out.println("Request-> [" + rabbitResponse.getEventName() + "][" + rabbitResponse.getType() + "][" + rabbitResponse.getData() + "]");
         if (Event.ROOM_CREATED.equalsIgnoreCase(rabbitResponse.getEventName())) {
             trucoRoomListener.roomCreated(objectMapper.convertValue(rabbitResponse.getData(), TrucoRoom.class));
         }
+
     }
 }

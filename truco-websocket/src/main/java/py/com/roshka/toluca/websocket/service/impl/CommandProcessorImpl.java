@@ -16,12 +16,13 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class CommandProcessorImpl implements CommandProcessor {
-    private ObjectMapper objectMapper;
+public class CommandProcessorImpl extends  Processor implements CommandProcessor {
+
     RoomService roomService;
 
+
     public CommandProcessorImpl(ObjectMapper objectMapper, RoomService roomService) {
-        this.objectMapper = objectMapper;
+        super(objectMapper);
         this.roomService = roomService;
     }
 
@@ -37,13 +38,7 @@ public class CommandProcessorImpl implements CommandProcessor {
         return null;
     }
 
-    public Event getEvent(Command command, List list) {
-        return new Event(command.getCommand(), list);
-    }
 
-    public Event getEvent(Command command, Object object) {
-        return new Event(command.getCommand(), objectMapper.convertValue(object, Map.class));
-    }
 
 
 }

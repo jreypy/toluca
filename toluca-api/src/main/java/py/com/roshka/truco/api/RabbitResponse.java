@@ -7,6 +7,9 @@ public class RabbitResponse {
     private String type;
     private Map data;
 
+    public RabbitResponse() {
+    }
+
     public RabbitResponse(String eventName, String type, Map data) {
         this.eventName = eventName;
         this.type = type;
