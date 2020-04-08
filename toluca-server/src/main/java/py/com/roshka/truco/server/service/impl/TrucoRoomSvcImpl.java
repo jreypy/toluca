@@ -48,7 +48,7 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
             trucoRoomEvent.setEventName(Event.ROOM_USER_CREATED);
             trucoRoomEvent.setMessage("User joined to the Room [" + roomId + "]");
             trucoRoomEvent.setUser(user);
-            rabbitTemplate.convertAndSend("truco_event", "room/" + roomId + "/join", new RabbitResponse(Event.ROOM_CREATED, trucoRoom.getClass().getCanonicalName(), objectMapper.convertValue(trucoRoom, HashMap.class)));
+            rabbitTemplate.convertAndSend("truco_event", "room." + roomId + "", new RabbitResponse(Event.ROOM_CREATED, trucoRoom.getClass().getCanonicalName(), objectMapper.convertValue(trucoRoom, HashMap.class)));
             logger.debug("User [" + user.getUsername() + "] joined to the room [" + roomId + "]");
             return trucoRoomEvent;
         }

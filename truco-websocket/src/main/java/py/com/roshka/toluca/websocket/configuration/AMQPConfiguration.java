@@ -15,23 +15,39 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.handler.annotation.support.DefaultMessageHandlerMethodFactory;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Configuration
 public class AMQPConfiguration implements RabbitListenerConfigurer {
+    private String exchangeName = "truco_event";
+    private String queueName = "truco_client";
+
     @Bean
-    public TopicExchange trucoExchange(@Value("truco_event") final String exchangeName) {
+    public TopicExchange trucoExchange() {
         return new TopicExchange(exchangeName);
     }
 
     @Bean
-    public Queue trucoClientQueue(@Value("truco_client") final String queueName) {
+    public Queue trucoClientQueue() {
         return new Queue(queueName, true);
     }
 
     @Bean
-    Binding binding(final Queue queue, final TopicExchange exchange,
-                    @Value("room") final String routingKey) {
-        return BindingBuilder.bind(queue).to(exchange).with(routingKey);
+    List<Binding> bindings() {
+        return Arrays.asList(
+                BindingBuilder.bind(trucoClientQueue()).to(trucoExchange()).with("room"),
+                BindingBuilder.bind(trucoClientQueue()).to(trucoExchange()).with("room.*")
+        );
+
+
     }
+
+//    @Bean
+//    Binding binding(final Queue queue, final TopicExchange exchange,
+//                    @Value("room") final String routingKey) {
+//        return
+//    }
 
     @Bean
     public RabbitTemplate rabbitTemplate(final ConnectionFactory connectionFactory) {
@@ -44,7 +60,6 @@ public class AMQPConfiguration implements RabbitListenerConfigurer {
     public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
-
 
 
     @Bean
