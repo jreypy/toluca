@@ -8,14 +8,19 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+import py.com.roshka.toluca.websocket.service.RoomService;
 
 @Component
 public class RoomHandler extends TextWebSocketHandler {
     Logger logger = LoggerFactory.getLogger(RoomHandler.class);
 
 
-    public RoomHandler(ObjectMapper objectMapper) {
+    ObjectMapper objectMapper;
+    RoomService roomService;
 
+    public RoomHandler(ObjectMapper objectMapper, RoomService roomService) {
+        this.objectMapper = objectMapper;
+        this.roomService = roomService;
     }
 
     @Override
@@ -33,6 +38,7 @@ public class RoomHandler extends TextWebSocketHandler {
         session.sendMessage(new TextMessage(message));
         logger.debug("afterConnectionEstablished [" + session.getId() + "]");
         super.afterConnectionEstablished(session);
+        roomService.connect(auth.split("-")[0]);
     }
 
     @Override

@@ -2,15 +2,15 @@ version: '2'
 services:
     rabbitmq:
           image: paragon-rabbitmq
-          container_name: rabbitmq37
+          container_name: rabbitmq-truco
 
           ports:
             - "15672:15672"
             - "5672:5672"
             - "61613:61613"
           environment:
-            - RABBITMQ_DEFAULT_USER=guest
-            - RABBITMQ_DEFAULT_PASS=guest
+            - RABBITMQ_DEFAULT_USER=truco
+            - RABBITMQ_DEFAULT_PASS=truco
 
 
 
