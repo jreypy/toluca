@@ -25,4 +25,9 @@ public class TrucoRoomController {
     public TrucoRoom findAllTrucoRoom(@PathVariable("id") String id) {
         return trucoRoomSvc.findAllRooms().get(0);
     }
+
+    @PostMapping("")
+    public TrucoRoom createTrucoRoom(@RequestBody TrucoRoom trucoRoom) {
+        return trucoRoomSvc.create(trucoRoom);
+    }
 }

@@ -1,13 +1,15 @@
 package py.com.roshka.truco.api;
 
+import java.util.Map;
+
 public class RabbitRequest {
     private String type;
-    private Object data;
+    private Map data;
 
     public RabbitRequest() {
     }
 
-    public RabbitRequest(String type, Object data) {
+    public RabbitRequest(String type, Map data) {
         this.type = type;
         this.data = data;
     }
@@ -20,11 +22,11 @@ public class RabbitRequest {
         this.type = type;
     }
 
-    public Object getData() {
+    public Map getData() {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(Map data) {
         this.data = data;
     }
 }

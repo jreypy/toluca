@@ -8,26 +8,32 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-import py.com.roshka.toluca.websocket.service.RoomService;
+import py.com.roshka.toluca.websocket.beans.Command;
+import py.com.roshka.toluca.websocket.beans.Event;
+import py.com.roshka.toluca.websocket.service.CommandProcessor;
 
 @Component
 public class RoomHandler extends TextWebSocketHandler {
     Logger logger = LoggerFactory.getLogger(RoomHandler.class);
 
-
     ObjectMapper objectMapper;
-    RoomService roomService;
+    CommandProcessor commandProcessor;
 
-    public RoomHandler(ObjectMapper objectMapper, RoomService roomService) {
+    public RoomHandler(ObjectMapper objectMapper, CommandProcessor commandProcessor) {
         this.objectMapper = objectMapper;
-        this.roomService = roomService;
+        this.commandProcessor = commandProcessor;
     }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+        String auth = session.getHandshakeHeaders().get("Authentication").get(0);
         logger.debug("HandleTextMessage", message);
         super.handleTextMessage(session, message);
-        session.sendMessage(new TextMessage("Hello! " + session.getUri()));
+        Event event = commandProcessor.processCommand(auth, objectMapper.readValue(message.getPayload(), Command.class));
+        if (event != null) {
+            session.sendMessage(new TextMessage(objectMapper.writeValueAsString(event)));
+        }
+        //
     }
 
     @Override
@@ -38,7 +44,7 @@ public class RoomHandler extends TextWebSocketHandler {
         session.sendMessage(new TextMessage(message));
         logger.debug("afterConnectionEstablished [" + session.getId() + "]");
         super.afterConnectionEstablished(session);
-        roomService.connect(auth.split("-")[0]);
+        // roomService.connect(auth.split("-")[0]);
     }
 
     @Override
