@@ -30,4 +30,13 @@ public class RabbitRequest {
     public void setData(Map data) {
         this.data = data;
     }
+
+    @Override
+    public String toString() {
+        return "RabbitRequest{" +
+                "eventName='" + eventName + '\'' +
+                ", type='" + type + '\'' +
+                ", data=" + data +
+                '}';
+    }
 }

@@ -40,4 +40,13 @@ public class RabbitResponse {
     public void setData(Map data) {
         this.data = data;
     }
+
+    @Override
+    public String toString() {
+        return "RabbitResponse{" +
+                "eventName='" + eventName + '\'' +
+                ", type='" + type + '\'' +
+                ", data=" + data +
+                '}';
+    }
 }
