@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class CommandProcessorImpl extends  Processor implements CommandProcessor {
+public class CommandProcessorImpl extends Processor implements CommandProcessor {
 
     RoomService roomService;
 
@@ -30,6 +30,8 @@ public class CommandProcessorImpl extends  Processor implements CommandProcessor
     public Event processCommand(String token, Command command) {
         if (CREATE_ROOM.equalsIgnoreCase(command.getCommand())) {
             return getEvent(command, roomService.createRoom(objectMapper.convertValue(command.getData(), TrucoRoom.class)));
+        } else if (JOIN_ROOM.equalsIgnoreCase(command.getCommand())) {
+            return getEvent(command, roomService.joinRoom(objectMapper.convertValue(command.getData(), TrucoRoom.class)));
         } else if (GET_ROOMS.equalsIgnoreCase(command.getCommand())) {
             return getEvent(command, roomService.findAllRooms());
         } else {
@@ -37,8 +39,6 @@ public class CommandProcessorImpl extends  Processor implements CommandProcessor
         }
         return null;
     }
-
-
 
 
 }

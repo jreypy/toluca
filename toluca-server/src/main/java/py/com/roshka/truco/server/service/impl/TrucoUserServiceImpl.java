@@ -1,6 +1,8 @@
 package py.com.roshka.truco.server.service.impl;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import py.com.roshka.truco.api.TrucoPrincipal;
 import py.com.roshka.truco.api.TrucoUser;
 import py.com.roshka.truco.server.service.TrucoUserService;
 
@@ -13,5 +15,11 @@ public class TrucoUserServiceImpl implements TrucoUserService {
         trucoUser.setId(username);
         trucoUser.setUsername(username);
         return trucoUser;
+    }
+
+    @Override
+    public TrucoUser getTrucoUser() {
+        TrucoPrincipal trucoPrincipal = (TrucoPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return getTrucoUser(trucoPrincipal.getAuthKey());
     }
 }

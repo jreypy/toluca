@@ -17,6 +17,11 @@ Create Room
 --------
 
     $ {"command":"create_room", "data" : {"name":"My First Room"}}
+    
+
+Join to Room
+--------
+    $ {"command":"join_room", "data" : {"id":"1"}}
 
 Events
 -------

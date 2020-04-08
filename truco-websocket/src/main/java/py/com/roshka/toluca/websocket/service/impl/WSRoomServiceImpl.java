@@ -6,6 +6,7 @@ import org.springframework.web.client.RestTemplate;
 import py.com.roshka.toluca.websocket.service.AMQPDispatcher;
 import py.com.roshka.toluca.websocket.service.RoomService;
 import py.com.roshka.truco.api.TrucoRoom;
+import py.com.roshka.truco.api.TrucoRoomEvent;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -37,6 +38,11 @@ public class WSRoomServiceImpl implements RoomService {
     @Override
     public TrucoRoom createRoom(TrucoRoom trucoRoom) {
         return restTemplate.postForObject(trucoServerHost + "/api/room", trucoRoom, TrucoRoom.class);
+    }
+
+    @Override
+    public TrucoRoomEvent joinRoom(TrucoRoom trucoRoom) {
+        return restTemplate.postForObject(trucoServerHost + "/api/room/" + trucoRoom.getId() + "/join", null, TrucoRoomEvent.class);
     }
 
     @Override
