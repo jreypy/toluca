@@ -1,8 +1,6 @@
 package py.com.roshka.truco.server.service;
 
-import py.com.roshka.truco.api.Chair;
-import py.com.roshka.truco.api.TrucoRoom;
-import py.com.roshka.truco.api.TrucoRoomTable;
+import py.com.roshka.truco.api.*;
 
 import java.util.List;
 
@@ -11,6 +9,8 @@ public interface TrucoRoomSvc {
     List<TrucoRoom> findAllRooms();
 
     TrucoRoom create(TrucoRoom trucoRoom);
+
+    TrucoRoomEvent joinRoom(String roomId, TrucoUser user);
 
     TrucoRoom delete(TrucoRoom trucoRoom);
 

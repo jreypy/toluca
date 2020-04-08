@@ -15,3 +15,8 @@ Create Room
 --------
 
     $ curl -X POST http://localhost:8091/api/room -H 'Content-Type: application/json' -d '{"name":"UCA"}'
+
+Join Room
+--------
+
+    $ curl -X POST "http://localhost:8091/api/room/principal/join?authkey=julio-rey" -H 'Content-Type: application/json'

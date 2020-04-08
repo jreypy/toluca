@@ -1,9 +1,8 @@
 package py.com.roshka.truco.api;
 
-public class User {
+public class TrucoUser {
     private String id;
     private String username;
-    private Player player;
 
     public String getId() {
         return id;
@@ -19,13 +18,5 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
     }
 }

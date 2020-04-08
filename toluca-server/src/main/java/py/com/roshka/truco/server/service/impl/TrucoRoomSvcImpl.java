@@ -10,10 +10,11 @@ import java.util.*;
 
 @Component
 public class TrucoRoomSvcImpl implements TrucoRoomSvc {
+    org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(TrucoRoomSvcImpl.class);
 
     RabbitTemplate rabbitTemplate;
     ObjectMapper objectMapper;
-    List<TrucoRoom> rooms = new ArrayList<>();
+    Map<String, TrucoRoom> rooms = new LinkedHashMap<>();
 
     public TrucoRoomSvcImpl(RabbitTemplate rabbitTemplate, ObjectMapper objectMapper) {
         this.rabbitTemplate = rabbitTemplate;
@@ -21,21 +22,37 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
         TrucoRoom trucoRoom = new TrucoRoom();
         trucoRoom.setId("principal");
         trucoRoom.setName("Principal");
-        this.rooms.add(trucoRoom);
+        this.rooms.put(trucoRoom.getId(), trucoRoom);
     }
 
 
     @Override
     public List<TrucoRoom> findAllRooms() {
-        return rooms;
+        return new ArrayList<>(rooms.values());
     }
 
     public TrucoRoom create(TrucoRoom trucoRoom) {
         trucoRoom.setId(UUID.randomUUID().toString());
-        rooms.add(trucoRoom);
+        this.rooms.put(trucoRoom.getId(), trucoRoom);
         // Notify was created
         rabbitTemplate.convertAndSend("truco_event", "room", new RabbitResponse(Event.ROOM_CREATED, trucoRoom.getClass().getCanonicalName(), objectMapper.convertValue(trucoRoom, HashMap.class)));
         return trucoRoom;
+    }
+
+    @Override
+    public TrucoRoomEvent joinRoom(String roomId, TrucoUser user) {
+        logger.debug("User [" + user.getUsername() + "] joining to room [" + roomId + "]");
+        TrucoRoom trucoRoom = rooms.get(roomId);
+        if (trucoRoom != null) {
+            TrucoRoomEvent trucoRoomEvent = new TrucoRoomEvent();
+            trucoRoomEvent.setEventName(Event.ROOM_USER_CREATED);
+            trucoRoomEvent.setMessage("User joined to the Room [" + roomId + "]");
+            trucoRoomEvent.setUser(user);
+            rabbitTemplate.convertAndSend("truco_event", "room/" + roomId + "/join", new RabbitResponse(Event.ROOM_CREATED, trucoRoom.getClass().getCanonicalName(), objectMapper.convertValue(trucoRoom, HashMap.class)));
+            logger.debug("User [" + user.getUsername() + "] joined to the room [" + roomId + "]");
+            return trucoRoomEvent;
+        }
+        return null;
     }
 
     public TrucoRoom delete(TrucoRoom trucoRoom) {
