@@ -15,6 +15,7 @@
         <module name="toluca-registry" />
         <module name="toluca-server" />
         <module name="toluca-ui" />
+        <module name="truco-ui" />
         <module name="truco-websocket" />
       </profile>
     </annotationProcessing>

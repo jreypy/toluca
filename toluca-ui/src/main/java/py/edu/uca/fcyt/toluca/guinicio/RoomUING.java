@@ -113,7 +113,7 @@ public class RoomUING extends JApplet {
      * 
      * @return javax.swing.JPanel
      */
-    private JPanel getPanelPrincipal() {
+    protected JPanel getPanelPrincipal() {
         if (panelPrincipal == null) {
             panelPrincipal = new JPanel();
             panelPrincipal.setLayout(new BorderLayout());

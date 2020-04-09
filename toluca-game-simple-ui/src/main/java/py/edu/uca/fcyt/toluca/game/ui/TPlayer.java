@@ -307,7 +307,6 @@ public class TPlayer extends JFrame
             logger.error("Error getting image [" + spec + "]");
             throw e;
         }
-
     }
 
     public void cantar(byte type) {
