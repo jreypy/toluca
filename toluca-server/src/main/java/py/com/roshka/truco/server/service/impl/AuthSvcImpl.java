@@ -1,6 +1,7 @@
 package py.com.roshka.truco.server.service.impl;
 
 import org.springframework.stereotype.Component;
+import py.com.roshka.truco.api.TrucoPrincipal;
 import py.com.roshka.truco.server.beans.AuthResponse;
 import py.com.roshka.truco.server.exceptions.LoginException;
 import py.com.roshka.truco.server.service.AuthSvc;
@@ -18,9 +19,9 @@ public class AuthSvcImpl implements AuthSvc {
     }
 
     @Override
-    public AuthResponse login(String username, String password) throws LoginException {
+    public TrucoPrincipal login(String username, String password) throws LoginException {
         // Notificar Nuevo Usuario
-        return new AuthResponse(username + "-" + UUID.randomUUID().toString());
+        return new TrucoPrincipal(username, username + "-" + UUID.randomUUID().toString());
     }
 
 

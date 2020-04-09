@@ -1,6 +1,7 @@
 package py.com.roshka.truco.server.controller;
 
 import org.springframework.web.bind.annotation.*;
+import py.com.roshka.truco.api.TrucoPrincipal;
 import py.com.roshka.truco.api.TrucoRoom;
 import py.com.roshka.truco.server.beans.AuthResponse;
 import py.com.roshka.truco.server.exceptions.LoginException;
@@ -19,7 +20,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody Map<String, String> map) throws LoginException {
+    public TrucoPrincipal login(@RequestBody Map<String, String> map) throws LoginException {
         return authSvc.login(map.get("username"), map.get("password"));
     }
 

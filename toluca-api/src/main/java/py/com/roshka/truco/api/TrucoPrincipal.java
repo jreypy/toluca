@@ -1,11 +1,16 @@
 package py.com.roshka.truco.api;
 
 public class TrucoPrincipal {
+    private String username;
     private String authKey;
-    String username;
 
     public TrucoPrincipal() {
 
+    }
+
+    public TrucoPrincipal(String username, String authKey) {
+        this.username = username;
+        this.authKey = authKey;
     }
 
     public TrucoPrincipal(String authKey) {
