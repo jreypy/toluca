@@ -30,7 +30,7 @@ public class TableRanking extends JTable {
     }
 
     /**
-     *  
+     *
      */
     public void initComponents() {
         rowSelectionAllowed = false;
@@ -42,7 +42,7 @@ public class TableRanking extends JTable {
         TableColumn puntajeCol = getColumn("Puntaje");
         puntajeCol.setPreferredWidth(60);
         puntajeCol.setMaxWidth(60);
-        setRowHeight(25);       
+        setRowHeight(25);
 
         /*
          * coloresRanking.put(RowRanking.RANKING_AZUL, new
@@ -72,13 +72,13 @@ public class TableRanking extends JTable {
                 .getResource(RoomUING.IMAGE_DIR + "rVerde.gif")));
 
         userCol.setCellRenderer(new TableRankingRender(coloresRanking,
-                new Color(255, 255, 255), new Color(240, 248, 146)));        
+                new Color(255, 255, 255), new Color(240, 248, 146)));
     }
 
     /**
      * @deprecated
-     * */
-    
+     */
+
     public TableRanking(TableCellRenderer render) {
     }
 
@@ -107,7 +107,8 @@ public class TableRanking extends JTable {
     public void addPlayer(TrucoPlayer player) {
 
         TableModelRanking model = (TableModelRanking) getModel();
-        model.insertRow(new RowRanking(player.getName(), new Integer(player
+
+        model.insertRow(new RowRanking(player.getId(), player.getName(), new Integer(player
                 .getRating())));
         players.put(player.getName(), player);
     }
@@ -138,6 +139,7 @@ public class TableRanking extends JTable {
     public Table getTable() {
         return table;
     }
+
     public void setTable(Table table) {
         this.table = table;
         // TODO Muuuuuuuuuuuy porcino
@@ -151,11 +153,11 @@ public class TableRanking extends JTable {
     }
 
     /**
-     * 
+     *
      */
     public List getPlayers() {
         ArrayList ret = new ArrayList(players.values());
         return ret;
     }
-       
+
 }

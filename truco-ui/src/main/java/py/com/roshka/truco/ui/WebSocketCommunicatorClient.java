@@ -21,7 +21,6 @@ import java.util.Map;
 
 public class WebSocketCommunicatorClient extends CommunicatorClient implements TrucoClientHandler {
 
-    static String MAIN_ROOM = "1";
 
     static Logger logger = Logger.getLogger(TrucoFrame.class);
 
@@ -29,13 +28,14 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
     private RoomClient roomClient;
 
     ObjectMapper objectMapper = new ObjectMapper();
-
+    TrucoClientDispatcher trucoClientDispatcher = null;
 
     public WebSocketCommunicatorClient(RoomClient client, String serverString, Integer portNumber) throws IOException {
         super(new EventDispatcherClient());
         eventDispatcher.setRoom(client);
         roomClient = client;
         ((EventDispatcherClient) getEventDispatcher()).setCommClient(this);
+        trucoClientDispatcher = new TrucoClientDispatcher(objectMapper, getEventDispatcher());
     }
 
 
@@ -105,12 +105,7 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
         getEventDispatcher().loginCompleted(roomEvent);
         /// join users
         {
-            RoomEvent joinUser = new RoomEvent();
-            joinUser.setType(RoomEvent.TYPE_PLAYER_JOINED);
-            joinUser.setPlayer(new TrucoPlayer());
-            joinUser.getPlayer().setName("sricco");
-            joinUser.getPlayer().setId("sricco");
-            getEventDispatcher().dispatchEvent(joinUser);
+
         }
         /// addTable
         {
@@ -133,12 +128,14 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
     public void receiveMessage(Object object) {
         //objectMapper
         logger.debug("receiveMessage [" + object + "]");
+        trucoClientDispatcher.dispatchEvent((Map) object);
+
     }
 
     @Override
     public void ready() {
         Map map = new LinkedHashMap();
-        map.put("id", MAIN_ROOM);
+        map.put("id", TrucoFrame.MAIN_ROOM);
         try {
             trucoClient.send("join_room", map);
         } catch (TrucoClientException e) {

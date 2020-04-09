@@ -7,8 +7,7 @@ import py.edu.uca.fcyt.toluca.guinicio.RoomUING;
 import javax.swing.*;
 
 public class TrucoFrame extends RoomUING {
-
-
+    public static String MAIN_ROOM = "1";
     static Logger logger = Logger.getLogger(TrucoFrame.class);
 
 

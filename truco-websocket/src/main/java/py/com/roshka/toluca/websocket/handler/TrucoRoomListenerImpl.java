@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import py.com.roshka.toluca.websocket.global.Events;
 import py.com.roshka.toluca.websocket.service.EventProcessor;
 import py.com.roshka.toluca.websocket.service.TrucoRoomListener;
+import py.com.roshka.truco.api.Event;
 import py.com.roshka.truco.api.TrucoRoom;
 import py.com.roshka.truco.api.TrucoRoomEvent;
 
@@ -25,6 +26,6 @@ public class TrucoRoomListenerImpl implements TrucoRoomListener {
 
     @Override
     public void joinedToRoom(String roomId, TrucoRoomEvent trucoRoomEvent) {
-        roomHandler.sendRoomEvent(roomId, trucoRoomEvent.getUser(), eventProcessor.sendEvent(Events.JOINED_TO_ROOM, trucoRoomEvent));
+        roomHandler.sendRoomEvent(roomId, trucoRoomEvent.getUser(), eventProcessor.sendEvent(Event.ROOM_USER_JOINED, trucoRoomEvent));
     }
 }
