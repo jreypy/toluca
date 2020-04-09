@@ -72,7 +72,7 @@ public class TrucoPlayer {
     	this.rating = rating;
     }
     /** Constructor de un TrucoPlayer con su nombre identificador.
-     * @param name String que se asignar� como nombre identificador del TrucoPlayer.
+     * @param name String que se asignar como nombre identificador del TrucoPlayer.
      */
     /*public TrucoPlayer(){
     }*/

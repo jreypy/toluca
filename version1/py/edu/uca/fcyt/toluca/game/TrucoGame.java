@@ -137,17 +137,7 @@ public class TrucoGame extends Game
 			((TrucoListener)listenerlist.get(i)).cardsDeal(event);
 		}
 	}
-	/** Retorna el Equipo que es Numero i.
-	 * @param i numero de Team (o 0 o 1)
-	 * @return Retorna un Equipo(TrucoTeam).
-	 */
-	
-	public TrucoTeam getTeam(int i)
-	{ //retorna el team numero i
-		if (i == 0 || i == 1)
-			return teams[i];
-		return null;
-	}
+
 	/** Retorna el puntaje Total de uno de los Teams.
 	 * @param tm TrucoTeam de quien se retorna el Puntaje.
 	 * @return El valor del puntaje de un TrucoTeam.
@@ -313,7 +303,7 @@ public class TrucoGame extends Game
 		//System.out.println("se envia el mensaje de PlayEvent");
 		TrucoEvent event = new TrucoEvent(this,numberOfHand,pl,type,card);
 		event.setTableNumber(getTableNumber());
-		System.out.println("Se va a disparar un evento de play response.  El tamaño de la lista de listeners es: " + listenerlist.size());
+		System.out.println("Se va a disparar un evento de play response.  El tamaï¿½o de la lista de listeners es: " + listenerlist.size());
 		for(int i=0; i<listenerlist.size();i++)
 		{
 			System.out.println("FirePlayEvent para: " + listenerlist.get(i).getClass().getName());

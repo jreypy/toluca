@@ -7,16 +7,13 @@ package py.edu.uca.fcyt.toluca.event;
  */
 
 
-import java.beans.XMLEncoder;
-import java.io.BufferedOutputStream;
-import java.util.Arrays;
-
 import org.apache.log4j.Logger;
 import py.edu.uca.fcyt.toluca.game.TrucoCard;
 import py.edu.uca.fcyt.toluca.game.TrucoGame;
 import py.edu.uca.fcyt.toluca.game.TrucoPlay;
 import py.edu.uca.fcyt.toluca.game.TrucoPlayer;
-import py.edu.uca.fcyt.toluca.game.TrucoTeam;
+
+import java.util.Arrays;
 
 
 public class TrucoEvent {
@@ -363,7 +360,7 @@ public class TrucoEvent {
    }*/
 
     public TrucoPlay getTrucoPlay() {
-        // TODO Hacer el SWITCH gigantesco, probar y ya est�
+        // TODO Hacer el SWITCH gigantesco, probar y ya est
         TrucoPlay tp = null;
         switch (type) {
 /*		 case ENVIAR_CARTAS:

@@ -15,7 +15,7 @@ import py.edu.uca.fcyt.toluca.event.TrucoEvent;
  * </p>
  */
 public class TrucoPlay {
-    org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(TrucoGame.class);
+    org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(TrucoPlay.class);
 
 //    public TrucoCard getCardAux() {
 //        return cardAux;
@@ -171,7 +171,7 @@ public class TrucoPlay {
     /**
      * Constructor de jugada de tipo cantar o acto(cerrarse)algo.
      *
-     * @param tp   Player que jugar�.
+     * @param tp   Player que jugar.
      * @param type Tipo de canto o acto a realizar.
      */
 

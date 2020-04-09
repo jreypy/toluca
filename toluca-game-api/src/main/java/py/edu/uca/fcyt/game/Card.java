@@ -1,8 +1,7 @@
 package py.edu.uca.fcyt.game;
 
+import javax.swing.*;
 import java.util.Hashtable;
-
-import javax.swing.ImageIcon;
 
 
 public class Card
@@ -27,7 +26,7 @@ public class Card
 	{
 	}
 
-	// devuelven el valor y el palo de la carta, y si est� abierta o no
+	// devuelven el valor y el palo de la carta, y si est abierta o no
 	public byte getValue() { return value; }
 	public byte getKind() { return kind; }
 	public boolean isFlipped() { return flipped; }
@@ -35,7 +34,7 @@ public class Card
 	// establece el valor de la carta
 	public Card setValue(int value)
 	{
-		if (value < 1 || value > 12) throw new RuntimeException("Valor inv�lido");
+		if (value < 1 || value > 12) throw new RuntimeException("Valor invlido");
 		this.value = (byte) value;
 		return this;
 	}
@@ -43,12 +42,12 @@ public class Card
 	// establece el palo de la carta
 	public Card setKind(int kind)
 	{
-		if (kind < 1 || kind > 4) throw new RuntimeException("Palo inv�lido");
+		if (kind < 1 || kind > 4) throw new RuntimeException("Palo invlido");
 		this.kind = (byte) kind;
 		return this;
 	}
 
-	// establece si la carta est� abierta o no
+	// establece si la carta est abierta o no
 	public Card setFlipped(boolean flipped)
 	{
 		this.flipped = flipped;
@@ -69,8 +68,8 @@ public class Card
 	}
 	
 	/**
-	 * Retorna el c�digo hash.
-	 * c1.hashCode() == c2.hashCode(), si y s�lo si 
+	 * Retorna el cdigo hash.
+	 * c1.hashCode() == c2.hashCode(), si y slo si
 	 * c1.getValue() == c2.Value() y c1.getKind() == c2.getKind()
 	 */
 	public int hashCode()
@@ -79,7 +78,7 @@ public class Card
 	}
     
 	/**
-	 * Retorna verdadero si una carta es igual a �sta. Si 
+	 * Retorna verdadero si una carta es igual a sta. Si
 	 * <code> o </code> no es un Card, retorna falso.
 	 * @param o		la carta en cuestion
 	 */
@@ -123,7 +122,7 @@ public class Card
 	}
     
 	/**
-	 * Retorna la descripci�n de la carta
+	 * Retorna la descripcin de la carta
 	 */
 	public String getDescription()
 	{

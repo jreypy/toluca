@@ -6,11 +6,10 @@
 
 package py.edu.uca.fcyt.toluca.game;
 
+import py.edu.uca.fcyt.toluca.statusGame.statusGameCliente.TrucoStatusTableCliente;
+
 import java.util.Vector;
 import java.util.logging.Logger;
-
-import py.edu.uca.fcyt.toluca.TolucaConstants;
-import py.edu.uca.fcyt.toluca.statusGame.statusGameCliente.TrucoStatusTableCliente;
 
 /**
  * 

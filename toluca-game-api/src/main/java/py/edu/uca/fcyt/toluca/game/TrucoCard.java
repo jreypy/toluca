@@ -14,9 +14,6 @@
  */
 package py.edu.uca.fcyt.toluca.game;
 
-import java.beans.XMLEncoder;
-import java.io.BufferedOutputStream;
-
 import py.edu.uca.fcyt.game.Card;
 
 public class TrucoCard extends Card {

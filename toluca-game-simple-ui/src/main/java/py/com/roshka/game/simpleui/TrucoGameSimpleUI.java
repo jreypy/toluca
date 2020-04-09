@@ -3,6 +3,7 @@ package py.com.roshka.game.simpleui;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import py.edu.uca.fcyt.toluca.game.TrucoGame;
+import py.edu.uca.fcyt.toluca.game.TrucoGameImpl;
 import py.edu.uca.fcyt.toluca.game.TrucoPlayer;
 import py.edu.uca.fcyt.toluca.game.TrucoTeam;
 import py.edu.uca.fcyt.toluca.game.ui.TPlayer;
@@ -31,7 +32,7 @@ public class TrucoGameSimpleUI {
         jreyTeam.addPlayer(jrey);
 //            jreyTeam.addPlayer(zid1);
 
-        TrucoGame tg = new TrucoGame(cBenitezTeam, jreyTeam);
+        TrucoGame tg = new TrucoGameImpl(cBenitezTeam, jreyTeam);
 
         TPlayer tp1 = new TPlayer(jrey, tg, cBenitezTeam, jreyTeam);
         TPlayer tp2 = new TPlayer(cBenitez, tg, cBenitezTeam, jreyTeam);

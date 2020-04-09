@@ -3,7 +3,9 @@
  *
  * Created on 8 de abril de 2002, 10:12 AM
  */
-package py.edu.uca.fcyt.toluca.game;
+package py.edu.uca.fcyt.toluca.game.ui;
+
+import py.edu.uca.fcyt.toluca.game.*;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;

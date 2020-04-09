@@ -19,9 +19,9 @@ import java.util.Vector;
  * @version 1.0
  * @authors Julio Rey || Christian Benitez
  */
-public class TrucoGame extends Game {
+public class TrucoGameImpl extends TrucoGame {
 
-    org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(TrucoGame.class);
+    org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(TrucoGameImpl.class);
 
     //TODO: Poner estos 2 en un constructor.
     private int gamePoints = 30;
@@ -31,16 +31,10 @@ public class TrucoGame extends Game {
     /**
      * Creates a new instance of trucoGame
      */
-    LinkedList listenerlist; //lista de todos los listener
-    private int tableNumber;
+
+
 //    static Logger logger = Logger.getLogger(RoomServer.class);
 
-    /**
-     * @return Returns the tableNumber.
-     */
-    public int getTableNumber() {
-        return tableNumber;
-    }
 
     /**
      * @param tableNumber The tableNumber to set.
@@ -51,10 +45,10 @@ public class TrucoGame extends Game {
     }
 
     protected int[] points = new int[2]; //puntajes de los teams
-    protected TrucoTeam[] teams = new TrucoTeam[2]; //equipos que juegan
+
     protected TrucoHand trucoHand; //mano actual
-    protected int numberOfHand; //numero de mano actual
-    protected int numberOfPlayers; //cantidad de jugadores
+
+
     protected int numberOfTeams = 0; //numero de equipos
     protected int reparteCartas = 0; //quien empieza la mano
     protected boolean playersPreparados[]; //lista de players que estan preparados
@@ -62,7 +56,7 @@ public class TrucoGame extends Game {
     protected Vector detalleDelPuntaje;
 
 
-    public TrucoGame() {
+    public TrucoGameImpl() {
     }
 
     /**
@@ -72,7 +66,7 @@ public class TrucoGame extends Game {
      * @param tm2 Equipo 1 que jugará el TrucoGame.
      * @deprecated
      */
-    public TrucoGame(TrucoTeam tm1, TrucoTeam tm2) { //contructor con los teams
+    public TrucoGameImpl(TrucoTeam tm1, TrucoTeam tm2) { //contructor con los teams
         this(tm1, tm2, 30);
     }
 
@@ -82,10 +76,8 @@ public class TrucoGame extends Game {
      * @param tm1 Equipo 1 que jugará el TrucoGame.
      * @param tm2 Equipo 1 que jugará el TrucoGame.
      */
-    public TrucoGame(TrucoTeam tm1, TrucoTeam tm2, int points) { //contructor con los teams
-
+    public TrucoGameImpl(TrucoTeam tm1, TrucoTeam tm2, int points) { //contructor con los teams
         setGamePoints(points);
-        listenerlist = new LinkedList(); //instancia de la lista de Trucolistener
         teams[0] = tm1;
         teams[1] = tm2;
         numberOfHand = 0;
@@ -129,12 +121,7 @@ public class TrucoGame extends Game {
      *
      * @param tl Oyente que se adhiere a la lista.
      */
-    public void addTrucoListener(TrucoListener tl) {
-        listenerlist.add(tl);
-        System.out.println("Se agrega un truco listener al trucogame ");
-        //	new Throwable().printStackTrace();
 
-    }
 
     /**
      * configurar los equipos que jugarán el TrucoGame.
@@ -147,20 +134,6 @@ public class TrucoGame extends Game {
         teams[1] = team_2;
     }
 
-    /**
-     * Envia las cartas a los jugadores.
-     *
-     * @param tp   TrucoPlayer a quien irá las cartas.
-     * @param card carta a ser enviadas.
-     */
-    public void dealtCards(TrucoPlayer tp, TrucoCard[] card) {//reparte las cartas a los jugadores
-        TrucoEvent event = new TrucoEvent(this, numberOfHand, tp, (byte) 0, card);
-        event.setTableNumber(getTableNumber());
-        for (int i = 0; i < listenerlist.size(); i++) {
-//			System.out.println(i+"ejecutando cardsDEal de:" + getClass().getName());
-            ((TrucoListener) listenerlist.get(i)).cardsDeal(event);
-        }
-    }
 
     /**
      * Retorna el Equipo que es Numero i.
@@ -249,137 +222,6 @@ public class TrucoGame extends Game {
         return trucoHand.esPosibleJugar(tp);
     }
 
-    /**
-     * Enviar mensajes a todos los oyentes del cambio de turno.
-     *
-     * @param pl   TrucoPlayer a quien se le asigna el turno.
-     * @param type Tipo de Turno a ser asignado.
-     */
-    public void fireTurnEvent(TrucoPlayer pl, byte type) { //avisar quien juega con type el tipo de turno, ronda de cartas, ronda de envidos o flores etc
-
-        TrucoEvent event = new TrucoEvent(this, numberOfHand, pl, type); //crear el evento
-        event.setTableNumber(getTableNumber());
-        for (int i = 0; i < listenerlist.size(); i++) { //enviarle a todos el evento
-            ((TrucoListener) (listenerlist.get(i))).turn(event);
-        }
-    }
-
-    public void fireTurnEvent(TrucoPlayer pl, byte type, int value) { //avisar el Turno con envio del value of envido
-        TrucoEvent event1 = new TrucoEvent(this, numberOfHand, pl, type, value); //crear el evento1
-        TrucoEvent event2 = new TrucoEvent(this, numberOfHand, pl, type); //crear el evento2
-        event1.setTableNumber(getTableNumber());
-        event2.setTableNumber(getTableNumber());
-        for (int i = 0; i < listenerlist.size(); i++) {
-            if (((TrucoListener) listenerlist.get(i)).getAssociatedPlayer() == pl)
-                ((TrucoListener) (listenerlist.get(i))).turn(event1);
-            else
-                ((TrucoListener) (listenerlist.get(i))).turn(event2);
-        }
-    }
-
-    /**
-     * Enviar mensaje de jugada a todos los oyentes del juego.
-     *
-     * @param pl   TrucoPlayer que realizo la jugada.
-     * @param type Tipo de Jugada que realizó.
-     */
-    public void firePlayEvent(TrucoPlayer pl, byte type) { //eventos de juego sin carta o canto
-        TrucoEvent event = new TrucoEvent(this, numberOfHand, pl, type);
-        event.setTableNumber(getTableNumber());
-        for (int i = 0; i < listenerlist.size(); i++) {
-            //			((TrucoListener)(listenerlist.get(i))).play(event);
-            // 			Se cambi� la llamada en intento desesperado por hacer funcionar esto
-            //			((TrucoListener)(listenerlist.get(i))).playResponse(event);
-            ((TrucoListener) (listenerlist.get(i))).play(event);
-        }
-    }
-
-    /**
-     * Enviar mensaje de jugada a todos los oyentes del juego.
-     *
-     * @param pl   TrucoPlayer que realizó la jugada.
-     * @param card Carta que jugó el Player.
-     * @param type Tipo de jugada que realizó.
-     */
-    public void firePlayEvent(TrucoPlayer pl, TrucoCard card, byte type) { //eventos de juego con carta
-        logger.debug("FirePlayEvent [" + pl + "][" + card + "][" + type + "]");
-
-        TrucoEvent event = new TrucoEvent(this, numberOfHand, pl, type, card);
-        event.setTableNumber(getTableNumber());
-
-        for (int i = 0; i < listenerlist.size(); i++) {
-            logger.debug("FireEvent to [" + listenerlist.get(i).getClass().getName() + "]");
-            ((TrucoListener) (listenerlist.get(i))).play(event);
-        }
-    }
-
-    /**
-     * Enviar mensaje de jugada a todos los oyentes del juego.
-     *
-     * @param pl    Player que realiz� la jugada.
-     * @param type  Tipo de jugada que realiz�.
-     * @param value Valor del canto (para jugadas de canto de valor Envido o Flor).
-     */
-    public void firePlayEvent(TrucoPlayer pl, byte type, int value) {//eventos de canto de tanto
-        TrucoEvent event = new TrucoEvent(this, numberOfHand, pl, type, value);
-        event.setTableNumber(getTableNumber());
-        for (int i = 0; i < listenerlist.size(); i++) {
-            ((TrucoListener) (listenerlist.get(i))).play(event);
-            //			((TrucoListener)(listenerlist.get(i))).playResponse(event);
-        }
-    }
-
-    /**
-     * Enviar mensaje de jugada a todos los oyentes del juego.
-     *
-     * @param pl   TrucoPlayer que realizo la jugada.
-     * @param type Tipo de Jugada que realiz�.
-     */
-    public void firePlayResponseEvent(TrucoPlayer pl, byte type) { //eventos de juego sin carta o canto
-        TrucoEvent event = new TrucoEvent(this, numberOfHand, pl, type);
-        event.setTableNumber(getTableNumber());
-        for (int i = 0; i < listenerlist.size(); i++) {
-            //			((TrucoListener)(listenerlist.get(i))).play(event);
-            //			Se cambió la llamada en intento desesperado por hacer funcionar esto
-            ((TrucoListener) (listenerlist.get(i))).playResponse(event);
-            //			((TrucoListener)(listenerlist.get(i))).play(event);
-        }
-    }
-
-    /**
-     * Enviar mensaje de jugada a todos los oyentes del juego.
-     *
-     * @param pl   TrucoPlayer que realizó la jugada.
-     * @param card Carta que jugó el Player.
-     * @param type Tipo de jugada que realizó.
-     */
-    public void firePlayResponseEvent(TrucoPlayer pl, TrucoCard card, byte type) { //eventos de juego con carta
-        //System.out.println("se envia el mensaje de PlayEvent");
-        TrucoEvent event = new TrucoEvent(this, numberOfHand, pl, type, card);
-        event.setTableNumber(getTableNumber());
-        System.out.println("Se va a disparar un evento de play response.  El tamaño de la lista de listeners es: " + listenerlist.size());
-        for (int i = 0; i < listenerlist.size(); i++) {
-            System.out.println("FirePlayEvent para: " + listenerlist.get(i).getClass().getName());
-            //		((TrucoListener)(listenerlist.get(i))).play(event);
-            ((TrucoListener) (listenerlist.get(i))).playResponse(event);
-        }
-    }
-
-    /**
-     * Enviar mensaje de jugada a todos los oyentes del juego.
-     *
-     * @param pl    Player que realizó la jugada.
-     * @param type  Tipo de jugada que realizó.
-     * @param value Valor del canto (para jugadas de canto de valor Envido o Flor).
-     */
-    public void firePlayResponseEvent(TrucoPlayer pl, byte type, int value) {//eventos de canto de tanto
-        TrucoEvent event = new TrucoEvent(this, numberOfHand, pl, type, value);
-        event.setTableNumber(getTableNumber());
-        for (int i = 0; i < listenerlist.size(); i++) {
-            //			((TrucoListener)(listenerlist.get(i))).play(event);
-            ((TrucoListener) (listenerlist.get(i))).playResponse(event);
-        }
-    }
 	
 	
 	/*public void fireEventType(byte type){
@@ -391,15 +233,12 @@ public class TrucoGame extends Game {
      */
     public void fireEndOfHandEvent() {
         logger.debug("Fire End Of Hand");
-
         points[0] = points[0] + trucoHand.getPointsOfTeam(0);
         points[1] = points[1] + trucoHand.getPointsOfTeam(1);
 
         teams[0].setPoints(points[0]);
         teams[1].setPoints(points[1]);
 
-        TrucoEvent event = new TrucoEvent(this, numberOfHand, TrucoEvent.FIN_DE_MANO);
-        event.setTableNumber(getTableNumber());
         detalleDelPuntaje = trucoHand.getPointsDetail();
 
 
@@ -419,9 +258,7 @@ public class TrucoGame extends Game {
         logger.info("------------------------------------------------------------------------");
 
         setPlayersReady();
-        for (int i = 0; i < listenerlist.size(); i++) {
-            ((TrucoListener) (listenerlist.get(i))).endOfHand(event);
-        }
+        super.fireEndOfHandEvent();
     }
 
     public void EndOfHandEvent() {
@@ -446,60 +283,6 @@ public class TrucoGame extends Game {
             playersPreparados[i] = false;
     }
 
-    /**
-     * Enviar mensaje a todos los oyentes sobre el final del juego.
-     */
-    public void fireEndOfGameEvent() {
-        logger.info("End Of Game [" + tableNumber + "]");
-        TrucoEvent event = new TrucoEvent(this, numberOfHand, TrucoEvent.FIN_DE_JUEGO);
-        event.setTableNumber(getTableNumber());
-        for (int i = 0; i < listenerlist.size(); i++) {
-            ((TrucoListener) (listenerlist.get(i))).endOfGame(event);
-        }
-    }
-
-    /**
-     * Enviar las cartas a cada jugador.
-     */
-    public void fireCardsDealt() {
-        TrucoEvent event = new TrucoEvent(this, TrucoEvent.ENVIAR_CARTAS);
-        event.setTableNumber(getTableNumber());
-        for (int i = 0; i < listenerlist.size(); i++) {
-            ((TrucoListener) (listenerlist.get(i))).play(event);
-        }
-    }
-
-    /**
-     * Enviar mensaje a todos los oyentes sobre el el comienzo de la mano.
-     */
-    public void fireHandStarted() {
-        logger.info(" fireHandStarted " + getNumberOfHand());
-        logger.info(" el equipo es: " + teams[0]);
-        logger.info(teams[1] == null);
-        logger.info(" numero de players de los equipos = " + teams[0].getNumberOfPlayers() + "y" + teams[0].getNumberOfPlayers());
-
-        TrucoPlayer tp = teams[(numberOfHand + 1) % 2].getTrucoPlayerNumber((numberOfHand - 1) % numberOfPlayers / 2);
-        TrucoEvent event = new TrucoEvent(this, numberOfHand, tp, TrucoEvent.INICIO_DE_MANO);
-        event.setTableNumber(getTableNumber());
-
-        for (int i = 0; i < listenerlist.size(); i++) {
-            ((TrucoListener) (listenerlist.get(i))).handStarted(event);
-        }
-    }
-
-    /**
-     * Enviar mensaje a todos los oyentes sobre el el comienzo del juego.
-     */
-    public void fireGameStarted() {
-        logger.debug("Fire Game Started Event");
-
-        TrucoEvent event = new TrucoEvent(this, numberOfHand, TrucoEvent.INICIO_DE_JUEGO);
-        event.setTableNumber(getTableNumber());
-
-        for (int i = 0; i < listenerlist.size(); i++) {
-            ((TrucoListener) (listenerlist.get(i))).gameStarted(event);
-        }
-    }
 
     /**
      * Para dejarse en espera a que inicie la siguiente mano.
@@ -570,14 +353,6 @@ public class TrucoGame extends Game {
         return (numberOfPlayers);
     }
 
-    /**
-     * Retorna el numero de mano actual del TrucoGame.
-     *
-     * @return El numero de mano actual del TrucoGame.
-     */
-    public int getNumberOfHand() {
-        return numberOfHand;
-    }
 
     /**
      * Retorna cuantos puntos se juegan en caso de faltear.
@@ -632,33 +407,6 @@ public class TrucoGame extends Game {
         return myCarta;
     }
 
-    /**
-     * @param tptmp
-     */
-    public void removeTrucoListener(TrucoPlayer tptmp) {
-        try {
-            System.out.println("Se elimina un truco listener del trucogame, vamos a eliminar a:" + tptmp.getName());
-            for (int i = 0; i < listenerlist.size(); i++) {
-                TrucoListener comm = ((TrucoListener) (listenerlist.get(i)));
-                if (comm.getAssociatedPlayer().getName() == tptmp.getName()) {
-                    listenerlist.remove(i);
-                    System.out.println("Eliminamos el listener del player " + comm.getAssociatedPlayer().getName());
-                }
-
-            }
-        } catch (NullPointerException npe) {
-            System.out.println("No se pudo eliminar el listener " + tptmp.getName());
-        }
-
-    }
-
-    public LinkedList getListaListeners() {
-        return listenerlist;
-    }
-
-    public TrucoTeam[] getTeams() {
-        return teams;
-    }
 
     /**
      *

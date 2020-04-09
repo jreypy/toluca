@@ -22,7 +22,7 @@ public class TrucoHand {
     org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(TrucoHand.class);
 
 
-    protected TrucoGame game;
+    protected TrucoGameImpl game;
 
     /* estados del juego */
     protected static final byte PRIMERA_RONDA = 0;
@@ -177,7 +177,7 @@ public class TrucoHand {
      * @param reparteCartas numero de jugador que repartira(para saber quien tiene el
      *                      primer turno)
      */
-    public TrucoHand(TrucoGame tg, int reparteCartas) { //Se crea la Instancia
+    public TrucoHand(TrucoGameImpl tg, int reparteCartas) { //Se crea la Instancia
         // de la mano
         game = tg; //a que game se refiere
         cantidadDePlayers = game.getNumberOfPlayers();

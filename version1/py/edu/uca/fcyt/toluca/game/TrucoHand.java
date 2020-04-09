@@ -15,9 +15,9 @@ import py.edu.uca.fcyt.toluca.statusGame.TrucoStatusTable;
 
 /**
  * constructor
- * 
+ *
  * @author Julio Rey || Cristian Benitez
- *  
+ *
  */
 public class TrucoHand {
 
@@ -71,7 +71,7 @@ public class TrucoHand {
                                                    */
 
     protected boolean equipo2_canto_flor = false;
-    
+
     /** Contiene los nombres de los que ya cantaron flor*/
     protected ArrayList jugadoresFloridos = new ArrayList();
 
@@ -168,7 +168,7 @@ public class TrucoHand {
 
     /**
      * Contruye un TrucoHand.
-     * 
+     *
      * @param tg
      *            juego al que pertenece(un truco hand es una parte de un
      *            TrucoGame)
@@ -204,9 +204,9 @@ public class TrucoHand {
      * Inicia el TrucoHand.
      */
     public void startHand() {
-    	
+
     	System.out.println("---------------------------------------");
-    	System.out.println("---- EMPIEZA LA MANO  ----");    	
+    	System.out.println("---- EMPIEZA LA MANO  ----");
         playTurn(); //asignar turno
     }
 
@@ -231,7 +231,7 @@ public class TrucoHand {
     /* devolver el numero de player que es pie */
     /**
      * Retorna el jugador que es el pie del equipo
-     * 
+     *
      * @param i
      *            Numero de Equipo del Player a ser retornado.
      * @return Numero de TrucoPlayer que es pie del TrucoTeam.
@@ -438,8 +438,8 @@ public class TrucoHand {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @return
      */
     protected int[] finDeMano_controlarEnvido() {
@@ -461,11 +461,11 @@ public class TrucoHand {
     }
 
     /**
-     * Chanchada máxima:
-     * 
+     * Chanchada mï¿½xima:
+     *
      * @see finDeMano_controlarEnvido
-     * 
-     * es un copy paste de ese método.
+     *
+     * es un copy paste de ese mï¿½todo.
      */
     protected void finDeManoSetearEnvido() {
         int[] result = finDeMano_controlarEnvido();
@@ -489,9 +489,9 @@ public class TrucoHand {
     }
 
     /**
-     * 
+     *
      * @param win
-     *            el nro de equipo que ganó (0, 1)
+     *            el nro de equipo que ganï¿½ (0, 1)
      * @throws InvalidPlayExcepcion
      */
     protected void finDeMano(int win) throws InvalidPlayExcepcion {
@@ -632,7 +632,7 @@ public class TrucoHand {
      */
     /**
      * Verifica si es posible realizar una jugada.
-     * 
+     *
      * @param tp
      *            TrucoPlay que quiere ser verificada.
      * @return retorna verdadero en caso de ser validï¿½ la jugada, falso en
@@ -848,7 +848,7 @@ public class TrucoHand {
             if (statusTable.jugoPrimeraCarta(getNumberOfPlayer(tp.getPlayer())))
                 return false;//el player ya jugo su primera carta
 
-            /*//Parche porcino, le caga si el mismo equipo tiene más de una Flor
+            /*//Parche porcino, le caga si el mismo equipo tiene mï¿½s de una Flor
             //Pero evita que se cante N veces la flor
             if (playTurnNumber % 2 == 0) {
                 if (equipo1_canto_flor)
@@ -875,7 +875,7 @@ public class TrucoHand {
 
     /**
      * Realizar una jugada.
-     * 
+     *
      * @param tp
      *            Jugada(TrucoPlay a ser realizadï¿½).
      * @throws InvalidPlayExcepcion
@@ -1084,7 +1084,7 @@ public class TrucoHand {
       * InvalidPlayExcepcion{ if(tp.getPlayer() != playTurn) throw (new
       * InvalidPlayExcepcion("No es el turno de ese jugador")); if(estadoActual !=
       * RONDA_DE_FLOR) throw (new InvalidPlayExcepcion("No es ronda de flor"));
-      * 
+      *
       *  }
       */
 
@@ -1159,7 +1159,7 @@ public class TrucoHand {
     /*
      * NoHabilitadoprotected void quieroContraflor(TrucoPlay tp){
      * if(estadoActual != CONTRAFLOR)
-     * 
+     *
      * game.firePlayEvent(tp.getPlayer(),tp.getType()); estadoActual =
      * RONDA_DE_FLOR; }
      */
@@ -1413,7 +1413,7 @@ public class TrucoHand {
                 && estadoActual != ENVIDO && estadoActual != REAL_ENVIDO
                 && estadoActual != FALTA_ENVIDO)
             return 6;
-        
+
         return 0;// si se puede.
     }
 
@@ -1588,7 +1588,7 @@ public class TrucoHand {
     /* No esta habilitado>> */
     /*
      * public void cantarContraFlor(TrucoPlay tp) throws InvalidPlayExcepcion{
-     * 
+     *
      * if(tp.getPlayer() != playTurn) /*no es el turno del jugador throw(new
      * InvalidPlayExcepcion("No es el turno del jugador"));
      * if(!sePuedeCantarFlor) /*ya acepto envido o algun error porahi throw(new
@@ -1598,14 +1598,14 @@ public class TrucoHand {
      * if(playTurnNumber%2 == 0 && equipo2_canto_flor==false) /*canta equipo1 y
      * equipo 2 tdvia tiene flor throw(new InvalidPlayExcepcion("el equipo
      * contrario tdvia canto flor"));
-     * 
+     *
      * if(playTurnNumber%2 != 0 && equipo1_canto_flor==false)/*canta equipo1 y
      * equipo 2 tdvia tiene throw(new InvalidPlayExcepcion("el equipo contrario
      * tdvia canto flor"));
-     * 
+     *
      * contraFlor=true; sePuedeCantarEnvido=false; /*ya no se puede cantar
      * envido
-     * 
+     *
      * game.firePlayEvent(tp.getPlayer(),tp.getType()); esperarRespuesta();
      * game.fireTurnEvent(playTurn,TrucoEvent.TURNO_RESPONDER_CONTRAFLOR); }
      */
@@ -1742,7 +1742,7 @@ public class TrucoHand {
      * puntos por cada flor ganada points[1] = puntos + points[1]; /*sumar
      * puntos //puntajes.add(new String("equipo: " + teams.getName(0) + " gano" +
      * puntos + " puntos de Contra Flor)); } }
-     * 
+     *
      * volverAEstadoDeJuego(); playTurn(); }
      */
     protected void elEnvidoEstaPrimero() {
@@ -1776,7 +1776,7 @@ public class TrucoHand {
 
     /**
      * retorna el puntaje de un equipo en mano
-     * 
+     *
      * @param team
      *            el equipo de quien se quiere saber
      * @return Valor del puntaje en la mano del team.
@@ -1789,7 +1789,7 @@ public class TrucoHand {
 
     /**
      * Retorta el valor del Envido que puede cantar el TrucoPlayer
-     * 
+     *
      * @param tp
      *            TrucoPlayer del quien se devolverï¿½ el valor de su Envido.
      * @return Valor del Envido del TrucoPlayer.

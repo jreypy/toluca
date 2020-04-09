@@ -9,6 +9,7 @@
         <module name="toluca-api" />
         <module name="toluca-chat" />
         <module name="toluca-game" />
+        <module name="toluca-game-api" />
         <module name="toluca-game-simple-ui" />
         <module name="toluca-gateway" />
         <module name="toluca-registry" />
@@ -20,6 +21,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="toluca-gui" target="1.5" />
+      <module name="toluca-net" target="1.5" />
       <module name="toluca-room" target="1.5" />
     </bytecodeTargetLevel>
   </component>
