@@ -16,6 +16,7 @@
         <option value="$PROJECT_DIR$/toluca-chat/pom.xml" />
         <option value="$PROJECT_DIR$/toluca-game-api/pom.xml" />
         <option value="$PROJECT_DIR$/truco-ui/pom.xml" />
+        <option value="$PROJECT_DIR$/truco-client/pom.xml" />
       </list>
     </option>
   </component>

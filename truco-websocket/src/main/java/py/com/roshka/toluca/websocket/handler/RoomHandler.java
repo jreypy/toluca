@@ -17,6 +17,8 @@ import py.com.roshka.toluca.websocket.service.CommandProcessor;
 import py.com.roshka.truco.api.TrucoPrincipal;
 
 import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Component
 public class RoomHandler extends WebSocketHandler {
@@ -107,7 +109,9 @@ public class RoomHandler extends WebSocketHandler {
         session.getAttributes().put("username", trucoPrincipal.getUsername());
         String query = session.getUri().getQuery();
         String message = "Hello! " + trucoPrincipal.getUsername() + " is connected [" + query + "]";
-        session.sendMessage(new TextMessage(message));
+        Map map = new LinkedHashMap<>();
+        map.put("message", message);
+        session.sendMessage(new TextMessage(objectMapper.writeValueAsString(map)));
         super.afterConnectionEstablished(session);
 
         // roomService.connect(auth.split("-")[0]);

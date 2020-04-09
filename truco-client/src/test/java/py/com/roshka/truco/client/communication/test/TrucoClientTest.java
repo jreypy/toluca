@@ -12,9 +12,9 @@ import py.com.roshka.truco.client.communication.impl.TrucoClientImpl;
 import java.net.MalformedURLException;
 
 public class TrucoClientTest {
-    Logger logger = Logger.getLogger(TrucoClientTest.class);
+    static Logger logger = Logger.getLogger(TrucoClientTest.class);
 
-    {
+    static {
         BasicConfigurator.configure();
     }
 
@@ -23,5 +23,30 @@ public class TrucoClientTest {
         TrucoClient trucoClient = new TrucoClientImpl("http://ec2-184-73-89-227.compute-1.amazonaws.com:8091", "http://ec2-184-73-89-227.compute-1.amazonaws.com:8050");
         TrucoPrincipal trucoPrincipal = trucoClient.login("prueba", "prueba");
         logger.debug("TrucoPrincipal token [" + trucoPrincipal.getAuthKey() + "]");
+
+    }
+
+    @Test
+    public void connectToWs() throws TrucoClientException {
+        TrucoClient trucoClient = new TrucoClientImpl("p://localhost:8091", "ws://localhost:8050");
+        ((TrucoClientImpl) trucoClient).connect("julio-token");
+        logger.debug("TrucoClient was connected to Websocket");
+        // wscat -c ws://ec2-184-73-89-227.compute-1.amazonaws.com:8050/ws
+    }
+
+    public static void main(String[] args) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                TrucoClient trucoClient = new TrucoClientImpl("http://ec2-184-73-89-227.compute-1.amazonaws.com:8091", "ws://localhost:8050");
+                try {
+
+                    ((TrucoClientImpl) trucoClient).connect("julio-token");
+                    logger.debug("TrucoClient was connected to Websocket");
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
+            }
+        }).start();
     }
 }

@@ -15,11 +15,13 @@
         <module name="toluca-registry" />
         <module name="toluca-server" />
         <module name="toluca-ui" />
+        <module name="truco-client" />
         <module name="truco-ui" />
         <module name="truco-websocket" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="toluca-client" target="1.5" />
       <module name="toluca-gui" target="1.5" />
       <module name="toluca-net" target="1.5" />
       <module name="toluca-room" target="1.5" />

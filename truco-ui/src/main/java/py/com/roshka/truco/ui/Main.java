@@ -1,11 +1,17 @@
 package py.com.roshka.truco.ui;
 
-import py.edu.uca.fcyt.toluca.guinicio.RoomUING;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 
 public class Main {
+    static Logger logger = Logger.getLogger(Main.class);
+
     public static void main(String[] args) {
+        BasicConfigurator.configure();
+        logger.debug("Starting JFrame");
+
         Runnable r = new Runnable() {
             public void run() {
                 JFrame f = new JFrame("Truco");

@@ -1,13 +1,15 @@
 package py.edu.uca.fcyt.toluca;
 
-/** Java class "RoomClient.java" generated from Poseidon for UML.
- *  Poseidon for UML is developed by <A HREF="http://www.gentleware.com">Gentleware</A>.
- *  Generated with <A HREF="http://jakarta.apache.org/velocity/">velocity</A> template engine.
+/**
+ * Java class "RoomClient.java" generated from Poseidon for UML.
+ * Poseidon for UML is developed by <A HREF="http://www.gentleware.com">Gentleware</A>.
+ * Generated with <A HREF="http://jakarta.apache.org/velocity/">velocity</A> template engine.
  */
 
 import py.edu.uca.fcyt.game.ChatPanel;
 import py.edu.uca.fcyt.game.ChatPanelContainer;
 import py.edu.uca.fcyt.net.CommunicatorClient;
+import py.edu.uca.fcyt.net.CommunicatorProvider;
 import py.edu.uca.fcyt.toluca.event.RoomEvent;
 import py.edu.uca.fcyt.toluca.event.RoomListener;
 import py.edu.uca.fcyt.toluca.event.TableEvent;
@@ -24,7 +26,7 @@ import java.util.Iterator;
 import java.util.logging.Logger;
 
 /**
- * 
+ *
  * @author Interfaz de Inicio
  */
 public class RoomClient extends Room implements ChatPanelContainer,
@@ -53,7 +55,7 @@ public class RoomClient extends Room implements ChatPanelContainer,
         // roomClient");
         String serverString = rui.getParameter("serverString");
         String portNumberString = rui.getParameter("portNumber");
-        String intervaloTestString=rui.getParameter("intervaloTest");
+        String intervaloTestString = rui.getParameter("intervaloTest");
         int portNumber;
         long intervaloTest;
         try {
@@ -61,22 +63,19 @@ public class RoomClient extends Room implements ChatPanelContainer,
         } catch (NumberFormatException e) {
             portNumber = 6767;
         }
-        try
-        {
-           intervaloTest=Long.parseLong(intervaloTestString);
-        }
-        catch(NumberFormatException e)
-        {
-            intervaloTest=5000;
+        try {
+            intervaloTest = Long.parseLong(intervaloTestString);
+        } catch (NumberFormatException e) {
+            intervaloTest = 5000;
         }
         try {
-            cc = new CommunicatorClient(this, serverString, portNumber);
-            ct=new ConexionTester(cc,intervaloTest);
+            cc = CommunicatorProvider.getIntance(this, serverString, portNumber);
+            ct = new ConexionTester(cc, intervaloTest);
             setRoomUING(rui);
             addRoomListener(cc);
             //SwingUtilities.invokeLater(cc);
             Thread cct = new Thread(cc, "comm-client");
-            Thread ctt = new Thread(ct,"conn-tester");
+            Thread ctt = new Thread(ct, "conn-tester");
             cct.setPriority(Thread.MAX_PRIORITY);
             ctt.setPriority(Thread.MIN_PRIORITY);
             cct.start();
@@ -149,7 +148,7 @@ public class RoomClient extends Room implements ChatPanelContainer,
      * <p>
      * Informa a todos los <i>listeners </i> registrados que se esta intentando
      * ingresar a una tabla.
-     * 
+     *
      * @param tableNumber
      *            El numero de tabla a la que queremos unirnos
      *            </p>
@@ -176,19 +175,19 @@ public class RoomClient extends Room implements ChatPanelContainer,
     public void createTableRequest() {
         createTableRequest(30);
     }
-    
+
     public void createTableRequest(int points) {
         fireTableCreateRequested(points);
     }
 
     /**
-	 * @param points
-	 */
-	private void fireTableCreateRequested() {
-		fireTableCreateRequested(30);
-	}
+     * @param points
+     */
+    private void fireTableCreateRequested() {
+        fireTableCreateRequested(30);
+    }
 
-	/**
+    /**
      * <p>
      * Informa a todos los <i>listeners </i> registrados que se esta intentando
      * crear una tabla nueva en el Room.
@@ -221,7 +220,7 @@ public class RoomClient extends Room implements ChatPanelContainer,
      * crear un objeto chatMessage, roomEvent de tipo ChatResquested
      * </p>
      * <p>
-     * 
+     *
      * @param player
      *            El jugador que esta intentando enviar el mensaje
      *            </p>
@@ -231,7 +230,7 @@ public class RoomClient extends Room implements ChatPanelContainer,
      *            </p>
      */
     private synchronized void fireChatMessageRequested(TrucoPlayer player,
-            String htmlMessage, String origin) {
+                                                       String htmlMessage, String origin) {
         /** lock-end */
 
         Iterator iter = roomListeners.listIterator();
@@ -354,10 +353,11 @@ public class RoomClient extends Room implements ChatPanelContainer,
 //        player.setFullName(player.getName());        
         getRoomUING().loginCompleted(player);
     } // end loginCompleted /** lock-begin */
-    public void actualizarRanking(TrucoPlayer trucoPlayer)
-    {
-    	getRoomUING().actualzarRanking(trucoPlayer);
+
+    public void actualizarRanking(TrucoPlayer trucoPlayer) {
+        getRoomUING().actualzarRanking(trucoPlayer);
     }
+
     /*
      * Ingresa al Player en la Tabla Principal como Observador
      */
@@ -377,9 +377,9 @@ public class RoomClient extends Room implements ChatPanelContainer,
 
     /**
      * Getter for property rankTable.
-     * 
+     *
      * @return Value of property rankTable.
-     *  
+     *
      */
     public TableRanking getRankTable() {
         if (rankTable == null) {
@@ -390,10 +390,10 @@ public class RoomClient extends Room implements ChatPanelContainer,
 
     /**
      * Setter for property rankTable.
-     * 
+     *
      * @param ranking
      *            New value of property rankTable.
-     *  
+     *
      */
     public void setRankTable(TableRanking ranking) {
         /*
@@ -430,7 +430,7 @@ public class RoomClient extends Room implements ChatPanelContainer,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.event.TableListener#playerStandRequest(py.edu.uca.fcyt.toluca.event.TableEvent)
      */
     public void playerStandRequest(TableEvent event) {
@@ -440,7 +440,7 @@ public class RoomClient extends Room implements ChatPanelContainer,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.event.TableListener#playerStanded(py.edu.uca.fcyt.toluca.event.TableEvent)
      */
     public void playerStanded(TableEvent event) {
@@ -450,7 +450,7 @@ public class RoomClient extends Room implements ChatPanelContainer,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.event.TableListener#playerKickRequest(py.edu.uca.fcyt.toluca.event.TableEvent)
      */
     public void playerKickRequest(TableEvent event) {
@@ -460,7 +460,7 @@ public class RoomClient extends Room implements ChatPanelContainer,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.event.TableListener#playerKicked(py.edu.uca.fcyt.toluca.event.TableEvent)
      */
     public void playerKicked(TableEvent event) {
@@ -470,7 +470,7 @@ public class RoomClient extends Room implements ChatPanelContainer,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.event.TableListener#playerLeft(py.edu.uca.fcyt.toluca.event.TableEvent)
      */
     public void playerLeft(TableEvent event) {
@@ -482,7 +482,7 @@ public class RoomClient extends Room implements ChatPanelContainer,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.event.TableListener#playerSitRequest(py.edu.uca.fcyt.toluca.event.TableEvent)
      */
     public void playerSitRequest(TableEvent event) {
@@ -523,7 +523,7 @@ public class RoomClient extends Room implements ChatPanelContainer,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.event.TableListener#signSendRequest(py.edu.uca.fcyt.toluca.event.TableEvent)
      */
     public void signSendRequest(TableEvent event) {
@@ -553,7 +553,7 @@ public class RoomClient extends Room implements ChatPanelContainer,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.event.SpaceListener#playerLeft(py.edu.uca.fcyt.toluca.game.TrucoPlayer)
      */
     public void playerLeft(TrucoPlayer player) {
@@ -563,24 +563,24 @@ public class RoomClient extends Room implements ChatPanelContainer,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.event.SpaceListener#chatMessageRequested(py.edu.uca.fcyt.game.ChatPanelContainer,
      *      py.edu.uca.fcyt.toluca.game.TrucoPlayer, java.lang.String)
      */
     public void chatMessageRequested(ChatPanelContainer cpc,
-            TrucoPlayer player, String htmlMessage) {
+                                     TrucoPlayer player, String htmlMessage) {
         // TODO Auto-generated method stub
 
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.event.SpaceListener#chatMessageSent(py.edu.uca.fcyt.game.ChatPanelContainer,
      *      py.edu.uca.fcyt.toluca.game.TrucoPlayer, java.lang.String)
      */
     public void chatMessageSent(ChatPanelContainer cpc, TrucoPlayer player,
-            String htmlMessage) {
+                                String htmlMessage) {
         // TODO Auto-generated method stub
 
     }
@@ -591,7 +591,7 @@ public class RoomClient extends Room implements ChatPanelContainer,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.game.ChatPanelContainer#sendChatMessage(py.edu.uca.fcyt.toluca.event.RoomEvent)
      */
     public void sendChatMessage(RoomEvent event) {
@@ -601,7 +601,7 @@ public class RoomClient extends Room implements ChatPanelContainer,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.event.SpaceListener#chatMessageSent(py.edu.uca.fcyt.toluca.event.RoomEvent)
      */
     public void chatMessageSent(RoomEvent event) {
@@ -611,7 +611,7 @@ public class RoomClient extends Room implements ChatPanelContainer,
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.event.TableListener#tableDestroyed(py.edu.uca.fcyt.toluca.event.TableEvent)
      */
     public void tableDestroyed(TableEvent event) {
@@ -637,14 +637,13 @@ public class RoomClient extends Room implements ChatPanelContainer,
     public void setRoomUING(RoomUING uiNG) {
         this.roomUING = uiNG;
     }
-    public void testConexionReceive(long milisegundos)
-    {
+
+    public void testConexionReceive(long milisegundos) {
         getRoomUING().actualizarTestConexion(milisegundos);
-        
+
         for (int i = 0; i < tables.length; i++) {
-            
-            if(tables[i]!=null)
-            {
+
+            if (tables[i] != null) {
                 tables[i].getJTrucoTable().actualizarConexionStatus(milisegundos);
             }
         }
@@ -655,7 +654,7 @@ public class RoomClient extends Room implements ChatPanelContainer,
      */
     public void invitationRequest(RoomEvent event) {
         // TODO Auto-generated method stub
-        
+
     }
 
     /* (non-Javadoc)
@@ -663,7 +662,7 @@ public class RoomClient extends Room implements ChatPanelContainer,
      */
     public void invitationRejected(RoomEvent re) {
         // TODO Auto-generated method stub
-        
+
     }
 
     /**

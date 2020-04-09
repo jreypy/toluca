@@ -1,6 +1,7 @@
 package py.com.roshka.truco.client.communication.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.log4j.Logger;
 import py.com.roshka.truco.api.TrucoPrincipal;
 import py.com.roshka.truco.client.communication.TrucoClient;
 import py.com.roshka.truco.client.communication.exception.TrucoClientException;
@@ -8,17 +9,19 @@ import py.com.roshka.truco.client.communication.exception.TrucoClientException;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class TrucoClientImpl implements TrucoClient {
+public class TrucoClientImpl implements TrucoClient, WebSocketClientListener {
+    Logger logger = Logger.getLogger(TrucoClientImpl.class);
 
     String serverHost;
     String websocketHost;
-
+    private WebSocketClient webSocketClient;
+    private String authentication;
     private ObjectMapper objectMapper = new ObjectMapper();
+
 
     public TrucoClientImpl(String serverHost, String websocketHost) {
         this.serverHost = serverHost;
@@ -54,10 +57,49 @@ public class TrucoClientImpl implements TrucoClient {
             }
             in.close();
             con.disconnect();
-
-            return objectMapper.readValue(content.toString(), TrucoPrincipal.class);
+            TrucoPrincipal trucoPrincipal = objectMapper.readValue(content.toString(), TrucoPrincipal.class);
+            authentication = trucoPrincipal.getAuthKey();
+            return trucoPrincipal;
         } catch (Exception e) {
             throw new TrucoClientException("Error al intentar realizar login", e);
         }
+    }
+
+    public void connect(String authentication) throws TrucoClientException {
+        try {
+            Map headers = new LinkedHashMap();
+            headers.put("Authentication", authentication);
+            webSocketClient = new WebSocketClient(
+                    new URI(websocketHost + "/ws"),
+                    objectMapper,
+                    this,
+                    headers
+            );
+            webSocketClient.connect();
+        } catch (Exception e) {
+            throw new TrucoClientException("Could not be connected", e);
+        }
+
+    }
+
+    @Override
+    public void onOpen(WebSocketClient webSocketClient) {
+        logger.debug("on open");
+    }
+
+    @Override
+    public void onClose(WebSocketClient webSocketClient) {
+        logger.debug("on close");
+    }
+
+    @Override
+    public boolean onMessage(WebSocketClient webSocketClient, Map map) {
+        logger.debug("onmessage [" + map + "]");
+        return false;
+    }
+
+    @Override
+    public void onError(Exception ex) {
+        logger.debug("onError", ex);
     }
 }

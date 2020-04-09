@@ -2,7 +2,7 @@
  * Created on Sep 10, 2004
  *
  * Last modified: $Date: 2005/09/02 23:24:15 $
- * @version $Revision: 1.44 $ 
+ * @version $Revision: 1.44 $
  * @author afeltes
  */
 package py.edu.uca.fcyt.toluca.guinicio;
@@ -36,15 +36,13 @@ import py.edu.uca.fcyt.toluca.game.TrucoPlayer;
 import py.edu.uca.fcyt.toluca.table.Table;
 
 /**
- * 
  * @author afeltes
- *  
  */
 public class RoomUING extends JApplet {
 
     //se saca el log4j porque es muy gande para que este en el cliente
-    //    protected static org.apache.log4j.Logger logger = org.apache.log4j.Logger
-    //            .getLogger(RoomUING.class);
+    protected static org.apache.log4j.Logger logger = org.apache.log4j.Logger
+            .getLogger(RoomUING.class);
 
     public static final String VERSION = "20050819-1359";
 
@@ -56,7 +54,9 @@ public class RoomUING extends JApplet {
 
     private PanelGradiente panelTitle = null; //  @jve:decl-index=0:visual-constraint="10,220"
 
-    /** el directorio relativo de donde se sacan las imagenes */
+    /**
+     * el directorio relativo de donde se sacan las imagenes
+     */
     public static final String IMAGE_DIR = "/py/edu/uca/fcyt/toluca/images/inicio/";
 
     private JPanel panelConMargen = null;
@@ -110,7 +110,7 @@ public class RoomUING extends JApplet {
 
     /**
      * This method initializes panelPrincipal
-     * 
+     *
      * @return javax.swing.JPanel
      */
     protected JPanel getPanelPrincipal() {
@@ -129,12 +129,12 @@ public class RoomUING extends JApplet {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.applet.Applet#stop()
-     * 
+     *
      * Programacin porcina aa / af el 23 de Diciembre de 2004 Cerramos el
      * socket al cerrar el applet.
-     *  
+     *
      */
     public void stop() {
         roomClient.cerrarConexion();
@@ -143,7 +143,7 @@ public class RoomUING extends JApplet {
 
     /**
      * This method initializes panelTitle
-     * 
+     *
      * @return py.edu.uca.fcyt.toluca.guinicio.PanelGradiente
      */
     private PanelGradiente getPanelTitle() {
@@ -166,7 +166,7 @@ public class RoomUING extends JApplet {
 
     /**
      * This method initializes panelConMargen
-     * 
+     *
      * @return javax.swing.JPanel
      */
     private JPanel getPanelConMargen() {
@@ -190,7 +190,7 @@ public class RoomUING extends JApplet {
 
     /**
      * This method initializes panelPaneles
-     * 
+     *
      * @return javax.swing.JPanel
      */
     private JPanel getPanelPaneles() {
@@ -206,7 +206,7 @@ public class RoomUING extends JApplet {
 
     /**
      * This method initializes panelControl
-     * 
+     *
      * @return javax.swing.JPanel
      */
     private JPanel getPanelControl() {
@@ -224,7 +224,7 @@ public class RoomUING extends JApplet {
 
     /**
      * This method initializes panelCentral
-     * 
+     *
      * @return javax.swing.JPanel
      */
     private JPanel getPanelCentral() {
@@ -239,7 +239,7 @@ public class RoomUING extends JApplet {
 
     /**
      * This method initializes scrollRanking
-     * 
+     *
      * @return javax.swing.JPanel
      */
     private JPanel getScrollRanking() {
@@ -258,7 +258,7 @@ public class RoomUING extends JApplet {
 
     /**
      * This method initializes panelComandos
-     * 
+     *
      * @return py.edu.uca.fcyt.toluca.guinicio.PanelComandos
      */
     private PanelComandos getPanelComandos() {
@@ -275,7 +275,7 @@ public class RoomUING extends JApplet {
 
     /**
      * This method initializes scrollGame
-     * 
+     *
      * @return javax.swing.JScrollPane
      */
     private JScrollPane getScrollGame() {
@@ -288,7 +288,7 @@ public class RoomUING extends JApplet {
 
     /**
      * This method initializes tableGame
-     * 
+     *
      * @return py.edu.uca.fcyt.toluca.guinicio.TableGame
      */
     public TableGame getTableGame() {
@@ -300,12 +300,12 @@ public class RoomUING extends JApplet {
 
     /**
      * This method initializes panelSur
-     * 
+     *
      * @return javax.swing.JPanel
      */
     private JPanel getPanelSur() {
         if (panelSur == null) {
-            Dimension dim = new Dimension(300,180);
+            Dimension dim = new Dimension(300, 180);
             panelSur = new JPanel();
             panelSur.setMinimumSize(dim);
             panelSur.setPreferredSize(dim);
@@ -322,7 +322,7 @@ public class RoomUING extends JApplet {
 
     /**
      * This method initializes chatPanel
-     * 
+     *
      * @return py.edu.uca.fcyt.game.ChatPanel
      */
     public ChatPanel getChatPanel() {
@@ -334,7 +334,7 @@ public class RoomUING extends JApplet {
 
     /**
      * This method initializes jScrollPane
-     * 
+     *
      * @return javax.swing.JScrollPane
      */
     private JScrollPane getJScrollPane() {
@@ -348,7 +348,7 @@ public class RoomUING extends JApplet {
 
     /**
      * This method initializes tableRanking
-     * 
+     *
      * @return py.edu.uca.fcyt.toluca.guinicio.TableRanking
      */
     public TableRanking getTableRanking() {
@@ -360,7 +360,7 @@ public class RoomUING extends JApplet {
 
     /**
      * This method initializes jEPanuncios
-     * 
+     *
      * @return javax.swing.JTextArea
      */
     public JEditorPane getJEPanuncios() {
@@ -382,7 +382,7 @@ public class RoomUING extends JApplet {
 
     /**
      * This method initializes jPanel
-     * 
+     *
      * @return javax.swing.JPanel
      */
     private JPanel getJPanel() {
@@ -397,7 +397,7 @@ public class RoomUING extends JApplet {
 
     /**
      * This method initializes conexionTestPanel
-     * 
+     *
      * @return py.edu.uca.fcyt.toluca.guinicio.ConexionTestPanel
      */
     private ConexionTestPanel getConexionTestPanel() {
@@ -409,7 +409,7 @@ public class RoomUING extends JApplet {
 
     /**
      * This method initializes jPanel1
-     * 
+     *
      * @return javax.swing.JPanel
      */
     private JPanel getJPanel1() {
@@ -439,7 +439,7 @@ public class RoomUING extends JApplet {
 
     /**
      * This method initializes this
-     * 
+     *
      * @return void
      */
     public void init() {
@@ -497,7 +497,7 @@ public class RoomUING extends JApplet {
 
     /**
      * This method initializes jProomPanel
-     * 
+     *
      * @return javax.swing.JPanel
      */
     private JPanel getRoomPanel() {
@@ -559,7 +559,7 @@ public class RoomUING extends JApplet {
     }
 
     public void login() {
-
+        logger.debug("Login [!!]");
         // El login lo escribo por n-sima vez - CVS urgeeeeente!
         py.edu.uca.fcyt.util.LoginDialog ld = new py.edu.uca.fcyt.util.LoginDialog(
                 JOptionPane.getRootFrame(), true);
@@ -590,15 +590,14 @@ public class RoomUING extends JApplet {
     }
 
     /**
-     * @param chatPanel
-     *            The chatPanel to set.
+     * @param chatPanel The chatPanel to set.
      */
     public void setChatPanel(ChatPanel chatPanel) {
         this.chatPanel = chatPanel;
     }
 
     public void setOwner(TrucoPlayer trucoPlayer) {
-
+        logger.debug("Set Owner [" + trucoPlayer.getName() + "]");
         panelTitle.setNombre(trucoPlayer.getName());
     }
 
@@ -627,6 +626,7 @@ public class RoomUING extends JApplet {
      * @param player
      */
     public void loginCompleted(TrucoPlayer player) {
+        logger.debug("LoginCompleted [" + player + "]");
         TrucoPlayer tp = new TrucoPlayer("macho");
         getContentPane().removeAll();
         getContentPane().add(getRoomPanel());
