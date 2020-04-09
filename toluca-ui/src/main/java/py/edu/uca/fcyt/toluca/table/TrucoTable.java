@@ -32,9 +32,12 @@ import py.edu.uca.fcyt.toluca.guinicio.ConexionTestPanel;
 import py.edu.uca.fcyt.toluca.guinicio.TableRanking;
 
 import javax.swing.JEditorPane;
-/** Panel principal de juego */
+
+/**
+ * Panel principal de juego
+ */
 public class TrucoTable extends JPanel implements ComponentListener {
-    
+
     private SimpleAttributeSet style = new SimpleAttributeSet();
     public static final int BUTTON_INICIAR_OK = 0;
 
@@ -46,8 +49,8 @@ public class TrucoTable extends JPanel implements ComponentListener {
 
     //	protected PlayTable pTable;
 
-    protected JButton[] buttons = new JButton[] { new JButton("Iniciar"),
-            new JButton("Ayuda") };
+    protected JButton[] buttons = new JButton[]{new JButton("Iniciar"),
+            new JButton("Ayuda")};
 
     protected JLabel jlSaying;
 
@@ -79,8 +82,9 @@ public class TrucoTable extends JPanel implements ComponentListener {
 
     private JPanel logChatPanel;
 
-	private JScrollPane jScrollPane1 = null;
-	private JEditorPane jEditorPane = null;  //  @jve:decl-index=0:
+    private JScrollPane jScrollPane1 = null;
+    private JEditorPane jEditorPane = null;  //  @jve:decl-index=0:
+
     /**
      * Construye un TrucoTable con ptListener como listener de eventos de la
      * mesa
@@ -92,7 +96,7 @@ public class TrucoTable extends JPanel implements ComponentListener {
 
     /**
      * This method initializes this
-     * 
+     *
      * @return void
      */
     private void initialize() {
@@ -109,16 +113,15 @@ public class TrucoTable extends JPanel implements ComponentListener {
      * @return
      */
     private JPanel getLogChatPanel() {
-        if(logChatPanel == null)
-        {
-            Dimension dim = new Dimension(240,100);
+        if (logChatPanel == null) {
+            Dimension dim = new Dimension(240, 100);
             logChatPanel = new JPanel();
             logChatPanel.setMaximumSize(dim);
             logChatPanel.setMinimumSize(dim);
             logChatPanel.setPreferredSize(dim);
             logChatPanel.setLayout(new BoxLayout(logChatPanel, BoxLayout.X_AXIS));
             logChatPanel.add(getJScrollPane1(), null);
-            logChatPanel.add(getChatPanel(), null);            
+            logChatPanel.add(getChatPanel(), null);
         }
         return logChatPanel;
     }
@@ -139,7 +142,7 @@ public class TrucoTable extends JPanel implements ComponentListener {
     }
 
     /**
-     *  
+     *
      */
     void inicializar() {
         //      crea los componentes
@@ -224,7 +227,7 @@ public class TrucoTable extends JPanel implements ComponentListener {
         getChatPanel().setCpc(table);
         getChatPanel().setPlayer(table.getPlayer());
         getJpLeftPanel().add(getJBinvitar());
-        getJpLeftPanel().add(actions = new Actions(buttons, table, table));        
+        getJpLeftPanel().add(actions = new Actions(buttons, table, table));
         //        ((TableRanking)getTableRanking()).setTable(table);
     }
 
@@ -232,7 +235,7 @@ public class TrucoTable extends JPanel implements ComponentListener {
      * @return
      */
     JButton getJBinvitar() {
-        if (jBinvitar == null) {            
+        if (jBinvitar == null) {
             jBinvitar = new JButton();
             jBinvitar.setText("Invitar");
             jBinvitar.addActionListener(new ActionListener() {
@@ -254,13 +257,12 @@ public class TrucoTable extends JPanel implements ComponentListener {
      */
     protected void jBinvitarActionPerformed(ActionEvent e) {
         TrucoPlayer tp = getTable().getRoom().getRoomUING().selectUserFromList();
-        if(tp != null)
+        if (tp != null)
             sendInvitation(tp);
     }
 
     /**
      * @param tp
-     * 
      */
     private void sendInvitation(TrucoPlayer tp) {
         //TODO enviar el pacochi. Debe contener el player que invita
@@ -279,7 +281,7 @@ public class TrucoTable extends JPanel implements ComponentListener {
 
     /**
      * This method initializes playTable
-     * 
+     *
      * @return py.edu.uca.fcyt.toluca.table.PlayTable
      */
     public PlayTable getPlayTable() {
@@ -291,7 +293,7 @@ public class TrucoTable extends JPanel implements ComponentListener {
 
     /**
      * This method initializes chatPanel
-     * 
+     *
      * @return py.edu.uca.fcyt.game.ChatPanel
      */
     public ChatPanel getChatPanel() {
@@ -304,7 +306,7 @@ public class TrucoTable extends JPanel implements ComponentListener {
 
     /**
      * This method initializes jPanel
-     * 
+     *
      * @return javax.swing.JPanel
      */
     private JPanel getJpLeftPanel() {
@@ -321,7 +323,7 @@ public class TrucoTable extends JPanel implements ComponentListener {
 
     /**
      * This method initializes jPanel
-     * 
+     *
      * @return javax.swing.JPanel
      */
     private JPanel getJpCantos() {
@@ -339,7 +341,7 @@ public class TrucoTable extends JPanel implements ComponentListener {
 
     /**
      * This method initializes jScrollPane
-     * 
+     *
      * @return javax.swing.JScrollPane
      */
     private JScrollPane getJScrollPane() {
@@ -352,7 +354,7 @@ public class TrucoTable extends JPanel implements ComponentListener {
 
     /**
      * This method initializes tableRanking
-     * 
+     *
      * @return py.edu.uca.fcyt.toluca.guinicio.TableRanking
      */
     TableRanking getTableRanking() {
@@ -380,7 +382,7 @@ public class TrucoTable extends JPanel implements ComponentListener {
 
     /**
      * This method initializes jPanel
-     * 
+     *
      * @return javax.swing.JPanel
      */
     private JPanel getJPmedio() {
@@ -396,7 +398,7 @@ public class TrucoTable extends JPanel implements ComponentListener {
 
     /**
      * This method initializes jPanel
-     * 
+     *
      * @return javax.swing.JPanel
      */
     public JPanel getJPbotonesJugadas() {
@@ -406,13 +408,15 @@ public class TrucoTable extends JPanel implements ComponentListener {
             jPbotonesJugadas = new JPanel() {
                 /*
                  * (non-Javadoc)
-                 * 
+                 *
                  * @see java.awt.Component#repaint()
                  */
                 public void repaint() {
                     // TODO Auto-generated method stub
                     super.repaint();
-                    validateTree();
+                    synchronized (getTreeLock()) {
+                        validateTree();
+                    }
                 }
             };
             jPbotonesJugadas.setLayout(gridLayout1);
@@ -440,7 +444,7 @@ public class TrucoTable extends JPanel implements ComponentListener {
 
     /**
      * This method initializes jPanel
-     * 
+     *
      * @return javax.swing.JPanel
      */
     private JPanel getJPanel() {
@@ -455,7 +459,7 @@ public class TrucoTable extends JPanel implements ComponentListener {
 
     /**
      * This method initializes conexionTestPanel
-     * 
+     *
      * @return py.edu.uca.fcyt.toluca.guinicio.ConexionTestPanel
      */
     private ConexionTestPanel getConexionTestPanel() {
@@ -486,74 +490,73 @@ public class TrucoTable extends JPanel implements ComponentListener {
         jf.getContentPane().add(ip);
         ip.setDialog(jf);
         jf.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        jf.setSize(300,200);
+        jf.setSize(300, 200);
         jf.setVisible(true);
     }
-	/**
-	 * This method initializes jScrollPane1	
-	 * 	
-	 * @return javax.swing.JScrollPane	
-	 */    
-	private JScrollPane getJScrollPane1() {
-		if (jScrollPane1 == null) {
-			jScrollPane1 = new JScrollPane();
-			jScrollPane1.setViewportView(getJEditorPane());
-			jScrollPane1.setBorder(BorderFactory.createTitledBorder(null, "Informaciones del Juego", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, null));
-	}
-		return jScrollPane1;
-	}
-	/**
-	 * This method initializes jEditorPane	
-	 * 	
-	 * @return javax.swing.JEditorPane	
-	 */    
-	private JEditorPane getJEditorPane() {
-		if (jEditorPane == null) {
-			jEditorPane = new JEditorPane();
+
+    /**
+     * This method initializes jScrollPane1
+     *
+     * @return javax.swing.JScrollPane
+     */
+    private JScrollPane getJScrollPane1() {
+        if (jScrollPane1 == null) {
+            jScrollPane1 = new JScrollPane();
+            jScrollPane1.setViewportView(getJEditorPane());
+            jScrollPane1.setBorder(BorderFactory.createTitledBorder(null, "Informaciones del Juego", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, null));
+        }
+        return jScrollPane1;
+    }
+
+    /**
+     * This method initializes jEditorPane
+     *
+     * @return javax.swing.JEditorPane
+     */
+    private JEditorPane getJEditorPane() {
+        if (jEditorPane == null) {
+            jEditorPane = new JEditorPane();
 //			jEditorPane.setEditorKit(new HTMLEditorKit());
-			jEditorPane.setPreferredSize(new Dimension(240,100));
-			jEditorPane.setFont(new java.awt.Font("Dialog", java.awt.Font.PLAIN, 10));
-		}
-		return jEditorPane;
-	}
-	public void addLog(TrucoPlayer player, int team, String htmlMessage)
-	{
-	    String msg = player.getName() + "(" + (team == TrucoTeam.ROJO ? "Rojo): " : "Azul): ") + htmlMessage + "\n";
-		appendLog(msg);
-	}
+            jEditorPane.setPreferredSize(new Dimension(240, 100));
+            jEditorPane.setFont(new java.awt.Font("Dialog", java.awt.Font.PLAIN, 10));
+        }
+        return jEditorPane;
+    }
+
+    public void addLog(TrucoPlayer player, int team, String htmlMessage) {
+        String msg = player.getName() + "(" + (team == TrucoTeam.ROJO ? "Rojo): " : "Azul): ") + htmlMessage + "\n";
+        appendLog(msg);
+    }
 
     /**
      * @param msg
      */
     private void appendLog(String msg) {
-        try
-		{
-			String s = getJEditorPane().getDocument().getText(0,getJEditorPane().getDocument().getLength());
-			int d1 = s.length();
-			getJEditorPane().getDocument().insertString(getJEditorPane().getDocument().getLength(), msg, style);
-			getJEditorPane().setEditable(true);
-			
-			getJEditorPane().setEditable(false);
-			// Temporary patch code.
-			getJEditorPane().getDocument().insertString(getJEditorPane().getDocument().getLength(), "", style);
-			getJEditorPane().setCaretPosition(getJEditorPane().getDocument().getLength());
-		}
-		catch(Exception e)
-		{
-			System.out.println(e.getMessage());
-		}
+        try {
+            String s = getJEditorPane().getDocument().getText(0, getJEditorPane().getDocument().getLength());
+            int d1 = s.length();
+            getJEditorPane().getDocument().insertString(getJEditorPane().getDocument().getLength(), msg, style);
+            getJEditorPane().setEditable(true);
+
+            getJEditorPane().setEditable(false);
+            // Temporary patch code.
+            getJEditorPane().getDocument().insertString(getJEditorPane().getDocument().getLength(), "", style);
+            getJEditorPane().setCaretPosition(getJEditorPane().getDocument().getLength());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
-     * 
+     *
      */
     public void startGame() {
         appendLog("------------------------\n");
-        appendLog(new Date().toString() + ": Nuevo Juego\n" );
+        appendLog(new Date().toString() + ": Nuevo Juego\n");
     }
-    
-    public void endOfGame() {        
-        appendLog(new Date().toString() + ": Fin del Juego\n" );
+
+    public void endOfGame() {
+        appendLog(new Date().toString() + ": Fin del Juego\n");
     }
 
     /**
@@ -562,5 +565,5 @@ public class TrucoTable extends JPanel implements ComponentListener {
     public void addSystemLog(String string) {
         appendLog(string);
     }
-		
-  }
+
+}

@@ -103,6 +103,27 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
         roomEvent.getPlayer().setId(trucoPrincipal.getUsername());
         roomEvent.setTablesServers(new TableServer[0]);
         getEventDispatcher().loginCompleted(roomEvent);
+        /// join users
+        {
+            RoomEvent joinUser = new RoomEvent();
+            joinUser.setType(RoomEvent.TYPE_PLAYER_JOINED);
+            joinUser.setPlayer(new TrucoPlayer());
+            joinUser.getPlayer().setName("sricco");
+            joinUser.getPlayer().setId("sricco");
+            getEventDispatcher().dispatchEvent(joinUser);
+        }
+        /// addTable
+        {
+            RoomEvent table = new RoomEvent();
+            table.setTableServer(new TableServer());
+            table.getTableServer().setHost(new TrucoPlayer());
+            table.getTableServer().getHost().setName("sricco");
+            table.setType(RoomEvent.TYPE_TABLE_CREATED);
+            table.setGamePoints(30);
+            table.setPlayers(new LinkedHashMap());
+            getEventDispatcher().dispatchEvent(table);
+        }
+
         logger.debug("Client connected to Websocket");
         // Notify
 
