@@ -1,7 +1,7 @@
 version: '2'
 services:
     rabbitmq:
-          image: paragon-rabbitmq
+          image: rabbitmq-truco
           container_name: rabbitmq-truco
 
           ports:
