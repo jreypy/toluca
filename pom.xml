@@ -15,6 +15,7 @@
         <module>toluca-registry</module>
         <module>toluca-gateway</module>
         <module>toluca-server</module>
+        <module>truco-websocket</module>
     </modules>
 
 </project>
