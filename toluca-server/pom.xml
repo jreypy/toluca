@@ -9,8 +9,8 @@
     <version>2.0.0</version>
     <packaging>jar</packaging>
 
-    <name>gamification-v10</name>
-    <description>Social Multiplication App - Gamification (Microservices - the Practical Way book)</description>
+    <name>Truco Server</name>
+    <description>Truco Server</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
