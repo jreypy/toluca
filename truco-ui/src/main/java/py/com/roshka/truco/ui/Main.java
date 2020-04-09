@@ -10,6 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
         BasicConfigurator.configure();
+
         logger.debug("Starting JFrame");
 
         Runnable r = new Runnable() {

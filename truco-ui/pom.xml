@@ -15,6 +15,13 @@
             <artifactId>toluca-ui</artifactId>
             <version>2.0.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>py.edu.uca</groupId>
+            <artifactId>truco-client</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
     </dependencies>
 
 
