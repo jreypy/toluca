@@ -528,7 +528,7 @@ public class TableServer implements TrucoListener, ChatPanelContainer {
     public String toString2() {
         String ret = new String();
 
-        TrucoGame tg = getTrucoGame();
+        TrucoGameServer tg = getTrucoGame();
         try {
             Iterator it = tg.getListaListeners().iterator();
 

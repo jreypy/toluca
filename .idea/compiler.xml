@@ -14,7 +14,6 @@
         <module name="toluca-gateway" />
         <module name="toluca-registry" />
         <module name="toluca-server" />
-        <module name="toluca-table-ui" />
         <module name="toluca-ui" />
         <module name="truco-websocket" />
       </profile>
@@ -23,6 +22,7 @@
       <module name="toluca-gui" target="1.5" />
       <module name="toluca-net" target="1.5" />
       <module name="toluca-room" target="1.5" />
+      <module name="toluca-table-ui" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>
