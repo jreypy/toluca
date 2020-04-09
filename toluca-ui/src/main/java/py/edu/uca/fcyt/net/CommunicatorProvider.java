@@ -7,7 +7,7 @@ import java.io.IOException;
 public class CommunicatorProvider {
 
     // Default behaviour
-    static Class intanceType = CommunicatorClientImpl.class;
+    public static Class intanceType = CommunicatorClientImpl.class;
     static CommunicatorClient instance = null;
 
 

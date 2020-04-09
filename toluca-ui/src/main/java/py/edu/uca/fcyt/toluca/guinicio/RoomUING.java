@@ -631,11 +631,19 @@ public class RoomUING extends JApplet {
         getContentPane().removeAll();
         getContentPane().add(getRoomPanel());
         setOwner(player);
-        validateTree();
+        synchronized (getTreeLock()) {
+            validateTree();
+        }
         getChatPanel()
                 .showSystemMessage("Para iniciar un juego presiona \"Crear Mesa\" y sientate en un cuadro Libre", null);
         getChatPanel()
                 .showSystemMessage("Para unirte a una mesa seleciona una de la tabla del medio y presiona \"Unirse\"", null);
+
+        panelUpdated();
+    }
+
+    public void panelUpdated() {
+        logger.debug("Panel updated");
     }
 
     public void actualzarRanking(TrucoPlayer trucoPlayer) {

@@ -17,7 +17,7 @@ public class Main {
             public void run() {
                 JFrame f = new JFrame("Truco");
                 f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                f.add(new TrucoFrame().getContentPane());
+                f.add(new TrucoFrame(f).getContentPane());
                 f.pack();
                 f.setLocationByPlatform(true);
                 f.setVisible(true);
