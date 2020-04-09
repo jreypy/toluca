@@ -5,6 +5,7 @@ Connect to Websocket
 -----
     $ wscat -c ws://localhost:8050/ws -H 'Authentication: 1234'
 
+
 Commands
 --------
 

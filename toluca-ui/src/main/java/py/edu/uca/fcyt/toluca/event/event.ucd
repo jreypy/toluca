@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editmodel:ClassDiagramEditModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:editmodel="editmodel.xmi" size="466,1646" id="REICHUPABLOJAVIERTolucaFresco65" metadata="nsuml-1.4" initialized="true" showWireOptions="1">
+  <children xsi:type="editmodel:ClassEditModel" location="50,1401" size="165,211" id="REICHUPABLOJAVIERTolucaFresco66" runTimeClassModel="REICHUPABLOJAVIERTolucaFresco107;REICHUPABLOJAVIERTolucaFresco118;REICHUPABLOJAVIERTolucaFresco85;REICHUPABLOJAVIERTolucaFresco97;REICHUPABLOJAVIERTolucaFresco128;REICHUPABLOJAVIERTolucaFresco134;REICHUPABLOJAVIERTolucaFresco157;REICHUPABLOJAVIERTolucaFresco140;REICHUPABLOJAVIERTolucaFresco75;REICHUPABLOJAVIERTolucaFresco101;REICHUPABLOJAVIERTolucaFresco91;REICHUPABLOJAVIERTolucaFresco143;REICHUPABLOJAVIERTolucaFresco165;REICHUPABLOJAVIERTolucaFresco81;REICHUPABLOJAVIERTolucaFresco67;REICHUPABLOJAVIERTolucaFresco87;REICHUPABLOJAVIERTolucaFresco155;REICHUPABLOJAVIERTolucaFresco149;REICHUPABLOJAVIERTolucaFresco77;REICHUPABLOJAVIERTolucaFresco71;REICHUPABLOJAVIERTolucaFresco111;REICHUPABLOJAVIERTolucaFresco99;REICHUPABLOJAVIERTolucaFresco93;REICHUPABLOJAVIERTolucaFresco147;REICHUPABLOJAVIERTolucaFresco161;REICHUPABLOJAVIERTolucaFresco169;REICHUPABLOJAVIERTolucaFresco69;REICHUPABLOJAVIERTolucaFresco79;REICHUPABLOJAVIERTolucaFresco102;REICHUPABLOJAVIERTolucaFresco83;REICHUPABLOJAVIERTolucaFresco153;REICHUPABLOJAVIERTolucaFresco105;REICHUPABLOJAVIERTolucaFresco89;REICHUPABLOJAVIERTolucaFresco151;REICHUPABLOJAVIERTolucaFresco137;REICHUPABLOJAVIERTolucaFresco132;REICHUPABLOJAVIERTolucaFresco167;REICHUPABLOJAVIERTolucaFresco171;REICHUPABLOJAVIERTolucaFresco110;REICHUPABLOJAVIERTolucaFresco95;REICHUPABLOJAVIERTolucaFresco73;REICHUPABLOJAVIERTolucaFresco159;REICHUPABLOJAVIERTolucaFresco130;REICHUPABLOJAVIERTolucaFresco125">
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="142,162">
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco118"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco111"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco132"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco125"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco130"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco155"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco128"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco165"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco161"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showPublicMethods="true" showPackageMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" location="50,582" size="161,769" id="REICHUPABLOJAVIERTolucaFresco205" runTimeClassModel="REICHUPABLOJAVIERTolucaFresco422;REICHUPABLOJAVIERTolucaFresco266;REICHUPABLOJAVIERTolucaFresco258;REICHUPABLOJAVIERTolucaFresco414;REICHUPABLOJAVIERTolucaFresco236;REICHUPABLOJAVIERTolucaFresco337;REICHUPABLOJAVIERTolucaFresco280;REICHUPABLOJAVIERTolucaFresco214;REICHUPABLOJAVIERTolucaFresco224;REICHUPABLOJAVIERTolucaFresco270;REICHUPABLOJAVIERTolucaFresco246;REICHUPABLOJAVIERTolucaFresco299;REICHUPABLOJAVIERTolucaFresco381;REICHUPABLOJAVIERTolucaFresco404;REICHUPABLOJAVIERTolucaFresco318;REICHUPABLOJAVIERTolucaFresco264;REICHUPABLOJAVIERTolucaFresco256;REICHUPABLOJAVIERTolucaFresco416;REICHUPABLOJAVIERTolucaFresco212;REICHUPABLOJAVIERTolucaFresco286;REICHUPABLOJAVIERTolucaFresco418;REICHUPABLOJAVIERTolucaFresco289;REICHUPABLOJAVIERTolucaFresco379;REICHUPABLOJAVIERTolucaFresco394;REICHUPABLOJAVIERTolucaFresco222;REICHUPABLOJAVIERTolucaFresco407;REICHUPABLOJAVIERTolucaFresco424;REICHUPABLOJAVIERTolucaFresco368;REICHUPABLOJAVIERTolucaFresco220;REICHUPABLOJAVIERTolucaFresco242;REICHUPABLOJAVIERTolucaFresco349;REICHUPABLOJAVIERTolucaFresco284;REICHUPABLOJAVIERTolucaFresco208;REICHUPABLOJAVIERTolucaFresco305;REICHUPABLOJAVIERTolucaFresco399;REICHUPABLOJAVIERTolucaFresco262;REICHUPABLOJAVIERTolucaFresco377;REICHUPABLOJAVIERTolucaFresco228;REICHUPABLOJAVIERTolucaFresco210;REICHUPABLOJAVIERTolucaFresco240;REICHUPABLOJAVIERTolucaFresco295;REICHUPABLOJAVIERTolucaFresco254;REICHUPABLOJAVIERTolucaFresco420;REICHUPABLOJAVIERTolucaFresco216;REICHUPABLOJAVIERTolucaFresco238;REICHUPABLOJAVIERTolucaFresco397;REICHUPABLOJAVIERTolucaFresco268;REICHUPABLOJAVIERTolucaFresco361;REICHUPABLOJAVIERTolucaFresco412;REICHUPABLOJAVIERTolucaFresco282;REICHUPABLOJAVIERTolucaFresco294;REICHUPABLOJAVIERTolucaFresco383;REICHUPABLOJAVIERTolucaFresco300;REICHUPABLOJAVIERTolucaFresco402;REICHUPABLOJAVIERTolucaFresco310;REICHUPABLOJAVIERTolucaFresco288;REICHUPABLOJAVIERTolucaFresco250;REICHUPABLOJAVIERTolucaFresco287;REICHUPABLOJAVIERTolucaFresco329;REICHUPABLOJAVIERTolucaFresco303;REICHUPABLOJAVIERTolucaFresco234;REICHUPABLOJAVIERTolucaFresco301;REICHUPABLOJAVIERTolucaFresco244;REICHUPABLOJAVIERTolucaFresco293;REICHUPABLOJAVIERTolucaFresco278;REICHUPABLOJAVIERTolucaFresco389;REICHUPABLOJAVIERTolucaFresco343;REICHUPABLOJAVIERTolucaFresco276;REICHUPABLOJAVIERTolucaFresco391;REICHUPABLOJAVIERTolucaFresco375;REICHUPABLOJAVIERTolucaFresco218;REICHUPABLOJAVIERTolucaFresco325;REICHUPABLOJAVIERTolucaFresco232;REICHUPABLOJAVIERTolucaFresco274;REICHUPABLOJAVIERTolucaFresco302;REICHUPABLOJAVIERTolucaFresco386;REICHUPABLOJAVIERTolucaFresco410;REICHUPABLOJAVIERTolucaFresco252;REICHUPABLOJAVIERTolucaFresco206;REICHUPABLOJAVIERTolucaFresco230;REICHUPABLOJAVIERTolucaFresco260;REICHUPABLOJAVIERTolucaFresco226;REICHUPABLOJAVIERTolucaFresco248;REICHUPABLOJAVIERTolucaFresco297;REICHUPABLOJAVIERTolucaFresco354;REICHUPABLOJAVIERTolucaFresco272">
+    <children xsi:type="editmodel:CompartmentEditModel" size="97,108">
+      <children xsi:type="editmodel:AttributeEditModel" id="REICHUPABLOJAVIERTolucaFresco299"/>
+      <children xsi:type="editmodel:AttributeEditModel" id="REICHUPABLOJAVIERTolucaFresco297"/>
+      <children xsi:type="editmodel:AttributeEditModel" id="REICHUPABLOJAVIERTolucaFresco294"/>
+      <children xsi:type="editmodel:AttributeEditModel" id="REICHUPABLOJAVIERTolucaFresco302"/>
+      <children xsi:type="editmodel:AttributeEditModel" id="REICHUPABLOJAVIERTolucaFresco301"/>
+      <children xsi:type="editmodel:AttributeEditModel" id="REICHUPABLOJAVIERTolucaFresco300"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="138,612">
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco337"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco329"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco305"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco361"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco343"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco354"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco318"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco325"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco349"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco368"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco310"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco303"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco389"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco383"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco377"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco397"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco410"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco375"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco424"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco379"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco381"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco402"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco386"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco391"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco407"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco394"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco399"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco404"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco422"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco414"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco416"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco420"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco418"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco412"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showPublicMethods="true" showPackageMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" location="261,582" size="135,499" id="REICHUPABLOJAVIERTolucaFresco480" runTimeClassModel="REICHUPABLOJAVIERTolucaFresco648;REICHUPABLOJAVIERTolucaFresco637;REICHUPABLOJAVIERTolucaFresco615;REICHUPABLOJAVIERTolucaFresco621;REICHUPABLOJAVIERTolucaFresco594;REICHUPABLOJAVIERTolucaFresco572;REICHUPABLOJAVIERTolucaFresco567;REICHUPABLOJAVIERTolucaFresco653;REICHUPABLOJAVIERTolucaFresco559;REICHUPABLOJAVIERTolucaFresco588;REICHUPABLOJAVIERTolucaFresco643;REICHUPABLOJAVIERTolucaFresco629;REICHUPABLOJAVIERTolucaFresco651;REICHUPABLOJAVIERTolucaFresco640;REICHUPABLOJAVIERTolucaFresco595;REICHUPABLOJAVIERTolucaFresco562;REICHUPABLOJAVIERTolucaFresco600;REICHUPABLOJAVIERTolucaFresco596;REICHUPABLOJAVIERTolucaFresco574;REICHUPABLOJAVIERTolucaFresco582;REICHUPABLOJAVIERTolucaFresco563;REICHUPABLOJAVIERTolucaFresco632;REICHUPABLOJAVIERTolucaFresco560;REICHUPABLOJAVIERTolucaFresco590;REICHUPABLOJAVIERTolucaFresco618;REICHUPABLOJAVIERTolucaFresco613;REICHUPABLOJAVIERTolucaFresco598;REICHUPABLOJAVIERTolucaFresco608;REICHUPABLOJAVIERTolucaFresco584;REICHUPABLOJAVIERTolucaFresco646;REICHUPABLOJAVIERTolucaFresco624;REICHUPABLOJAVIERTolucaFresco576;REICHUPABLOJAVIERTolucaFresco634;REICHUPABLOJAVIERTolucaFresco658;REICHUPABLOJAVIERTolucaFresco592;REICHUPABLOJAVIERTolucaFresco580;REICHUPABLOJAVIERTolucaFresco586;REICHUPABLOJAVIERTolucaFresco557;REICHUPABLOJAVIERTolucaFresco611;REICHUPABLOJAVIERTolucaFresco656;REICHUPABLOJAVIERTolucaFresco627;REICHUPABLOJAVIERTolucaFresco568;REICHUPABLOJAVIERTolucaFresco578;REICHUPABLOJAVIERTolucaFresco603;REICHUPABLOJAVIERTolucaFresco606;REICHUPABLOJAVIERTolucaFresco570;REICHUPABLOJAVIERTolucaFresco558">
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="112,450">
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco596"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco621"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco637"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco640"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco627"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco606"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco651"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco613"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco646"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco656"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco632"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco598"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco611"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco624"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco643"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco629"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco603"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco653"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco618"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco615"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco648"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco658"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco634"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco600"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco608"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showPublicMethods="true" showPackageMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true"/>
+  </children>
+  <children xsi:type="editmodel:InterfaceEditModel" location="265,1401" size="154,225" id="REICHUPABLOJAVIERTolucaFresco688" runTimeClassModel="REICHUPABLOJAVIERTolucaFresco690;REICHUPABLOJAVIERTolucaFresco702;REICHUPABLOJAVIERTolucaFresco708;REICHUPABLOJAVIERTolucaFresco696;REICHUPABLOJAVIERTolucaFresco699;REICHUPABLOJAVIERTolucaFresco705;REICHUPABLOJAVIERTolucaFresco711;REICHUPABLOJAVIERTolucaFresco693;REICHUPABLOJAVIERTolucaFresco714">
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="131,162">
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco702"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco711"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco699"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco708"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco714"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco705"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco690"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco693"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco696"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showPublicMethods="true" showPackageMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true"/>
+  </children>
+  <children xsi:type="editmodel:InterfaceEditModel" location="50,235" size="152,297" id="REICHUPABLOJAVIERTolucaFresco513" runTimeClassModel="REICHUPABLOJAVIERTolucaFresco545;REICHUPABLOJAVIERTolucaFresco515;REICHUPABLOJAVIERTolucaFresco539;REICHUPABLOJAVIERTolucaFresco518;REICHUPABLOJAVIERTolucaFresco542;REICHUPABLOJAVIERTolucaFresco548;REICHUPABLOJAVIERTolucaFresco521;REICHUPABLOJAVIERTolucaFresco551;REICHUPABLOJAVIERTolucaFresco524;REICHUPABLOJAVIERTolucaFresco527;REICHUPABLOJAVIERTolucaFresco536;REICHUPABLOJAVIERTolucaFresco530;REICHUPABLOJAVIERTolucaFresco533">
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="129,234">
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco521"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco515"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco518"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco530"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco533"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco536"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco542"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco539"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco524"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco527"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco551"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco545"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco548"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" targetConnections="//@children.6/@sourceConnections.0" connectionRouterKind="GeneralizationManhattan" source="//@children.4" target="//@children.5" targetEnd="//@children.4/@sourceConnections.0/@children.1" sourceEnd="//@children.4/@sourceConnections.0/@children.0">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="76,0" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="85,135" anchorKind="FixedAtEdge"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showPublicMethods="true" showPackageMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true"/>
+  </children>
+  <children xsi:type="editmodel:InterfaceEditModel" location="134,50" size="171,135" targetConnections="//@children.4/@sourceConnections.0" id="REICHUPABLOJAVIERTolucaFresco450" runTimeClassModel="REICHUPABLOJAVIERTolucaFresco465;REICHUPABLOJAVIERTolucaFresco458;REICHUPABLOJAVIERTolucaFresco452;REICHUPABLOJAVIERTolucaFresco455">
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="148,72">
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco458"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco465"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco452"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco455"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showPublicMethods="true" showPackageMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true"/>
+  </children>
+  <children xsi:type="editmodel:InterfaceEditModel" location="232,235" size="163,243" id="REICHUPABLOJAVIERTolucaFresco477" runTimeClassModel="REICHUPABLOJAVIERTolucaFresco495;REICHUPABLOJAVIERTolucaFresco498;REICHUPABLOJAVIERTolucaFresco479;REICHUPABLOJAVIERTolucaFresco507;REICHUPABLOJAVIERTolucaFresco504;REICHUPABLOJAVIERTolucaFresco486;REICHUPABLOJAVIERTolucaFresco501;REICHUPABLOJAVIERTolucaFresco489;REICHUPABLOJAVIERTolucaFresco492;REICHUPABLOJAVIERTolucaFresco483">
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="140,180">
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco492"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco498"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco504"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco501"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco507"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco479"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco495"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco489"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco486"/>
+      <children xsi:type="editmodel:MethodEditModel" id="REICHUPABLOJAVIERTolucaFresco483"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" connectionRouterKind="Manual" source="//@children.6" target="//@children.4/@sourceConnections.0" targetEnd="//@children.6/@sourceConnections.0/@children.1" sourceEnd="//@children.6/@sourceConnections.0/@children.0">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="81,0" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showPublicMethods="true" showPackageMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true"/>
+  </children>
+  <classDiagramPreferences xsi:type="editmodel:UMLClassDiagramPreference" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showPublicMethods="true" showPackageMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showInterfaceStereotype="true" showClassStereotype="true" showPackageStereotype="true"/>
+</editmodel:ClassDiagramEditModel>

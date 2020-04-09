@@ -1,0 +1,16 @@
+// I have protected
+
+public TrucoCard(int kind, int value) {
+	super(kind, value);
+	agregarValor(kind,value);
+}
+
+	public TrucoCard(int kind, int value) {
+		super(kind, value);
+		agregarValor();
+	}
+	
+/*	public TrucoCard () 
+	{
+		super();
+	}	*/

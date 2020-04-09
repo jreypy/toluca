@@ -13,6 +13,8 @@
         <option value="$PROJECT_DIR$/truco-websocket/pom.xml" />
         <option value="$PROJECT_DIR$/toluca-gateway/pom.xml" />
         <option value="$PROJECT_DIR$/toluca-registry/pom.xml" />
+        <option value="$PROJECT_DIR$/toluca-ui/pom.xml" />
+        <option value="$PROJECT_DIR$/toluca-chat/pom.xml" />
       </list>
     </option>
   </component>
