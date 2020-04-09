@@ -2,6 +2,7 @@ package py.edu.uca.fcyt.toluca.game.ui;
 
 import org.apache.log4j.Logger;
 import py.edu.uca.fcyt.game.Card;
+import py.edu.uca.fcyt.toluca.RoomServer;
 import py.edu.uca.fcyt.toluca.event.TrucoEvent;
 import py.edu.uca.fcyt.toluca.event.TrucoListener;
 import py.edu.uca.fcyt.toluca.game.*;
@@ -298,9 +299,9 @@ public class TPlayer extends JFrame
     }
 
     private ImageIcon getImage(String image) throws Exception {
-        String spec = "images/" + image;
+        String spec = "py/edu/uca/fcyt/toluca/images/" + image;
         try {
-            URL url = TPlayer.class.getClassLoader().getResource(spec);
+            URL url = RoomServer.class.getClassLoader().getResource(spec);
             return new ImageIcon(url);
         } catch (Exception e) {
             logger.error("Error getting image [" + spec + "]");
