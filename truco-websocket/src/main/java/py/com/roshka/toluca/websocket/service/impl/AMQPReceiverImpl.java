@@ -15,6 +15,7 @@ import py.com.roshka.toluca.websocket.service.TrucoRoomListener;
 import py.com.roshka.truco.api.Event;
 import py.com.roshka.truco.api.RabbitResponse;
 import py.com.roshka.truco.api.TrucoRoom;
+import py.com.roshka.truco.api.TrucoRoomEvent;
 
 @Component
 public class AMQPReceiverImpl implements AMQPReceiver {
@@ -48,6 +49,7 @@ public class AMQPReceiverImpl implements AMQPReceiver {
 
         if (Event.ROOM_USER_JOINED.equalsIgnoreCase(rabbitResponse.getEventName())) {
             logger.debug("User joined to Room [" + routingKey + "]");
+            trucoRoomListener.joinedToRoom(routingKey, objectMapper.convertValue(rabbitResponse.getData(), TrucoRoomEvent.class));
         }
 
     }

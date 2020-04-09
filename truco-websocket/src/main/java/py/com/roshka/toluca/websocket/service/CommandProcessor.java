@@ -5,5 +5,5 @@ import py.com.roshka.toluca.websocket.beans.Event;
 
 public interface CommandProcessor {
 
-    Event processCommand(String token, Command command);
+    Event processCommand(Command command);
 }

@@ -5,15 +5,10 @@ import org.springframework.stereotype.Component;
 import py.com.roshka.toluca.websocket.beans.Command;
 import py.com.roshka.toluca.websocket.beans.Event;
 import py.com.roshka.toluca.websocket.service.CommandProcessor;
-
-import static py.com.roshka.toluca.websocket.global.Commands.*;
-
-import py.com.roshka.toluca.websocket.service.CommandProcessor;
 import py.com.roshka.toluca.websocket.service.RoomService;
 import py.com.roshka.truco.api.TrucoRoom;
 
-import java.util.List;
-import java.util.Map;
+import static py.com.roshka.toluca.websocket.global.Commands.*;
 
 @Component
 public class CommandProcessorImpl extends Processor implements CommandProcessor {
@@ -27,7 +22,7 @@ public class CommandProcessorImpl extends Processor implements CommandProcessor 
     }
 
     @Override
-    public Event processCommand(String token, Command command) {
+    public Event processCommand(Command command) {
         if (CREATE_ROOM.equalsIgnoreCase(command.getCommand())) {
             return getEvent(command, roomService.createRoom(objectMapper.convertValue(command.getData(), TrucoRoom.class)));
         } else if (JOIN_ROOM.equalsIgnoreCase(command.getCommand())) {

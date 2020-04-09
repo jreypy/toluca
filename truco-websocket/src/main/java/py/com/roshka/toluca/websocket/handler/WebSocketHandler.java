@@ -4,70 +4,95 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.CloseStatus;
-import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
-import org.springframework.web.socket.handler.TextWebSocketHandler;
 import py.com.roshka.toluca.websocket.beans.Event;
 import py.com.roshka.toluca.websocket.service.CommandProcessor;
-import py.com.roshka.toluca.websocket.service.EventProcessor;
+import py.com.roshka.truco.api.TrucoRoomUser;
+import py.com.roshka.truco.api.TrucoUser;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-public abstract class WebSocketHandler extends TextWebSocketHandler {
+public abstract class WebSocketHandler extends WebSocketSessionManager {
     Logger logger = LoggerFactory.getLogger(WebSocketHandler.class);
 
 
-    private Map<String, WebSocketSession> sessions = new HashMap<>();
-    int count;
+    private Map<String, TrucoRoomHandler> rooms = new LinkedHashMap<>();
 
-    protected  ObjectMapper objectMapper;
-    protected  EventProcessor eventProcessor;
+
     protected CommandProcessor commandProcessor;
 
-    public WebSocketHandler(ObjectMapper objectMapper, EventProcessor eventProcessor, CommandProcessor commandProcessor) {
-        this.objectMapper = objectMapper;
-        this.eventProcessor = eventProcessor;
+    public WebSocketHandler(ObjectMapper objectMapper, CommandProcessor commandProcessor) {
+        super(objectMapper);
         this.commandProcessor = commandProcessor;
     }
 
-    public WebSocketHandler(EventProcessor eventProcessor) {
-        this.eventProcessor = eventProcessor;
-    }
-
-
-
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        sessions.put(session.getId(), session);
-        count++;
-        logger.debug("afterConnectionEstablished [" + session.getId() + "][" + count + "]");
+        addSession(session);
         super.afterConnectionEstablished(session);
-        // roomService.connect(auth.split("-")[0]);
+
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        count--;
-        sessions.remove(session.getId());
-        logger.debug("afterConnectionClosed [" + session.getId() + "][" + count + "]");
+        removeSession(session);
         super.afterConnectionClosed(session, status);
+
     }
 
-    protected void sendEvent(Event event) {
-        for (WebSocketSession session : sessions.values()) {
-            sendEvent(session, event);
+    public void sendRoomEvent(String roomId, TrucoUser trucoUser, Event event) {
+        TrucoRoomHandler trucoRoomHandler = getTrucoRoomHandler(roomId);
+        //
+        sessions.values().stream().filter(s -> {
+            return s.getAttributes().get("username").equals(trucoUser.getUsername());
+        }).map(s -> {
+            logger.debug("Add User to Room Listener [" + roomId + "]");
+            trucoRoomHandler.addSession(s);
+            return s;
+        }).count();
+
+        trucoRoomHandler.sendEvent(event);
+    }
+
+    public void sendRoomEvent(String roomId, Event event) {
+        TrucoRoomHandler trucoRoomHandler = getTrucoRoomHandler(roomId);
+        trucoRoomHandler.sendEvent(event);
+    }
+
+
+    public void addListeners(String roomId, TrucoRoomUser... users) {
+        TrucoRoomHandler trucoRoomHandler = getTrucoRoomHandler(roomId);
+
+    }
+
+    public TrucoRoomHandler getTrucoRoomHandler(String roomId) {
+        TrucoRoomHandler trucoRoomHandler = rooms.get(roomId);
+        if (trucoRoomHandler != null) {
+            return trucoRoomHandler;
         }
-    }
-
-    protected void sendEvent(WebSocketSession session, Event event) {
-        try {
-            if (session.isOpen()) {
-                session.sendMessage(new TextMessage(objectMapper.writeValueAsString(event)));
+        synchronized (rooms) {
+            trucoRoomHandler = rooms.get(roomId);
+            if (trucoRoomHandler == null) {
+                trucoRoomHandler = new TrucoRoomHandler(objectMapper, roomId);
+                rooms.put(roomId, trucoRoomHandler);
             }
-        } catch (Exception e) {
-            logger.error("Event could not be sent [" + event + "]", e);
         }
+        return trucoRoomHandler;
+    }
+
+
+    class TrucoRoomHandler extends WebSocketSessionManager {
+        private String id;
+        private Map<String, WebSocketSession> sessions = new HashMap<>();
+
+        public TrucoRoomHandler(ObjectMapper objectMapper, String id) {
+            super(objectMapper);
+            this.id = id;
+        }
+
+
     }
 
 }

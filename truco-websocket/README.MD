@@ -30,3 +30,9 @@ Room Created Event
 -------    
 
     $ {"type":"ROOM_CREATED","data":{"id":"af138e6b-bae4-4671-940e-5508c06484f2","name":"My First Room"}}
+
+
+Joined to Room Event
+------
+
+    $ {"type":"JOINED_TO_ROOM","data":{"eventName":"ROOM_USER_JOINED","message":"User joined to the Room [1]","user":{"id":"julio","username":"julio"},"room":{"id":"1","name":"Principal","users":[{"user":{"id":"julio","username":"julio"},"online":true},{"user":{"id":"user","username":"user"},"online":true}]}}}
