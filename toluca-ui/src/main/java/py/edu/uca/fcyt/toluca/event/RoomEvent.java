@@ -6,6 +6,7 @@ package py.edu.uca.fcyt.toluca.event;
  */
 
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 import py.edu.uca.fcyt.game.ChatMessage;
@@ -402,7 +403,25 @@ public class RoomEvent {
 	public void setGamePoints(int points) {
 		this.gamePoints = points;
 	}
-} 
+
+	@Override
+	public String toString() {
+		return "RoomEvent{" +
+				"tableNumber=" + tableNumber +
+				", username='" + username + '\'' +
+				", password='" + password + '\'' +
+				", errorMsg='" + errorMsg + '\'' +
+				", chatMessage=" + chatMessage +
+				", type=" + type +
+				", tables=" + tables +
+				", players=" + players +
+				", player=" + player +
+				", tableServer=" + tableServer +
+				", msSend=" + msSend +
+				", gamePoints=" + gamePoints +
+				'}';
+	}
+}
 
 
 

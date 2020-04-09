@@ -462,12 +462,12 @@ public class RoomUING extends JApplet {
     /**
      * @return
      */
-    private JPanel getCcontenPane() {
+    public JPanel getCcontenPane() {
         if (jContenPane == null) {
             jContenPane = new JPanel();
             jContenPane.setLayout(new BorderLayout());
             jContenPane.add(getLoginPanel(), BorderLayout.NORTH);
-            jContenPane.add(getJEPanuncios(), BorderLayout.CENTER);
+//            jContenPane.add(getJEPanuncios(), BorderLayout.CENTER);
         }
         return jContenPane;
     }

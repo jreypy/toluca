@@ -55,6 +55,7 @@ public class LoginPanel extends JPanel {
         super();
         initialize();
     }
+    
 
     /**
      * This method initializes this
