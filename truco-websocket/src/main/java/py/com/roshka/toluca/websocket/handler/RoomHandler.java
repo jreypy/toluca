@@ -1,8 +1,11 @@
 package py.com.roshka.toluca.websocket.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.netflix.discovery.converters.Auto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -15,24 +18,25 @@ import py.com.roshka.toluca.websocket.beans.Command;
 import py.com.roshka.toluca.websocket.beans.CommandResponse;
 import py.com.roshka.toluca.websocket.beans.Event;
 import py.com.roshka.toluca.websocket.global.Events;
+import py.com.roshka.toluca.websocket.service.AMQPDispatcher;
 import py.com.roshka.toluca.websocket.service.CommandProcessor;
+import py.com.roshka.truco.api.RabbitResponse;
 import py.com.roshka.truco.api.TrucoEvent;
 import py.com.roshka.truco.api.TrucoPrincipal;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class RoomHandler extends WebSocketHandler {
     Logger logger = LoggerFactory.getLogger(RoomHandler.class);
 
 
-    public RoomHandler(ObjectMapper objectMapper, CommandProcessor commandProcessor) {
+    AMQPDispatcher amqpDispatcher;
+
+    public RoomHandler(AMQPDispatcher amqpDispatcher, ObjectMapper objectMapper, CommandProcessor commandProcessor) {
         super(objectMapper, commandProcessor);
-        this.logger = logger;
+        this.amqpDispatcher = amqpDispatcher;
     }
 
     public TrucoPrincipal getTrucoPrincipal(WebSocketSession session) {
@@ -140,9 +144,7 @@ public class RoomHandler extends WebSocketHandler {
                         logger.error("Error firing Connection [" + s.getId() + "]", e);
                     }
                 }
-
             }
-
         }
         super.afterConnectionEstablished(session);
         // roomService.connect(auth.split("-")[0]);
@@ -150,6 +152,13 @@ public class RoomHandler extends WebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+        if (!Events.USER_FIRED_BY_SERVER.equals(session.getAttributes().get(Events.USER_FIRED_BY_SERVER))) {
+            String username = (String) session.getAttributes().get("username");
+            logger.debug("Users was disconnected [" + username + "]");
+            Map map = new LinkedHashMap();
+            map.put("username", username);
+            amqpDispatcher.send("truco_user_event", "logout", new RabbitResponse(py.com.roshka.truco.api.Event.LOGOUT, Map.class.getCanonicalName(), map));
+        }
         super.afterConnectionClosed(session, status);
 
     }

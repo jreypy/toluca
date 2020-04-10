@@ -19,7 +19,7 @@ import org.springframework.messaging.handler.annotation.support.DefaultMessageHa
 public class AMQPConfiguration implements RabbitListenerConfigurer {
 
     @Bean
-    public TopicExchange trucoExchange(@Value("truco") final String exchangeName) {
+    public TopicExchange trucoExchange(@Value("truco_user_event") final String exchangeName) {
         return new TopicExchange(exchangeName);
     }
 
@@ -30,7 +30,7 @@ public class AMQPConfiguration implements RabbitListenerConfigurer {
 
     @Bean
     Binding binding(final Queue queue, final TopicExchange exchange,
-                    @Value("room") final String routingKey) {
+                    @Value("*") final String routingKey) {
         return BindingBuilder.bind(queue).to(exchange).with(routingKey);
     }
 

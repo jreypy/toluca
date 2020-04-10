@@ -28,4 +28,9 @@ public class TrucoRoomListenerImpl implements TrucoRoomListener {
     public void joinedToRoom(String roomId, TrucoRoomEvent trucoRoomEvent) {
         roomHandler.sendRoomEvent(roomId, trucoRoomEvent.getUser(), eventProcessor.sendEvent(Event.ROOM_USER_JOINED, trucoRoomEvent));
     }
+
+    @Override
+    public void userLeftTheRoom(String roomId, TrucoRoomEvent trucoRoomEvent) {
+        roomHandler.sendRoomEvent(roomId, trucoRoomEvent.getUser(), eventProcessor.sendEvent(Event.ROOM_USER_LEFT, trucoRoomEvent));
+    }
 }

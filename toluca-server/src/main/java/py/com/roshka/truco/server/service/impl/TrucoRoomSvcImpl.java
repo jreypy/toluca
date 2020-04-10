@@ -15,13 +15,13 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
     RabbitTemplate rabbitTemplate;
     ObjectMapper objectMapper;
     Map<String, TrucoRoom> rooms = new LinkedHashMap<>();
-    int roomId = 0;
+    int _roomId = 0;
 
     public TrucoRoomSvcImpl(RabbitTemplate rabbitTemplate, ObjectMapper objectMapper) {
         this.rabbitTemplate = rabbitTemplate;
         this.objectMapper = objectMapper;
         TrucoRoom trucoRoom = new TrucoRoom();
-        trucoRoom.setId(Integer.toString(++roomId));
+        trucoRoom.setId(Integer.toString(++_roomId));
         trucoRoom.setName("Principal");
         this.rooms.put(trucoRoom.getId(), trucoRoom);
     }
@@ -42,7 +42,7 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
     }
 
     public TrucoRoom create(TrucoRoom trucoRoom) {
-        trucoRoom.setId(Integer.toString(++roomId));
+        trucoRoom.setId(Integer.toString(++_roomId));
         this.rooms.put(trucoRoom.getId(), trucoRoom);
         // Notify was created
         rabbitTemplate.convertAndSend("truco_event", "room", new RabbitResponse(Event.ROOM_CREATED, trucoRoom.getClass().getCanonicalName(), objectMapper.convertValue(trucoRoom, HashMap.class)));
@@ -87,5 +87,23 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
 
     public void removeChair(String tableId, Integer chairPosition) {
 
+    }
+
+    @Override
+    public void logout(String username) {
+        TrucoRoomUser trucoRoomUser = new TrucoRoomUser(new TrucoUser(username, username), false);
+        rooms.values().stream().parallel().forEach(room -> {
+            if (room.getUsers().contains(trucoRoomUser)) {
+                // notify
+                room.getUsers().remove(trucoRoomUser);
+                TrucoRoomEvent trucoRoomEvent = new TrucoRoomEvent();
+                trucoRoomEvent.setEventName(Event.ROOM_USER_LEFT);
+                trucoRoomEvent.setMessage("User left the Room [" + room.getId() + "]");
+                trucoRoomEvent.setUser(trucoRoomUser.getUser());
+                trucoRoomEvent.setRoom(room);
+                rabbitTemplate.convertAndSend("truco_room_event", room.getId(), new RabbitResponse(Event.ROOM_USER_JOINED, trucoRoomEvent.getClass().getCanonicalName(), objectMapper.convertValue(trucoRoomEvent, HashMap.class)));
+                logger.debug("User [" + trucoRoomUser.getUser().getUsername() + "] left the room [" + room.getId() + "]");
+            }
+        });
     }
 }

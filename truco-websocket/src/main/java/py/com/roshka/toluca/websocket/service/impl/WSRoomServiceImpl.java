@@ -18,22 +18,15 @@ import java.util.Map;
 public class WSRoomServiceImpl implements RoomService {
 
     private final RestTemplate restTemplate;
-    private final AMQPDispatcher amqpDispatcher;
 
     @Value("${trucoServerHost}")
     private String trucoServerHost;
 
-    public WSRoomServiceImpl(RestTemplate restTemplate, AMQPDispatcher amqpDispatcher) {
+    public WSRoomServiceImpl(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
-        this.amqpDispatcher = amqpDispatcher;
+
     }
 
-    @Override
-    public void connect(String user) {
-        Map map = new LinkedHashMap();
-        map.put("username", user);
-        amqpDispatcher.send("truco", "room", map);
-    }
 
     @Override
     public TrucoRoom createRoom(TrucoRoom trucoRoom) {

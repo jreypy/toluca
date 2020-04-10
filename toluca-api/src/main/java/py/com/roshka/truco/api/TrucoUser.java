@@ -6,6 +6,14 @@ public class TrucoUser {
     private String id;
     private String username;
 
+    public TrucoUser() {
+    }
+
+    public TrucoUser(String id, String username) {
+        this.id = id;
+        this.username = username;
+    }
+
     public String getId() {
         return id;
     }
@@ -27,13 +35,11 @@ public class TrucoUser {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TrucoUser trucoUser = (TrucoUser) o;
-        return Objects.equals(id, trucoUser.id) &&
-                Objects.equals(username, trucoUser.username);
+        return Objects.equals(id, trucoUser.id);
     }
 
     @Override
     public int hashCode() {
-
         return Objects.hash(id, username);
     }
 }

@@ -24,5 +24,5 @@ public interface TrucoRoomSvc {
 
     void removeChair(String tableId, Integer chairPosition);
 
-
+    void logout(String username);
 }

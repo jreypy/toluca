@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface RoomService {
 
-    void connect(String user);
-
     TrucoRoom createRoom(TrucoRoom trucoRoom);
 
     TrucoRoomEvent joinRoom(TrucoRoom trucoRoom);

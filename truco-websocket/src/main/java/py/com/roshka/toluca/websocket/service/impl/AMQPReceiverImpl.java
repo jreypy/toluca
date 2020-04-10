@@ -50,6 +50,9 @@ public class AMQPReceiverImpl implements AMQPReceiver {
         if (Event.ROOM_USER_JOINED.equalsIgnoreCase(rabbitResponse.getEventName())) {
             logger.debug("User joined to Room [" + routingKey + "]");
             trucoRoomListener.joinedToRoom(routingKey, objectMapper.convertValue(rabbitResponse.getData(), TrucoRoomEvent.class));
+        } else if (Event.ROOM_USER_LEFT.equalsIgnoreCase(rabbitResponse.getEventName())) {
+            logger.debug("User joined to Room [" + routingKey + "]");
+            trucoRoomListener.userLeftTheRoom(routingKey, objectMapper.convertValue(rabbitResponse.getData(), TrucoRoomEvent.class));
         }
 
     }

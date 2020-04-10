@@ -40,7 +40,6 @@ public class TrucoRoomUser {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(user);
     }
 }
