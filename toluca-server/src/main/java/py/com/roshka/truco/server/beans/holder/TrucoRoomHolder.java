@@ -26,6 +26,7 @@ public class TrucoRoomHolder {
 
     public TrucoRoomTable addTable(String tableId, TrucoUser user, TrucoRoomTable trucoRoomTable) {
         // Check Permisions and size limit
+        trucoRoomTable.setId(tableId);
         trucoRoomTable.setOwner(user);
         tables.put(tableId, new TrucoTableHolder(trucoRoomTable));
         return trucoRoomTable;

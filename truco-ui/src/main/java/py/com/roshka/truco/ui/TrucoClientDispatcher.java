@@ -2,15 +2,14 @@ package py.com.roshka.truco.ui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
-import py.com.roshka.truco.api.Event;
-import py.com.roshka.truco.api.TrucoRoom;
-import py.com.roshka.truco.api.TrucoRoomEvent;
-import py.com.roshka.truco.api.TrucoUser;
+import py.com.roshka.truco.api.*;
 import py.com.roshka.truco.api.constants.Commands;
 import py.edu.uca.fcyt.toluca.event.RoomEvent;
 import py.edu.uca.fcyt.toluca.game.TrucoPlayer;
 import py.edu.uca.fcyt.toluca.net.EventDispatcher;
+import py.edu.uca.fcyt.toluca.table.TableServer;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class TrucoClientDispatcher {
@@ -34,7 +33,25 @@ public class TrucoClientDispatcher {
             dispatchRoomEvent((Map) event.get("data"));
         } else if (Event.ROOM_USER_LEFT.equalsIgnoreCase(type)) {
             dispatchRoomEvent((Map) event.get("data"));
+        } else if (Event.ROOM_TABLE_CREATED.equalsIgnoreCase(type)) {
+            dispatchRoomCreated((Map) event.get("data"));
         }
+
+
+    }
+
+    private void dispatchRoomCreated(Map eventData) {
+        TrucoRoomTable trucoRoomTable = objectMapper.convertValue(eventData, TrucoRoomTable.class);
+        RoomEvent table = new RoomEvent();
+        table.setTableServer(new TableServer());
+        table.getTableServer().setHost(new TrucoPlayer());
+        table.getTableServer().getHost().setId(trucoRoomTable.getOwner().getId());
+        table.getTableServer().getHost().setName(trucoRoomTable.getOwner().getUsername());
+        table.setType(RoomEvent.TYPE_TABLE_CREATED);
+        table.setGamePoints(trucoRoomTable.getPoints());
+        table.setPlayers(new LinkedHashMap());
+        table.setTableNumber(Integer.parseInt(trucoRoomTable.getId()));
+        eventDispatcher.dispatchEvent(table);
     }
 
     private void dispatchCommandResponse(String command, String id, Map data) {
@@ -72,6 +89,7 @@ public class TrucoClientDispatcher {
         roomEvent.getPlayer().setId(trucoUser.getId());
         eventDispatcher.dispatchEvent(roomEvent);
     }
+
     void trucoUserLeft(TrucoUser trucoUser) {
         RoomEvent roomEvent = new RoomEvent();
         roomEvent.setType(RoomEvent.TYPE_PLAYER_LEFT);
