@@ -8,6 +8,7 @@ import py.com.roshka.toluca.websocket.beans.Event;
 import py.com.roshka.toluca.websocket.service.CommandProcessor;
 import py.com.roshka.toluca.websocket.service.RoomService;
 import py.com.roshka.truco.api.TrucoRoom;
+import py.com.roshka.truco.api.TrucoRoomTable;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -28,14 +29,16 @@ public class CommandProcessorImpl extends Processor implements CommandProcessor 
 
     @Override
     public CommandResponse processCommand(Command command) {
-        if (CREATE_ROOM.equalsIgnoreCase(command.getCommand())) {
-            return getCommandResponse(command, roomService.createRoom(objectMapper.convertValue(command.getData(), TrucoRoom.class)));
+        if (CREATE_ROOM_TABLE.equalsIgnoreCase(command.getCommand())) {
+            return getCommandResponse(command, roomService.createRoomTable(objectMapper.convertValue(command.getData(), TrucoRoomTable.class)));
         } else if (JOIN_ROOM.equalsIgnoreCase(command.getCommand())) {
             return getCommandResponse(command, roomService.joinRoom(objectMapper.convertValue(command.getData(), TrucoRoom.class)));
         } else if (GET_ROOMS.equalsIgnoreCase(command.getCommand())) {
             return getCommandResponse(command, roomService.findAllRooms());
         } else if (GET_ROOM.equalsIgnoreCase(command.getCommand())) {
             return getCommandResponse(command, roomService.findRoomById(objectMapper.convertValue(command.getData(), TrucoRoom.class).getId()));
+        } else if (CREATE_ROOM.equalsIgnoreCase(command.getCommand())) {
+            return getCommandResponse(command, roomService.createRoom(objectMapper.convertValue(command.getData(), TrucoRoom.class)));
         } else {
             new IllegalArgumentException("Command not found [" + command.getCommand() + "]");
         }

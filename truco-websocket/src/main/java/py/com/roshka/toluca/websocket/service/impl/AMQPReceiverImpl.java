@@ -12,10 +12,7 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 import py.com.roshka.toluca.websocket.service.AMQPReceiver;
 import py.com.roshka.toluca.websocket.service.TrucoRoomListener;
-import py.com.roshka.truco.api.Event;
-import py.com.roshka.truco.api.RabbitResponse;
-import py.com.roshka.truco.api.TrucoRoom;
-import py.com.roshka.truco.api.TrucoRoomEvent;
+import py.com.roshka.truco.api.*;
 
 @Component
 public class AMQPReceiverImpl implements AMQPReceiver {
@@ -50,7 +47,12 @@ public class AMQPReceiverImpl implements AMQPReceiver {
         if (Event.ROOM_USER_JOINED.equalsIgnoreCase(rabbitResponse.getEventName())) {
             logger.debug("User joined to Room [" + routingKey + "]");
             trucoRoomListener.joinedToRoom(routingKey, objectMapper.convertValue(rabbitResponse.getData(), TrucoRoomEvent.class));
-        } else if (Event.ROOM_USER_LEFT.equalsIgnoreCase(rabbitResponse.getEventName())) {
+        }
+        else if (Event.ROOM_TABLE_CREATED.equalsIgnoreCase(rabbitResponse.getEventName())) {
+            logger.debug("User Table Created in Room [" + routingKey + "]");
+            trucoRoomListener.roomTableCreated(routingKey, objectMapper.convertValue(rabbitResponse.getData(), TrucoRoomTable.class));
+        }
+        else if (Event.ROOM_USER_LEFT.equalsIgnoreCase(rabbitResponse.getEventName())) {
             logger.debug("User joined to Room [" + routingKey + "]");
             trucoRoomListener.userLeftTheRoom(routingKey, objectMapper.convertValue(rabbitResponse.getData(), TrucoRoomEvent.class));
         }

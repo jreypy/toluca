@@ -201,7 +201,6 @@ public class RoomClient extends Room implements ChatPanelContainer,
 
         Iterator iter = roomListeners.listIterator();
         while (iter.hasNext()) {
-
             RoomListener ltmp = (RoomListener) iter.next();
             ltmp.createTableRequested(re);
         }

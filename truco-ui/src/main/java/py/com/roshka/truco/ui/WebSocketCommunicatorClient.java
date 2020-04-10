@@ -77,6 +77,7 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
 
     @Override
     public void loginRequested(RoomEvent ev) {
+        logger.debug("Request Authentication [" + ev.getUser() + "]");
 //        String host = "ec2-184-73-89-227.compute-1.amazonaws.com";
         String host = "localhost";
 
@@ -87,6 +88,12 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
         } catch (TrucoClientException e) {
             logger.error(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public void createTableRequested(RoomEvent ev) {
+        logger.debug("Create Table Requested [" + ev + "]");
+
     }
 
     @Override

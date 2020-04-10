@@ -11,10 +11,11 @@ public class TrucoRoomTable {
 
     private String id;
     private String roomId;
-    private String ownerId;
+    private TrucoUser owner;
     private boolean privateTable;
     private List<Chair> chairs = new ArrayList<Chair>();
-    private String status;
+    private String status = NEW;
+    private Integer points;
 
     public String getId() {
         return id;
@@ -32,14 +33,6 @@ public class TrucoRoomTable {
         this.roomId = roomId;
     }
 
-    public String getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(String ownerId) {
-        this.ownerId = ownerId;
-    }
-
     public boolean isPrivateTable() {
         return privateTable;
     }
@@ -54,5 +47,21 @@ public class TrucoRoomTable {
 
     public void setChairs(List<Chair> chairs) {
         this.chairs = chairs;
+    }
+
+    public TrucoUser getOwner() {
+        return owner;
+    }
+
+    public void setOwner(TrucoUser owner) {
+        this.owner = owner;
+    }
+
+    public Integer getPoints() {
+        return points;
+    }
+
+    public void setPoints(Integer points) {
+        this.points = points;
     }
 }

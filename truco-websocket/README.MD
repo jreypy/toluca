@@ -29,6 +29,10 @@ Join to Room
 --------
     $ {"command":"join_room", "data" : {"id":"1"}}
 
+Create Table
+--------
+    $ {"command":"create_room_table", "data" : {"roomId":"1", "points": 30 }}
+    
 Events
 -------
 

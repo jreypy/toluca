@@ -7,6 +7,7 @@ import py.com.roshka.toluca.websocket.service.AMQPDispatcher;
 import py.com.roshka.toluca.websocket.service.RoomService;
 import py.com.roshka.truco.api.TrucoRoom;
 import py.com.roshka.truco.api.TrucoRoomEvent;
+import py.com.roshka.truco.api.TrucoRoomTable;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -27,7 +28,6 @@ public class WSRoomServiceImpl implements RoomService {
 
     }
 
-
     @Override
     public TrucoRoom createRoom(TrucoRoom trucoRoom) {
         return restTemplate.postForObject(trucoServerHost + "/api/room", trucoRoom, TrucoRoom.class);
@@ -42,6 +42,11 @@ public class WSRoomServiceImpl implements RoomService {
     @Override
     public List<TrucoRoom> findAllRooms() {
         return Arrays.asList(restTemplate.getForObject(trucoServerHost + "/api/room", TrucoRoom[].class));
+    }
+
+    @Override
+    public TrucoRoomTable createRoomTable(TrucoRoomTable trucoRoomTable) {
+        return restTemplate.postForObject(trucoServerHost + "/api/room/" + trucoRoomTable.getRoomId() + "/table", trucoRoomTable, TrucoRoomTable.class);
     }
 
     @Override

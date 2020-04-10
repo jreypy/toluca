@@ -7,6 +7,7 @@ import py.com.roshka.toluca.websocket.service.TrucoRoomListener;
 import py.com.roshka.truco.api.Event;
 import py.com.roshka.truco.api.TrucoRoom;
 import py.com.roshka.truco.api.TrucoRoomEvent;
+import py.com.roshka.truco.api.TrucoRoomTable;
 
 @Component
 public class TrucoRoomListenerImpl implements TrucoRoomListener {
@@ -33,4 +34,10 @@ public class TrucoRoomListenerImpl implements TrucoRoomListener {
     public void userLeftTheRoom(String roomId, TrucoRoomEvent trucoRoomEvent) {
         roomHandler.sendRoomEvent(roomId, trucoRoomEvent.getUser(), eventProcessor.sendEvent(Event.ROOM_USER_LEFT, trucoRoomEvent));
     }
+
+    @Override
+    public void roomTableCreated(String roomId, TrucoRoomTable trucoRoomTable) {
+        roomHandler.sendRoomEvent(roomId, eventProcessor.sendEvent(Event.ROOM_TABLE_CREATED, trucoRoomTable));
+    }
+
 }
