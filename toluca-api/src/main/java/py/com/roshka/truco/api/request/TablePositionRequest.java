@@ -1,6 +1,6 @@
 package py.com.roshka.truco.api.request;
 
-public class SitDownRequest {
+public class TablePositionRequest {
     private String roomId;
     private String tableId;
     private Integer chair;

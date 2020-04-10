@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
 import py.com.roshka.truco.api.TrucoPrincipal;
 import py.com.roshka.truco.api.TrucoRoomTable;
+import py.com.roshka.truco.api.TrucoRoomTableEvent;
 import py.com.roshka.truco.api.constants.Commands;
+import py.com.roshka.truco.api.request.TablePositionRequest;
 import py.com.roshka.truco.client.communication.TrucoClient;
 import py.com.roshka.truco.client.communication.TrucoClientHandler;
 import py.com.roshka.truco.client.communication.exception.TrucoClientException;
@@ -99,6 +101,30 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
         trucoRoomTable.setPoints(ev.getGamePoints());
         try {
             executeCommand(Commands.CREATE_ROOM_TABLE, trucoRoomTable);
+        } catch (TrucoClientException e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+
+    @Override
+    public void playerSitRequest(TableEvent ev) {
+        /**
+         * TableEvent event = new TableEvent();
+         * 		event.setEvent(TableEvent.EVENT_playerSitRequest);
+         * 		event.setValue(chair);
+         * 		event.setTableBeanRepresentation(table.getTableBeanRepresentation());
+         * 		event.setPlayer(new TrucoPlayer[] { table.getPlayer() });
+         */
+
+        logger.debug("Set table position [" + ev + "]");
+        try {
+            TablePositionRequest tablePositionRequest = new TablePositionRequest();
+            tablePositionRequest.setRoomId(TrucoFrame.MAIN_ROOM_ID);
+            tablePositionRequest.setTableId(Integer.toString(ev.getTableBeanRepresentation().getId()));
+            tablePositionRequest.setChair(ev.getValue());
+            executeCommand(Commands.SET_TABLE_POSITION, tablePositionRequest);
+
         } catch (TrucoClientException e) {
             logger.error(e.getMessage(), e);
         }

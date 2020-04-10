@@ -36,7 +36,7 @@ Create Table
 
 Set Table Position
 --------
-    $ {"command":"set_table_position", "data" : {"roomId":"1","tableId":"1", "chair":0}}
+    $ {"command":"set_table_position", "data" : {"roomId":"1","tableId":"10", "chair":2}}
 
     
 Events

@@ -4,7 +4,7 @@ import py.com.roshka.truco.api.TrucoRoom;
 import py.com.roshka.truco.api.TrucoRoomEvent;
 import py.com.roshka.truco.api.TrucoRoomTable;
 import py.com.roshka.truco.api.TrucoRoomTableEvent;
-import py.com.roshka.truco.api.request.SitDownRequest;
+import py.com.roshka.truco.api.request.TablePositionRequest;
 
 import java.util.List;
 
@@ -20,5 +20,5 @@ public interface RoomService {
 
     TrucoRoomTable createRoomTable(TrucoRoomTable trucoRoomTable);
 
-    TrucoRoomTableEvent sitDownTable(SitDownRequest sitDownRequest);
+    TrucoRoomTableEvent setTablePosition(TablePositionRequest tablePositionRequest);
 }

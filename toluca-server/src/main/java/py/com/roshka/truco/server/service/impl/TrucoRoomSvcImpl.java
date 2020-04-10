@@ -93,6 +93,7 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
             trucoRoomTableEvent.setMessage("User sat down to the Table [" + roomId + "][" + index + "]");
             trucoRoomTableEvent.setUser(user);
             trucoRoomTableEvent.setRoomId(roomId);
+            trucoRoomTableEvent.setTableId(tableId);
             trucoRoomTableEvent.setChair(index);
             rabbitTemplate.convertAndSend(TRUCO_ROOM_EVENT, roomId, new RabbitResponse(Event.TABLE_POSITION_SETTED, trucoRoomTableEvent.getClass().getCanonicalName(), objectMapper.convertValue(trucoRoomTableEvent, HashMap.class)));
             logger.debug("User [" + user.getUsername() + "] joined to the room [" + roomId + "]");

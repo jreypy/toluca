@@ -5,12 +5,15 @@ import org.apache.log4j.Logger;
 import py.com.roshka.truco.api.*;
 import py.com.roshka.truco.api.constants.Commands;
 import py.edu.uca.fcyt.toluca.event.RoomEvent;
+import py.edu.uca.fcyt.toluca.event.TableEvent;
 import py.edu.uca.fcyt.toluca.game.TrucoPlayer;
 import py.edu.uca.fcyt.toluca.net.EventDispatcher;
 import py.edu.uca.fcyt.toluca.table.TableServer;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import static py.edu.uca.fcyt.toluca.event.TableEvent.EVENT_playerSit;
 
 public class TrucoClientDispatcher {
 
@@ -35,6 +38,8 @@ public class TrucoClientDispatcher {
             dispatchRoomEvent((Map) event.get("data"));
         } else if (Event.ROOM_TABLE_CREATED.equalsIgnoreCase(type)) {
             dispatchRoomCreated((Map) event.get("data"));
+        } else if (Event.TABLE_POSITION_SETTED.equalsIgnoreCase(type)) {
+            dispatchRoomTableEvent((Map) event.get("data"));
         }
 
 
@@ -50,7 +55,8 @@ public class TrucoClientDispatcher {
         table.setType(RoomEvent.TYPE_TABLE_CREATED);
         table.setGamePoints(trucoRoomTable.getPoints());
         table.setPlayers(new LinkedHashMap());
-        table.setTableNumber(Integer.parseInt(trucoRoomTable.getId()));
+        table.getTableServer().setTableNumber(Integer.parseInt(trucoRoomTable.getId()));
+        table.setTableNumber(table.getTableServer().getTableNumber());
         eventDispatcher.dispatchEvent(table);
     }
 
@@ -78,6 +84,7 @@ public class TrucoClientDispatcher {
             } else if (Event.ROOM_USER_LEFT.equalsIgnoreCase(trucoRoomEvent.getEventName())) {
                 trucoUserLeft(trucoRoomEvent.getUser());
             }
+
         }
     }
 
@@ -100,4 +107,18 @@ public class TrucoClientDispatcher {
     }
 
 
+    public void dispatchRoomTableEvent(Map eventData) {
+        TrucoRoomTableEvent trucoRoomTableEvent = objectMapper.convertValue(eventData, TrucoRoomTableEvent.class);
+        TableEvent tableEvent = new TableEvent();
+        tableEvent.setEvent(EVENT_playerSit);
+        tableEvent.setTableServer(new TableServer());
+        tableEvent.getTableServer().setTableNumber(Integer.parseInt(trucoRoomTableEvent.getTableId()));
+        TrucoPlayer trucoPlayer = new TrucoPlayer();
+        trucoPlayer.setId(trucoRoomTableEvent.getUser().getId());
+        trucoPlayer.setName(trucoRoomTableEvent.getUser().getUsername());
+        tableEvent.setPlayer(new TrucoPlayer[]{trucoPlayer});
+        tableEvent.setValue(trucoRoomTableEvent.getChair());
+        eventDispatcher.dispatchEvent(tableEvent);
+
+    }
 }

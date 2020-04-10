@@ -6,18 +6,15 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import py.com.roshka.toluca.websocket.service.AMQPDispatcher;
 import py.com.roshka.toluca.websocket.service.RoomService;
 import py.com.roshka.truco.api.TrucoRoom;
 import py.com.roshka.truco.api.TrucoRoomEvent;
 import py.com.roshka.truco.api.TrucoRoomTable;
 import py.com.roshka.truco.api.TrucoRoomTableEvent;
-import py.com.roshka.truco.api.request.SitDownRequest;
+import py.com.roshka.truco.api.request.TablePositionRequest;
 
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 
 @Component
@@ -55,8 +52,8 @@ public class WSRoomServiceImpl implements RoomService {
     }
 
     @Override
-    public TrucoRoomTableEvent sitDownTable(SitDownRequest sitDownRequest) {
-        return putForObject(trucoServerHost + "/api/room/" + sitDownRequest.getRoomId() + "/table/" + sitDownRequest.getTableId() + "/position/" + sitDownRequest.getChair(), null, TrucoRoomTableEvent.class);
+    public TrucoRoomTableEvent setTablePosition(TablePositionRequest tablePositionRequest) {
+        return putForObject(trucoServerHost + "/api/room/" + tablePositionRequest.getRoomId() + "/table/" + tablePositionRequest.getTableId() + "/position/" + tablePositionRequest.getChair(), null, TrucoRoomTableEvent.class);
     }
 
     @Override

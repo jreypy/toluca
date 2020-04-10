@@ -4,12 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 import py.com.roshka.toluca.websocket.beans.Command;
 import py.com.roshka.toluca.websocket.beans.CommandResponse;
-import py.com.roshka.toluca.websocket.beans.Event;
 import py.com.roshka.toluca.websocket.service.CommandProcessor;
 import py.com.roshka.toluca.websocket.service.RoomService;
 import py.com.roshka.truco.api.TrucoRoom;
 import py.com.roshka.truco.api.TrucoRoomTable;
-import py.com.roshka.truco.api.request.SitDownRequest;
+import py.com.roshka.truco.api.request.TablePositionRequest;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -33,7 +32,7 @@ public class CommandProcessorImpl extends Processor implements CommandProcessor 
         if (CREATE_ROOM_TABLE.equalsIgnoreCase(command.getCommand())) {
             return getCommandResponse(command, roomService.createRoomTable(objectMapper.convertValue(command.getData(), TrucoRoomTable.class)));
         } else if (SET_TABLE_POSITION.equalsIgnoreCase(command.getCommand())) {
-            return getCommandResponse(command, roomService.sitDownTable(objectMapper.convertValue(command.getData(), SitDownRequest.class)));
+            return getCommandResponse(command, roomService.setTablePosition(objectMapper.convertValue(command.getData(), TablePositionRequest.class)));
         } else if (JOIN_ROOM.equalsIgnoreCase(command.getCommand())) {
             return getCommandResponse(command, roomService.joinRoom(objectMapper.convertValue(command.getData(), TrucoRoom.class)));
         } else if (GET_ROOMS.equalsIgnoreCase(command.getCommand())) {
