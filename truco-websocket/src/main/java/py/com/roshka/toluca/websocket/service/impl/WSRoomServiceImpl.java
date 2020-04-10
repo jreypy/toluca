@@ -1,6 +1,9 @@
 package py.com.roshka.toluca.websocket.service.impl;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import py.com.roshka.toluca.websocket.service.AMQPDispatcher;
@@ -8,6 +11,8 @@ import py.com.roshka.toluca.websocket.service.RoomService;
 import py.com.roshka.truco.api.TrucoRoom;
 import py.com.roshka.truco.api.TrucoRoomEvent;
 import py.com.roshka.truco.api.TrucoRoomTable;
+import py.com.roshka.truco.api.TrucoRoomTableEvent;
+import py.com.roshka.truco.api.request.SitDownRequest;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -50,7 +55,25 @@ public class WSRoomServiceImpl implements RoomService {
     }
 
     @Override
+    public TrucoRoomTableEvent sitDownTable(SitDownRequest sitDownRequest) {
+        return putForObject(trucoServerHost + "/api/room/" + sitDownRequest.getRoomId() + "/table/" + sitDownRequest.getTableId() + "/position/" + sitDownRequest.getChair(), null, TrucoRoomTableEvent.class);
+    }
+
+    @Override
     public TrucoRoom findRoomById(String id) {
         return restTemplate.getForObject(trucoServerHost + "/api/room/" + id, TrucoRoom.class);
     }
+
+    private <T> T putForObject(String url, Object o, java.lang.Class<T> responseType) {
+        return requestForObject(url, HttpMethod.PUT, o, responseType);
+    }
+
+    private <T> T requestForObject(String url, HttpMethod method, Object o, java.lang.Class<T> responseType) {
+        HttpEntity request = new HttpEntity(o);
+        ResponseEntity<T> response = restTemplate
+                .exchange(url, method, request, responseType);
+        return response.getBody();
+    }
+
+
 }

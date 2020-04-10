@@ -1,20 +1,11 @@
 package py.com.roshka.truco.api;
 
 public class TrucoRoomEvent extends TrucoEvent {
-    private String eventName;
+
     private TrucoUser user;
     private TrucoRoom room;
 
     public TrucoRoomEvent() {
-    }
-
-
-    public String getEventName() {
-        return eventName;
-    }
-
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
     }
 
 

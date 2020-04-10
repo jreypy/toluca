@@ -4,7 +4,6 @@ import py.com.roshka.truco.api.TrucoRoom;
 import py.com.roshka.truco.api.TrucoRoomTable;
 import py.com.roshka.truco.api.TrucoUser;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -30,5 +29,12 @@ public class TrucoRoomHolder {
         trucoRoomTable.setOwner(user);
         tables.put(tableId, new TrucoTableHolder(trucoRoomTable));
         return trucoRoomTable;
+    }
+
+    public TrucoTableHolder getTrucoTableHolder(String tableId) {
+        TrucoTableHolder trucoTableHolder = tables.get(tableId);
+        if (trucoTableHolder == null)
+            throw new IllegalArgumentException("Truco Table not found [" + tableId + "]");
+        return trucoTableHolder;
     }
 }

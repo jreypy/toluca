@@ -44,15 +44,16 @@ public class AMQPReceiverImpl implements AMQPReceiver {
     void trucoRoomEvent(final @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey, final RabbitResponse rabbitResponse) {
         logger.debug("Receiving Truco Room Event [" + routingKey + "][" + rabbitResponse + "]");
 
-        if (Event.ROOM_USER_JOINED.equalsIgnoreCase(rabbitResponse.getEventName())) {
+        if (Event.TABLE_POSITION_SETTED.equalsIgnoreCase(rabbitResponse.getEventName())) {
+            logger.debug("Table Position Setted [" + routingKey + "]");
+            trucoRoomListener.trucoRoomTableEventReceived(routingKey, objectMapper.convertValue(rabbitResponse.getData(), TrucoRoomTableEvent.class));
+        } else if (Event.ROOM_USER_JOINED.equalsIgnoreCase(rabbitResponse.getEventName())) {
             logger.debug("User joined to Room [" + routingKey + "]");
             trucoRoomListener.joinedToRoom(routingKey, objectMapper.convertValue(rabbitResponse.getData(), TrucoRoomEvent.class));
-        }
-        else if (Event.ROOM_TABLE_CREATED.equalsIgnoreCase(rabbitResponse.getEventName())) {
+        } else if (Event.ROOM_TABLE_CREATED.equalsIgnoreCase(rabbitResponse.getEventName())) {
             logger.debug("User Table Created in Room [" + routingKey + "]");
             trucoRoomListener.roomTableCreated(routingKey, objectMapper.convertValue(rabbitResponse.getData(), TrucoRoomTable.class));
-        }
-        else if (Event.ROOM_USER_LEFT.equalsIgnoreCase(rabbitResponse.getEventName())) {
+        } else if (Event.ROOM_USER_LEFT.equalsIgnoreCase(rabbitResponse.getEventName())) {
             logger.debug("User joined to Room [" + routingKey + "]");
             trucoRoomListener.userLeftTheRoom(routingKey, objectMapper.convertValue(rabbitResponse.getData(), TrucoRoomEvent.class));
         }

@@ -81,6 +81,28 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
         return null;
     }
 
+    @Override
+    public TrucoRoomTableEvent setTablePosition(String roomId, String tableId, Integer index) {
+        TrucoUser user = trucoUserService.getTrucoUser();
+        logger.debug("User [" + user.getUsername() + "]  wants to sit at [" + roomId + "][" + index + "]");
+        TrucoRoomHolder trucoRoomHolder = getTrucoRoomHolder(roomId);
+        if (trucoRoomHolder != null) {
+            trucoRoomHolder.getTrucoTableHolder(tableId).sitDownPlayer(user, index);
+            TrucoRoomTableEvent trucoRoomTableEvent = new TrucoRoomTableEvent();
+            trucoRoomTableEvent.setEventName(Event.TABLE_POSITION_SETTED);
+            trucoRoomTableEvent.setMessage("User sat down to the Table [" + roomId + "][" + index + "]");
+            trucoRoomTableEvent.setUser(user);
+            trucoRoomTableEvent.setRoomId(roomId);
+            trucoRoomTableEvent.setChair(index);
+            rabbitTemplate.convertAndSend(TRUCO_ROOM_EVENT, roomId, new RabbitResponse(Event.TABLE_POSITION_SETTED, trucoRoomTableEvent.getClass().getCanonicalName(), objectMapper.convertValue(trucoRoomTableEvent, HashMap.class)));
+            logger.debug("User [" + user.getUsername() + "] joined to the room [" + roomId + "]");
+            return trucoRoomTableEvent;
+        } else {
+            logger.warn("Truco Room not found [" + roomId + "]");
+        }
+        return null;
+    }
+
     public TrucoRoom delete(TrucoRoom trucoRoom) {
         return null;
     }
@@ -94,6 +116,7 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
         rabbitTemplate.convertAndSend(TRUCO_ROOM_EVENT, roomId, new RabbitResponse(Event.ROOM_TABLE_CREATED, trucoRoomTable.getClass().getCanonicalName(), objectMapper.convertValue(trucoRoomTable, HashMap.class)));
         return trucoRoomTable;
     }
+
 
     public TrucoRoomTable deleteTable(String roomId, String tableId) {
         return null;

@@ -18,6 +18,8 @@ public interface TrucoRoomSvc {
 
     TrucoRoomTable addTable(String roomId, TrucoRoomTable trucoRoomTable);
 
+    TrucoRoomTableEvent setTablePosition(String roomId, String tableId, Integer position);
+
     TrucoRoomTable deleteTable(String roomId, String tableId);
 
     void addChair(String tableId, Chair chair);

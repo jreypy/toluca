@@ -3,6 +3,7 @@ package py.com.roshka.toluca.websocket.service;
 import py.com.roshka.truco.api.TrucoRoom;
 import py.com.roshka.truco.api.TrucoRoomEvent;
 import py.com.roshka.truco.api.TrucoRoomTable;
+import py.com.roshka.truco.api.TrucoRoomTableEvent;
 
 public interface TrucoRoomListener {
 
@@ -14,4 +15,6 @@ public interface TrucoRoomListener {
 
 
     void roomTableCreated(String roomId, TrucoRoomTable trucoRoomTable);
+
+    void trucoRoomTableEventReceived(String roomId, TrucoRoomTableEvent trucoRoomTableEvent);
 }
