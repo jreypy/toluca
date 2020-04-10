@@ -32,6 +32,8 @@ public class TrucoClientDispatcher {
             dispatchCommandResponse((String) event.get("command"), (String) event.get("id"), (Map) event.get("data"));
         } else if (Event.ROOM_USER_JOINED.equalsIgnoreCase(type)) {
             dispatchRoomEvent((Map) event.get("data"));
+        } else if (Event.ROOM_USER_LEFT.equalsIgnoreCase(type)) {
+            dispatchRoomEvent((Map) event.get("data"));
         }
     }
 
@@ -56,6 +58,8 @@ public class TrucoClientDispatcher {
         if (TrucoFrame.MAIN_ROOM_ID.equalsIgnoreCase(trucoRoomEvent.getRoom().getId())) {
             if (Event.ROOM_USER_JOINED.equalsIgnoreCase(trucoRoomEvent.getEventName())) {
                 trucoUserJoined(trucoRoomEvent.getUser());
+            } else if (Event.ROOM_USER_LEFT.equalsIgnoreCase(trucoRoomEvent.getEventName())) {
+                trucoUserLeft(trucoRoomEvent.getUser());
             }
         }
     }
@@ -63,6 +67,14 @@ public class TrucoClientDispatcher {
     void trucoUserJoined(TrucoUser trucoUser) {
         RoomEvent roomEvent = new RoomEvent();
         roomEvent.setType(RoomEvent.TYPE_PLAYER_JOINED);
+        roomEvent.setPlayer(new TrucoPlayer());
+        roomEvent.getPlayer().setName(trucoUser.getUsername());
+        roomEvent.getPlayer().setId(trucoUser.getId());
+        eventDispatcher.dispatchEvent(roomEvent);
+    }
+    void trucoUserLeft(TrucoUser trucoUser) {
+        RoomEvent roomEvent = new RoomEvent();
+        roomEvent.setType(RoomEvent.TYPE_PLAYER_LEFT);
         roomEvent.setPlayer(new TrucoPlayer());
         roomEvent.getPlayer().setName(trucoUser.getUsername());
         roomEvent.getPlayer().setId(trucoUser.getId());
