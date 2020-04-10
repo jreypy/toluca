@@ -3,6 +3,7 @@ package py.com.roshka.truco.ui;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
 import py.com.roshka.truco.api.TrucoPrincipal;
+import py.com.roshka.truco.api.TrucoRoomTable;
 import py.com.roshka.truco.api.constants.Commands;
 import py.com.roshka.truco.client.communication.TrucoClient;
 import py.com.roshka.truco.client.communication.TrucoClientHandler;
@@ -93,7 +94,14 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
     @Override
     public void createTableRequested(RoomEvent ev) {
         logger.debug("Create Table Requested [" + ev + "]");
-
+        TrucoRoomTable trucoRoomTable = new TrucoRoomTable();
+        trucoRoomTable.setRoomId(TrucoFrame.MAIN_ROOM_ID);
+        trucoRoomTable.setPoints(ev.getGamePoints());
+        try {
+            executeCommand(Commands.CREATE_ROOM_TABLE, trucoRoomTable);
+        } catch (TrucoClientException e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 
     @Override
