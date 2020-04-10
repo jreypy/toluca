@@ -77,7 +77,9 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
 
     @Override
     public void loginRequested(RoomEvent ev) {
-        String host = "ec2-184-73-89-227.compute-1.amazonaws.com";
+//        String host = "ec2-184-73-89-227.compute-1.amazonaws.com";
+        String host = "localhost";
+
         trucoClient = new TrucoClientImpl("http://" + host + ":8091", "ws://" + host + ":8050");
         logger.debug("loginRequested [" + ev + "]");
         try {

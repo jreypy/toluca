@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: py/edu/uca/fcyt/toluca/RoomServer
-Created-By: afeltes
-Class-Path: jdom.jar
-
