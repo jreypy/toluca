@@ -3,6 +3,8 @@ package py.com.roshka.truco.ui;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
 import py.com.roshka.truco.api.TrucoPrincipal;
+import py.com.roshka.truco.api.TrucoRoom;
+import py.com.roshka.truco.api.constants.Commands;
 import py.com.roshka.truco.client.communication.TrucoClient;
 import py.com.roshka.truco.client.communication.TrucoClientHandler;
 import py.com.roshka.truco.client.communication.exception.TrucoClientException;
@@ -95,6 +97,8 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
     public void afterLogin(TrucoPrincipal trucoPrincipal) throws TrucoClientException {
         logger.debug("After Login [" + trucoPrincipal + "]");
         trucoClient.connect();
+
+
         // TODO Notify Login Success
         RoomEvent roomEvent = new RoomEvent();
         roomEvent.setPlayer(new TrucoPlayer());
@@ -103,21 +107,20 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
         roomEvent.getPlayer().setId(trucoPrincipal.getUsername());
         roomEvent.setTablesServers(new TableServer[0]);
         getEventDispatcher().loginCompleted(roomEvent);
-        /// join users
-        {
 
-        }
         /// addTable
-        {
-            RoomEvent table = new RoomEvent();
-            table.setTableServer(new TableServer());
-            table.getTableServer().setHost(new TrucoPlayer());
-            table.getTableServer().getHost().setName("sricco");
-            table.setType(RoomEvent.TYPE_TABLE_CREATED);
-            table.setGamePoints(30);
-            table.setPlayers(new LinkedHashMap());
-            getEventDispatcher().dispatchEvent(table);
-        }
+//        {
+//            RoomEvent table = new RoomEvent();
+//            table.setTableServer(new TableServer());
+//            table.getTableServer().setHost(new TrucoPlayer());
+//            table.getTableServer().getHost().setName("sricco");
+//            table.setType(RoomEvent.TYPE_TABLE_CREATED);
+//            table.setGamePoints(30);
+//            table.setPlayers(new LinkedHashMap());
+//            getEventDispatcher().dispatchEvent(table);
+//        }
+        // get room
+
 
         logger.debug("Client connected to Websocket");
         // Notify
@@ -134,12 +137,15 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
 
     @Override
     public void ready() {
-        Map map = new LinkedHashMap();
-        map.put("id", TrucoFrame.MAIN_ROOM);
         try {
-            trucoClient.send("join_room", map);
+            executeCommand(Commands.GET_ROOM, TrucoFrame.MAIN_ROOM);
+            executeCommand(Commands.JOIN_ROOM, TrucoFrame.MAIN_ROOM);
         } catch (TrucoClientException e) {
             logger.error("Error on Client Message sending", e);
         }
+    }
+
+    private void executeCommand(String commandName, Object data) throws TrucoClientException {
+        trucoClient.send(commandName, data);
     }
 }

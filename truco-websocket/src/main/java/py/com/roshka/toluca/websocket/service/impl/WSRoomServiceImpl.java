@@ -45,9 +45,14 @@ public class WSRoomServiceImpl implements RoomService {
         return restTemplate.postForObject(trucoServerHost + "/api/room/" + trucoRoom.getId() + "/join", null, TrucoRoomEvent.class);
     }
 
+
     @Override
     public List<TrucoRoom> findAllRooms() {
-        // TODO Use Authentication
         return Arrays.asList(restTemplate.getForObject(trucoServerHost + "/api/room", TrucoRoom[].class));
+    }
+
+    @Override
+    public TrucoRoom findRoomById(String id) {
+        return restTemplate.getForObject(trucoServerHost + "/api/room/" + id, TrucoRoom.class);
     }
 }

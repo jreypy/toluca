@@ -8,6 +8,13 @@ public class TrucoRoom {
     private String name;
     private Set<TrucoRoomUser> users = new HashSet<>();
 
+    public TrucoRoom() {
+    }
+
+    public TrucoRoom(String id) {
+        this.id = id;
+    }
+
     public String getId() {
         return id;
     }

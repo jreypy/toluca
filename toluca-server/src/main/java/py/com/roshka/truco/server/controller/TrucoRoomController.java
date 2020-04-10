@@ -29,9 +29,9 @@ public class TrucoRoomController {
         return trucoRoomSvc.findAllRooms();
     }
 
-    @GetMapping("/{id}")
-    public TrucoRoom findAllTrucoRoom(@PathVariable("id") String id) {
-        return trucoRoomSvc.findAllRooms().get(0);
+    @GetMapping("/{roomId}")
+    public TrucoRoom findRoomById(@PathVariable("roomId") String roomId) {
+        return trucoRoomSvc.findRoomById(roomId);
     }
 
     @PostMapping("")

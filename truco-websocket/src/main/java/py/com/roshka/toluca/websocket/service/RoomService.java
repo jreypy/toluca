@@ -7,11 +7,13 @@ import java.util.List;
 
 public interface RoomService {
 
-    public void connect(String user);
+    void connect(String user);
 
-    public TrucoRoom createRoom(TrucoRoom trucoRoom);
+    TrucoRoom createRoom(TrucoRoom trucoRoom);
 
-    public TrucoRoomEvent joinRoom(TrucoRoom trucoRoom);
+    TrucoRoomEvent joinRoom(TrucoRoom trucoRoom);
+
+    TrucoRoom findRoomById(String id);
 
     List<TrucoRoom> findAllRooms();
 

@@ -20,6 +20,11 @@ Create Room
     $ {"command":"create_room", "data" : {"name":"My First Room"}}
     
 
+Get Room
+--------
+    $ {"command":"get_room", "data" : {"id":"1"}}
+
+
 Join to Room
 --------
     $ {"command":"join_room", "data" : {"id":"1"}}

@@ -4,6 +4,7 @@ import java.util.Map;
 
 public class Command {
     String command;
+    String id;
     Map data;
 
     public String getCommand() {
@@ -22,5 +23,12 @@ public class Command {
         this.data = data;
     }
 
-    
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }

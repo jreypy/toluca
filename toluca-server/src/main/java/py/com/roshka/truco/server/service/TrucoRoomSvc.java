@@ -8,6 +8,8 @@ public interface TrucoRoomSvc {
 
     List<TrucoRoom> findAllRooms();
 
+    TrucoRoom findRoomById(String roomId);
+
     TrucoRoom create(TrucoRoom trucoRoom);
 
     TrucoRoomEvent joinRoom(String roomId, TrucoUser user);

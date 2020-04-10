@@ -12,6 +12,7 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import py.com.roshka.toluca.websocket.beans.Command;
+import py.com.roshka.toluca.websocket.beans.CommandResponse;
 import py.com.roshka.toluca.websocket.beans.Event;
 import py.com.roshka.toluca.websocket.service.CommandProcessor;
 import py.com.roshka.truco.api.TrucoPrincipal;
@@ -86,9 +87,9 @@ public class RoomHandler extends WebSocketHandler {
                 logger.debug("Close Session by Client Request");
                 session.close();
             } else {
-                Event event = commandProcessor.processCommand(objectMapper.readValue(payload, Command.class));
-                if (event != null) {
-                    session.sendMessage(new TextMessage(objectMapper.writeValueAsString(event)));
+                CommandResponse commandResponse = commandProcessor.processCommand(objectMapper.readValue(payload, Command.class));
+                if (commandResponse != null) {
+                    session.sendMessage(new TextMessage(objectMapper.writeValueAsString(commandResponse)));
                 }
             }
         } catch (Exception e) {

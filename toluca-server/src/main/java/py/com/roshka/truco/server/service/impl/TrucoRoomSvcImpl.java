@@ -32,6 +32,15 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
         return new ArrayList<>(rooms.values());
     }
 
+    @Override
+    public TrucoRoom findRoomById(String roomId) {
+        TrucoRoom trucoRoom = rooms.get(roomId);
+        if (trucoRoom == null)
+            throw new IllegalArgumentException("Room not found [" + roomId + "]");
+
+        return trucoRoom;
+    }
+
     public TrucoRoom create(TrucoRoom trucoRoom) {
         trucoRoom.setId(Integer.toString(++roomId));
         this.rooms.put(trucoRoom.getId(), trucoRoom);
