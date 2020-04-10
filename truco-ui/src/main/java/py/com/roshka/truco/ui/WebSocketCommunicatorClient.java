@@ -3,7 +3,6 @@ package py.com.roshka.truco.ui;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
 import py.com.roshka.truco.api.TrucoPrincipal;
-import py.com.roshka.truco.api.TrucoRoom;
 import py.com.roshka.truco.api.constants.Commands;
 import py.com.roshka.truco.client.communication.TrucoClient;
 import py.com.roshka.truco.client.communication.TrucoClientHandler;
@@ -18,7 +17,6 @@ import py.edu.uca.fcyt.toluca.net.EventDispatcherClient;
 import py.edu.uca.fcyt.toluca.table.TableServer;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class WebSocketCommunicatorClient extends CommunicatorClient implements TrucoClientHandler {
@@ -79,7 +77,8 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
 
     @Override
     public void loginRequested(RoomEvent ev) {
-        trucoClient = new TrucoClientImpl("http://localhost:8091", "ws://localhost:8050");
+        String host = "ec2-184-73-89-227.compute-1.amazonaws.com";
+        trucoClient = new TrucoClientImpl("http://" + host + ":8091", "ws://" + host + ":8050");
         logger.debug("loginRequested [" + ev + "]");
         try {
             trucoClient.login(ev.getUser(), ev.getPassword(), this);
