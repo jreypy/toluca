@@ -10,12 +10,18 @@
     <version>2.0.0</version>
     <modules>
         <module>toluca-api</module>
+        <module>toluca-game-api</module>
         <module>toluca-game</module>
         <module>toluca-game-simple-ui</module>
         <module>toluca-registry</module>
         <module>toluca-gateway</module>
         <module>toluca-server</module>
         <module>truco-websocket</module>
+        <module>toluca-chat</module>
+        <module>toluca-ui</module>
+        <module>truco-client</module>
+        <module>truco-ui</module>
+
     </modules>
 
 </project>
