@@ -14,10 +14,14 @@ import org.springframework.web.socket.WebSocketSession;
 import py.com.roshka.toluca.websocket.beans.Command;
 import py.com.roshka.toluca.websocket.beans.CommandResponse;
 import py.com.roshka.toluca.websocket.beans.Event;
+import py.com.roshka.toluca.websocket.global.Events;
 import py.com.roshka.toluca.websocket.service.CommandProcessor;
+import py.com.roshka.truco.api.TrucoEvent;
 import py.com.roshka.truco.api.TrucoPrincipal;
 
+import java.io.IOException;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -110,11 +114,37 @@ public class RoomHandler extends WebSocketHandler {
         session.getAttributes().put("username", trucoPrincipal.getUsername());
         String query = session.getUri().getQuery();
         String message = "Hello! " + trucoPrincipal.getUsername() + " is connected [" + query + "]";
-        Map map = new LinkedHashMap<>();
-        map.put("message", message);
-        session.sendMessage(new TextMessage(objectMapper.writeValueAsString(map)));
-        super.afterConnectionEstablished(session);
+        {
+            Map map = new LinkedHashMap<>();
+            map.put("message", message);
+            session.sendMessage(new TextMessage(objectMapper.writeValueAsString(map)));
+        }
 
+        // Remove others connections
+        //Iterator it = map.entrySet().iterator();
+        Iterator<Map.Entry<String, WebSocketSession>> it = sessions.entrySet().iterator();
+        while (it.hasNext()) {
+            WebSocketSession s = it.next().getValue();
+            if (s.getAttributes().get("username").equals(trucoPrincipal.getUsername())) {
+                if (s.isOpen()) {
+                    // Disconnect
+                    logger.debug("Disconect because is already connected");
+                    Map goodBye = new LinkedHashMap<>();
+                    s.getAttributes().put(Events.USER_FIRED_BY_SERVER, Events.USER_FIRED_BY_SERVER);
+                    goodBye.put("message", "Usuario se conectó utilizando otra aplicación");
+                    Event event = new Event(Events.USER_FIRED_BY_SERVER, goodBye);
+                    sendEvent(event);
+                    try {
+                        s.close();
+                    } catch (IOException e) {
+                        logger.error("Error firing Connection [" + s.getId() + "]", e);
+                    }
+                }
+
+            }
+
+        }
+        super.afterConnectionEstablished(session);
         // roomService.connect(auth.split("-")[0]);
     }
 

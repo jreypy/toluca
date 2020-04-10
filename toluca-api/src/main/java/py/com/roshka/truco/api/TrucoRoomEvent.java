@@ -1,10 +1,13 @@
 package py.com.roshka.truco.api;
 
-public class TrucoRoomEvent {
+public class TrucoRoomEvent extends TrucoEvent {
     private String eventName;
-    private String message;
     private TrucoUser user;
     private TrucoRoom room;
+
+    public TrucoRoomEvent() {
+    }
+
 
     public String getEventName() {
         return eventName;
@@ -14,13 +17,6 @@ public class TrucoRoomEvent {
         this.eventName = eventName;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
 
     public TrucoUser getUser() {
         return user;
