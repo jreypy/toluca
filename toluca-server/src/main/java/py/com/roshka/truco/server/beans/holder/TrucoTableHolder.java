@@ -11,7 +11,10 @@ public class TrucoTableHolder {
     private Map<Integer, TrucoUser> positions = new LinkedHashMap<>();
 
     public TrucoTableHolder(TrucoRoomTable table) {
+        if (table.getOwner() == null)
+            throw new IllegalArgumentException("TrucoUser owner is required");
         this.table = table;
+        this.users.add(table.getOwner());
     }
 
     public TrucoRoomTable getTable() {
@@ -25,13 +28,12 @@ public class TrucoTableHolder {
     public TrucoUser sitDownPlayer(TrucoUser trucoUser, Integer index) {
         if (index < 0 || index >= 6)
             throw new IllegalArgumentException("Position is invalid [" + index + "] [0-6]");
-
         positions.put(index, trucoUser);
         users.add(trucoUser);
-
         return trucoUser;
-
     }
 
-
+    public void joinUser(TrucoUser user) {
+        this.users.add(user);
+    }
 }

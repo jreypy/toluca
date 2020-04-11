@@ -11,6 +11,7 @@ import py.com.roshka.truco.api.TrucoRoom;
 import py.com.roshka.truco.api.TrucoRoomEvent;
 import py.com.roshka.truco.api.TrucoRoomTable;
 import py.com.roshka.truco.api.TrucoRoomTableEvent;
+import py.com.roshka.truco.api.request.JoinRoomTableRequest;
 import py.com.roshka.truco.api.request.TablePositionRequest;
 
 import java.util.Arrays;
@@ -54,6 +55,11 @@ public class WSRoomServiceImpl implements RoomService {
     @Override
     public TrucoRoomTableEvent setTablePosition(TablePositionRequest tablePositionRequest) {
         return putForObject(trucoServerHost + "/api/room/" + tablePositionRequest.getRoomId() + "/table/" + tablePositionRequest.getTableId() + "/position/" + tablePositionRequest.getChair(), null, TrucoRoomTableEvent.class);
+    }
+
+    @Override
+    public TrucoRoomTableEvent joinRoomTable(JoinRoomTableRequest tablePositionRequest) {
+        return restTemplate.postForObject(trucoServerHost + "/api/room/" + tablePositionRequest.getRoomId() + "/table/" + tablePositionRequest.getTableId() + "/join", null, TrucoRoomTableEvent.class);
     }
 
     @Override

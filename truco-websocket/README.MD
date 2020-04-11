@@ -34,6 +34,10 @@ Create Table
 --------
     $ {"command":"create_room_table", "data" : {"roomId":"1", "points": 30 }}
 
+Join to Room Table
+--------
+    $ {"command":"join_room_table", "data" : {"roomId":"1","tableId":"1"}}
+    
 Set Table Position
 --------
     $ {"command":"set_table_position", "data" : {"roomId":"1","tableId":"10", "chair":2}}

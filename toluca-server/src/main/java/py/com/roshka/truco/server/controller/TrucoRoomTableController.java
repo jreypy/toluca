@@ -30,5 +30,10 @@ public class TrucoRoomTableController {
         return trucoRoomSvc.setTablePosition(roomId, tableId, position);
     }
 
+    @PostMapping("/{tableId}/join")
+    public TrucoRoomTableEvent joinTrucoRoomTable(@PathVariable("roomId") String roomId, @PathVariable("tableId") String tableId) {
+        return trucoRoomSvc.joinRoomTable(roomId, tableId);
+    }
+
 
 }

@@ -6,6 +6,7 @@ import py.com.roshka.truco.api.TrucoPrincipal;
 import py.com.roshka.truco.api.TrucoRoomTable;
 import py.com.roshka.truco.api.TrucoRoomTableEvent;
 import py.com.roshka.truco.api.constants.Commands;
+import py.com.roshka.truco.api.request.JoinRoomTableRequest;
 import py.com.roshka.truco.api.request.TablePositionRequest;
 import py.com.roshka.truco.client.communication.TrucoClient;
 import py.com.roshka.truco.client.communication.TrucoClientHandler;
@@ -106,6 +107,18 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
         }
     }
 
+    @Override
+    public void tableJoinRequested(RoomEvent ev) {
+        logger.debug("Send Join Requested [" + ev + "] Command");
+        JoinRoomTableRequest joinRoomTable = new JoinRoomTableRequest();
+        joinRoomTable.setRoomId(TrucoFrame.MAIN_ROOM_ID);
+        joinRoomTable.setTableId(Integer.toString(ev.getTableNumber()));
+        try {
+            executeCommand(Commands.JOIN_ROOM_TABLE, joinRoomTable);
+        } catch (TrucoClientException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void playerSitRequest(TableEvent ev) {

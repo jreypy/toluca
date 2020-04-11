@@ -8,6 +8,7 @@ import py.com.roshka.toluca.websocket.service.CommandProcessor;
 import py.com.roshka.toluca.websocket.service.RoomService;
 import py.com.roshka.truco.api.TrucoRoom;
 import py.com.roshka.truco.api.TrucoRoomTable;
+import py.com.roshka.truco.api.request.JoinRoomTableRequest;
 import py.com.roshka.truco.api.request.TablePositionRequest;
 
 import java.util.LinkedHashMap;
@@ -29,7 +30,9 @@ public class CommandProcessorImpl extends Processor implements CommandProcessor 
 
     @Override
     public CommandResponse processCommand(Command command) {
-        if (CREATE_ROOM_TABLE.equalsIgnoreCase(command.getCommand())) {
+        if (JOIN_ROOM_TABLE.equalsIgnoreCase(command.getCommand())) {
+            return getCommandResponse(command, roomService.joinRoomTable(objectMapper.convertValue(command.getData(), JoinRoomTableRequest.class)));
+        } else if (CREATE_ROOM_TABLE.equalsIgnoreCase(command.getCommand())) {
             return getCommandResponse(command, roomService.createRoomTable(objectMapper.convertValue(command.getData(), TrucoRoomTable.class)));
         } else if (SET_TABLE_POSITION.equalsIgnoreCase(command.getCommand())) {
             return getCommandResponse(command, roomService.setTablePosition(objectMapper.convertValue(command.getData(), TablePositionRequest.class)));

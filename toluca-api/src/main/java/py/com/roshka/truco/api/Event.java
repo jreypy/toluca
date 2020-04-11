@@ -11,4 +11,5 @@ public class Event {
     public static String COMMAND_RESPONSE = "COMMAND_RESPONSE";
 
     public static String ROOM_TABLE_CREATED = "ROOM_TABLE_CREATED";
+    public static String ROOM_TABLE_USER_JOINED = "ROOM_TABLE_USER_JOINED";
 }

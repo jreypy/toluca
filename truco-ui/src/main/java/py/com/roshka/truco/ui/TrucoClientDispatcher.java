@@ -39,7 +39,10 @@ public class TrucoClientDispatcher {
         } else if (Event.ROOM_TABLE_CREATED.equalsIgnoreCase(type)) {
             dispatchRoomCreated((Map) event.get("data"));
         } else if (Event.TABLE_POSITION_SETTED.equalsIgnoreCase(type)) {
-            dispatchRoomTableEvent((Map) event.get("data"));
+            dispatchRoomTableEvent( EVENT_playerSit, (Map) event.get("data"));
+        } else if (Event.ROOM_TABLE_USER_JOINED.equalsIgnoreCase(type)) {
+            TrucoRoomTableEvent trucoRoomTableEvent = objectMapper.convertValue((Map) event.get("data"), TrucoRoomTableEvent.class);
+            dispatchRoomEvent( RoomEvent.TYPE_TABLE_JOINED, trucoRoomTableEvent);
         }
 
 
@@ -107,10 +110,10 @@ public class TrucoClientDispatcher {
     }
 
 
-    public void dispatchRoomTableEvent(Map eventData) {
+    public void dispatchRoomTableEvent(Integer eventType, Map eventData) {
         TrucoRoomTableEvent trucoRoomTableEvent = objectMapper.convertValue(eventData, TrucoRoomTableEvent.class);
         TableEvent tableEvent = new TableEvent();
-        tableEvent.setEvent(EVENT_playerSit);
+        tableEvent.setEvent(eventType);
         tableEvent.setTableServer(new TableServer());
         tableEvent.getTableServer().setTableNumber(Integer.parseInt(trucoRoomTableEvent.getTableId()));
         TrucoPlayer trucoPlayer = new TrucoPlayer();
@@ -119,6 +122,20 @@ public class TrucoClientDispatcher {
         tableEvent.setPlayer(new TrucoPlayer[]{trucoPlayer});
         tableEvent.setValue(trucoRoomTableEvent.getChair());
         eventDispatcher.dispatchEvent(tableEvent);
+
+    }
+    public void dispatchRoomEvent(Integer eventType, TrucoRoomTableEvent eventData) {
+        RoomEvent roomEvent = new RoomEvent();
+        roomEvent.setType(eventType);
+        roomEvent.setPlayer(new TrucoPlayer());
+        roomEvent.getPlayer().setName(eventData.getUser().getUsername());
+        roomEvent.getPlayer().setId(eventData.getUser().getId());
+
+        roomEvent.setTableServer(new TableServer());
+        roomEvent.getTableServer().setTableNumber(Integer.parseInt(eventData.getTableId()));
+
+
+        eventDispatcher.dispatchEvent(roomEvent);
 
     }
 }

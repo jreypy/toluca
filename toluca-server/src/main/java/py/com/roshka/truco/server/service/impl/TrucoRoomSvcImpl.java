@@ -118,6 +118,25 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
         return trucoRoomTable;
     }
 
+    @Override
+    public TrucoRoomTableEvent joinRoomTable(String roomId, String tableId) {
+        TrucoUser user = trucoUserService.getTrucoUser();
+        logger.debug("User [" + user.getUsername() + "] joining to room [" + roomId + "]");
+        TrucoRoomHolder trucoRoomHolder = getTrucoRoomHolder(roomId);
+
+        trucoRoomHolder.getTrucoTableHolder(tableId).joinUser(user);
+        TrucoRoomTableEvent trucoRoomTableEvent = new TrucoRoomTableEvent();
+        trucoRoomTableEvent.setEventName(Event.ROOM_TABLE_USER_JOINED);
+        trucoRoomTableEvent.setMessage("User joined to the Room Table [" + roomId + "][" + tableId + "]");
+        trucoRoomTableEvent.setUser(user);
+        trucoRoomTableEvent.setRoomId(roomId);
+        trucoRoomTableEvent.setTableId(tableId);
+        rabbitTemplate.convertAndSend(TRUCO_ROOM_EVENT, roomId, new RabbitResponse(Event.ROOM_TABLE_USER_JOINED, trucoRoomTableEvent.getClass().getCanonicalName(), objectMapper.convertValue(trucoRoomTableEvent, HashMap.class)));
+        logger.debug("User [" + user.getUsername() + "] joined to the room [" + roomId + "]");
+        return trucoRoomTableEvent;
+
+    }
+
 
     public TrucoRoomTable deleteTable(String roomId, String tableId) {
         return null;
