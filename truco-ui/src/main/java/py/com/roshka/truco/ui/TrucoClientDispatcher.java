@@ -4,10 +4,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
 import py.com.roshka.truco.api.*;
 import py.com.roshka.truco.api.constants.Commands;
+import py.edu.uca.fcyt.toluca.RoomClient;
 import py.edu.uca.fcyt.toluca.event.RoomEvent;
 import py.edu.uca.fcyt.toluca.event.TableEvent;
+import py.edu.uca.fcyt.toluca.event.TrucoEvent;
+import py.edu.uca.fcyt.toluca.event.TrucoListener;
+import py.edu.uca.fcyt.toluca.game.TrucoCard;
+import py.edu.uca.fcyt.toluca.game.TrucoGameClient;
 import py.edu.uca.fcyt.toluca.game.TrucoPlayer;
+import py.edu.uca.fcyt.toluca.game.TrucoTeam;
 import py.edu.uca.fcyt.toluca.net.EventDispatcher;
+import py.edu.uca.fcyt.toluca.table.Table;
 import py.edu.uca.fcyt.toluca.table.TableServer;
 
 import java.util.LinkedHashMap;
@@ -21,15 +28,21 @@ public class TrucoClientDispatcher {
 
     private ObjectMapper objectMapper;
     private EventDispatcher eventDispatcher;
+    private TrucoListener trucoListener;
 
-    public TrucoClientDispatcher(ObjectMapper objectMapper, EventDispatcher eventDispatcher) {
+    public TrucoClientDispatcher(ObjectMapper objectMapper, EventDispatcher eventDispatcher, RoomClient client, TrucoListener trucoListener) {
         this.objectMapper = objectMapper;
         this.eventDispatcher = eventDispatcher;
+        eventDispatcher.setRoom(client);
+        this.trucoListener = trucoListener;
     }
 
     public void dispatchEvent(Map event) {
         String type = (String) event.get("type");
         logger.debug("Dispatching event [" + type + "]");
+        if (Event.TRUCO_GAME_EVENT.equalsIgnoreCase(type)) {
+            dispatchTrucoGameEvent((Map) event.get("data"));
+        }
         if (Event.COMMAND_RESPONSE.equalsIgnoreCase(type)) {
             dispatchCommandResponse((String) event.get("command"), (String) event.get("id"), (Map) event.get("data"));
         } else if (Event.ROOM_USER_JOINED.equalsIgnoreCase(type)) {
@@ -39,14 +52,71 @@ public class TrucoClientDispatcher {
         } else if (Event.ROOM_TABLE_CREATED.equalsIgnoreCase(type)) {
             dispatchRoomCreated((Map) event.get("data"));
         } else if (Event.TABLE_POSITION_SETTED.equalsIgnoreCase(type)) {
-            dispatchRoomTableEvent( EVENT_playerSit, (Map) event.get("data"));
+            dispatchRoomTableEvent(EVENT_playerSit, (Map) event.get("data"));
         } else if (Event.ROOM_TABLE_USER_JOINED.equalsIgnoreCase(type)) {
             TrucoRoomTableEvent trucoRoomTableEvent = objectMapper.convertValue((Map) event.get("data"), TrucoRoomTableEvent.class);
-            dispatchRoomEvent( RoomEvent.TYPE_TABLE_JOINED, trucoRoomTableEvent);
+            dispatchRoomEvent(RoomEvent.TYPE_TABLE_JOINED, trucoRoomTableEvent);
         }
 
 
     }
+
+    private void dispatchTrucoGameEvent(Map data) {
+        TrucoGameEvent trucoGameEvent = objectMapper.convertValue(data, TrucoGameEvent.class);
+        logger.info("*** TODO **** [" + data + "]");
+        if (Event.GAME_STARTED.equals(trucoGameEvent.getEventName())) {
+            handleGameStarted(trucoGameEvent);
+        } else if (Event.HAND_STARTED.equals(trucoGameEvent.getEventName())) {
+            handleHandStarted(trucoGameEvent);
+        } else if (Event.GIVING_CARDS.equals(trucoGameEvent.getEventName())) {
+            handleGivingCards(trucoGameEvent);
+        } else if (Event.PLAY_REQUEST.equals(trucoGameEvent.getEventName())) {
+
+        }
+    }
+
+    private void handleGivingCards(TrucoGameEvent trucoGameEvent) {
+
+        TrucoEvent trucoEvent = new TrucoEvent();
+        trucoEvent.setType(TrucoEvent.ENVIAR_CARTAS);
+        trucoEvent.setTableNumber(Integer.parseInt(trucoGameEvent.getGame().getId()));
+        trucoEvent.setPlayer(TrucoConverter.getPlayer(trucoGameEvent.getPlayer()));
+        trucoEvent.setCards(TrucoConverter.getCards(trucoGameEvent.getCards()));
+        eventDispatcher.receiveCards(trucoEvent);
+
+    }
+
+
+    private void handleGameStarted(TrucoGameEvent trucoGameEvent) {
+        TableEvent tableEvent = new TableEvent();
+        /*logeador.log(TolucaConstants.CLIENT_DEBUG_LOG_LEVEL,
+                "Llego un gameStarted de TableEvent ");*/
+        TableServer tableServer = new TableServer();
+        // TODO CHECK
+
+        Table table = eventDispatcher.getRoom().getTable(Integer.parseInt(trucoGameEvent.getTableId()));
+        TrucoTeam[] trucoTeams = table.createTeams();
+
+//        TrucoTeam[] trucoTeam = table.createTeams();
+        TrucoGameClient trucoGameClient = new TrucoGameClient(trucoTeams[0],
+                trucoTeams[1],
+                trucoGameEvent.getGame().getPoints());
+
+        trucoGameClient.setTableNumber(tableServer.getTableNumber());
+        trucoGameClient.addTrucoListener(trucoListener);
+
+        //es muy importante el orden de los faroles altera el valor del
+        // alumbrado
+        //esto me hizo perder 2 horas
+        table.startGame(trucoGameClient);//atender esta linea primero que la
+        trucoGameClient.startGameClient();
+
+
+    }
+    private void handleHandStarted(TrucoGameEvent trucoGameEvent) {
+
+    }
+
 
     private void dispatchRoomCreated(Map eventData) {
         TrucoRoomTable trucoRoomTable = objectMapper.convertValue(eventData, TrucoRoomTable.class);
@@ -124,6 +194,7 @@ public class TrucoClientDispatcher {
         eventDispatcher.dispatchEvent(tableEvent);
 
     }
+
     public void dispatchRoomEvent(Integer eventType, TrucoRoomTableEvent eventData) {
         RoomEvent roomEvent = new RoomEvent();
         roomEvent.setType(eventType);

@@ -34,7 +34,7 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
         trucoRoom.setId(Integer.toString(++_roomId));
         trucoRoom.setName("Principal");
         this.rooms.put(trucoRoom.getId(), trucoRoom);
-        this.roomsHolder.put(trucoRoom.getId(), new TrucoRoomHolder(trucoRoom));
+        this.roomsHolder.put(trucoRoom.getId(), new TrucoRoomHolder(trucoRoom, objectMapper, rabbitTemplate));
     }
 
 
@@ -55,7 +55,7 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
     public TrucoRoom create(TrucoRoom trucoRoom) {
         trucoRoom.setId(Integer.toString(++_roomId));
         this.rooms.put(trucoRoom.getId(), trucoRoom);
-        this.roomsHolder.put(trucoRoom.getId(), new TrucoRoomHolder(trucoRoom));
+        this.roomsHolder.put(trucoRoom.getId(), new TrucoRoomHolder(trucoRoom, objectMapper, rabbitTemplate));
         // Notify was created
         rabbitTemplate.convertAndSend(TRUCO_EVENT, ROOM_ROUTING_KEY, new RabbitResponse(Event.ROOM_CREATED, trucoRoom.getClass().getCanonicalName(), objectMapper.convertValue(trucoRoom, HashMap.class)));
         return trucoRoom;
@@ -168,7 +168,7 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
         });
     }
 
-    private TrucoRoomHolder getTrucoRoomHolder(String roomId) {
+    public TrucoRoomHolder getTrucoRoomHolder(String roomId) {
         TrucoRoomHolder trucoRoomHolder = roomsHolder.get(roomId);
         if (trucoRoomHolder != null) {
             return trucoRoomHolder;

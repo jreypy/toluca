@@ -1,5 +1,7 @@
 package py.com.roshka.truco.server.beans.holder;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import py.com.roshka.truco.api.TrucoRoom;
 import py.com.roshka.truco.api.TrucoRoomTable;
 import py.com.roshka.truco.api.TrucoUser;
@@ -10,9 +12,13 @@ import java.util.Map;
 public class TrucoRoomHolder {
     private TrucoRoom trucoRoom;
     private Map<String, TrucoTableHolder> tables = new LinkedHashMap<>();
+    private RabbitTemplate rabbitTemplate;
+    private ObjectMapper objectMapper;
 
-    public TrucoRoomHolder(TrucoRoom trucoRoom) {
+    public TrucoRoomHolder(TrucoRoom trucoRoom, ObjectMapper objectMapper, RabbitTemplate rabbitTemplate) {
         this.trucoRoom = trucoRoom;
+        this.rabbitTemplate = rabbitTemplate;
+        this.objectMapper = objectMapper;
     }
 
     public TrucoRoom getTrucoRoom() {
@@ -27,7 +33,8 @@ public class TrucoRoomHolder {
         // Check Permisions and size limit
         trucoRoomTable.setId(tableId);
         trucoRoomTable.setOwner(user);
-        tables.put(tableId, new TrucoTableHolder(trucoRoomTable));
+        trucoRoomTable.setRoomId(trucoRoom.getId());
+        tables.put(tableId, new TrucoTableHolder(trucoRoomTable, objectMapper, rabbitTemplate));
         return trucoRoomTable;
     }
 

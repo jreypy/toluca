@@ -36,11 +36,16 @@ Create Table
 
 Join to Room Table
 --------
-    $ {"command":"join_room_table", "data" : {"roomId":"1","tableId":"1"}}
+    $ {"command":"join_room_table", "data" : {"roomId":"1","tableId":"2"}}
     
 Set Table Position
 --------
-    $ {"command":"set_table_position", "data" : {"roomId":"1","tableId":"10", "chair":2}}
+    $ {"command":"set_table_position", "data" : {"roomId":"1","tableId":"2", "chair":1}}
+
+Start Game
+--------
+    
+    $ {"command":"start_game", "data" : {"roomId":"1","tableId":"4"}}
 
     
 Events

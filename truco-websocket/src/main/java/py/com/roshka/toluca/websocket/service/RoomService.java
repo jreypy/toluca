@@ -5,6 +5,7 @@ import py.com.roshka.truco.api.TrucoRoomEvent;
 import py.com.roshka.truco.api.TrucoRoomTable;
 import py.com.roshka.truco.api.TrucoRoomTableEvent;
 import py.com.roshka.truco.api.request.JoinRoomTableRequest;
+import py.com.roshka.truco.api.request.StartGameRequest;
 import py.com.roshka.truco.api.request.TablePositionRequest;
 
 import java.util.List;
@@ -24,4 +25,6 @@ public interface RoomService {
     TrucoRoomTableEvent setTablePosition(TablePositionRequest tablePositionRequest);
 
     TrucoRoomTableEvent joinRoomTable(JoinRoomTableRequest trucoRoomTable);
+
+    TrucoRoomTableEvent startGame(StartGameRequest startGameRequest);
 }

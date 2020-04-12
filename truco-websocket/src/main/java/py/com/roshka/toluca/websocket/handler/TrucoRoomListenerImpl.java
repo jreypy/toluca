@@ -6,6 +6,8 @@ import py.com.roshka.toluca.websocket.service.EventProcessor;
 import py.com.roshka.toluca.websocket.service.TrucoRoomListener;
 import py.com.roshka.truco.api.*;
 
+import java.util.Map;
+
 @Component
 public class TrucoRoomListenerImpl implements TrucoRoomListener {
 
@@ -40,6 +42,12 @@ public class TrucoRoomListenerImpl implements TrucoRoomListener {
     @Override
     public void trucoRoomTableEventReceived(String roomId, TrucoRoomTableEvent trucoRoomTableEvent) {
         roomHandler.sendRoomEvent(roomId, eventProcessor.sendEvent(trucoRoomTableEvent.getEventName(), trucoRoomTableEvent));
+    }
+
+    @Override
+    public void trucoGameEvent(String roomId, Map gameEvent) {
+        // TODO Send to Table
+        roomHandler.sendRoomEvent(roomId, eventProcessor.sendEvent(Event.TRUCO_GAME_EVENT, gameEvent));
     }
 
 }

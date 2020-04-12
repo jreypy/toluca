@@ -36,18 +36,6 @@ public class TrucoClientTest {
     }
 
     public static void main(String[] args) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                TrucoClient trucoClient = new TrucoClientImpl("http://ec2-184-73-89-227.compute-1.amazonaws.com:8091", "ws://localhost:8050");
-                try {
 
-                    ((TrucoClientImpl) trucoClient).connect();
-                    logger.debug("TrucoClient was connected to Websocket");
-                } catch (Exception e) {
-                    logger.error(e.getMessage(), e);
-                }
-            }
-        }).start();
     }
 }

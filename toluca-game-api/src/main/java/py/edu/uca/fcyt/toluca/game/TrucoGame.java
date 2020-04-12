@@ -113,7 +113,6 @@ public abstract class TrucoGame {
      * @param type Tipo de Turno a ser asignado.
      */
     public void fireTurnEvent(TrucoPlayer pl, byte type) { //avisar quien juega con type el tipo de turno, ronda de cartas, ronda de envidos o flores etc
-
         TrucoEvent event = new TrucoEvent(this, numberOfHand, pl, type); //crear el evento
         event.setTableNumber(getTableNumber());
         for (int i = 0; i < listenerlist.size(); i++) { //enviarle a todos el evento

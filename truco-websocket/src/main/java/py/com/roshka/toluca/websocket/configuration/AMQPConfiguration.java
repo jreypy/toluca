@@ -33,12 +33,22 @@ public class AMQPConfiguration implements RabbitListenerConfigurer {
     }
 
     @Bean
+    public TopicExchange trucoGameTopic(@Value("truco_game_event") final String topicName) {
+        return new TopicExchange(topicName, false, false);
+    }
+
+    @Bean
     public Queue queue1(@Value("truco_client") final String queueName) {
         return new Queue(queueName, true);
     }
 
     @Bean
     public Queue queue2(@Value("truco_room_client") final String queueName) {
+        return new Queue(queueName, true);
+    }
+
+    @Bean
+    public Queue trucoGameClient(@Value("truco_game_client") final String queueName) {
         return new Queue(queueName, true);
     }
 
@@ -52,6 +62,12 @@ public class AMQPConfiguration implements RabbitListenerConfigurer {
     public Binding binding2(final Queue queue2, final TopicExchange topicExchange2) {
         return BindingBuilder
                 .bind(queue2).to(topicExchange2).with("*");
+    }
+
+    @Bean
+    public Binding trucoGameBinding(final Queue trucoGameClient, final TopicExchange trucoGameTopic) {
+        return BindingBuilder
+                .bind(trucoGameClient).to(trucoGameTopic).with("*");
     }
 
 //    @Bean

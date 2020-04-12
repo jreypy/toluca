@@ -7,6 +7,7 @@ import py.com.roshka.truco.api.TrucoRoomTable;
 import py.com.roshka.truco.api.TrucoRoomTableEvent;
 import py.com.roshka.truco.api.constants.Commands;
 import py.com.roshka.truco.api.request.JoinRoomTableRequest;
+import py.com.roshka.truco.api.request.StartGameRequest;
 import py.com.roshka.truco.api.request.TablePositionRequest;
 import py.com.roshka.truco.client.communication.TrucoClient;
 import py.com.roshka.truco.client.communication.TrucoClientHandler;
@@ -16,6 +17,7 @@ import py.edu.uca.fcyt.net.CommunicatorClient;
 import py.edu.uca.fcyt.toluca.RoomClient;
 import py.edu.uca.fcyt.toluca.event.RoomEvent;
 import py.edu.uca.fcyt.toluca.event.TableEvent;
+import py.edu.uca.fcyt.toluca.event.TrucoListener;
 import py.edu.uca.fcyt.toluca.game.TrucoPlayer;
 import py.edu.uca.fcyt.toluca.net.EventDispatcherClient;
 import py.edu.uca.fcyt.toluca.table.TableServer;
@@ -33,13 +35,14 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
 
     ObjectMapper objectMapper = new ObjectMapper();
     TrucoClientDispatcher trucoClientDispatcher = null;
+    TrucoListener trucoListener = new WebSocketTrucoListener(this);
 
     public WebSocketCommunicatorClient(RoomClient client, String serverString, Integer portNumber) throws IOException {
         super(new EventDispatcherClient());
         eventDispatcher.setRoom(client);
         roomClient = client;
         ((EventDispatcherClient) getEventDispatcher()).setCommClient(this);
-        trucoClientDispatcher = new TrucoClientDispatcher(objectMapper, getEventDispatcher());
+        trucoClientDispatcher = new TrucoClientDispatcher(objectMapper, getEventDispatcher(), roomClient, trucoListener);
     }
 
 
@@ -137,6 +140,22 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
             tablePositionRequest.setTableId(Integer.toString(ev.getTableBeanRepresentation().getId()));
             tablePositionRequest.setChair(ev.getValue());
             executeCommand(Commands.SET_TABLE_POSITION, tablePositionRequest);
+
+        } catch (TrucoClientException e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void gameStartRequest(TableEvent ev) {
+        logger.debug("GameStartedRequest [" + ev + "]");
+        logger.debug("Call GameStarted Command");
+        logger.debug("Set table position [" + ev + "]");
+        try {
+            StartGameRequest requestCommand = new StartGameRequest();
+            requestCommand.setRoomId(TrucoFrame.MAIN_ROOM_ID);
+            requestCommand.setTableId(Integer.toString(ev.getTableBeanRepresentation().getId()));
+            executeCommand(Commands.START_GAME, requestCommand);
 
         } catch (TrucoClientException e) {
             logger.error(e.getMessage(), e);

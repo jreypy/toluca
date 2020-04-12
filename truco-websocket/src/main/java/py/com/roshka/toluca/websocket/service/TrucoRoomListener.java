@@ -5,6 +5,8 @@ import py.com.roshka.truco.api.TrucoRoomEvent;
 import py.com.roshka.truco.api.TrucoRoomTable;
 import py.com.roshka.truco.api.TrucoRoomTableEvent;
 
+import java.util.Map;
+
 public interface TrucoRoomListener {
 
     public void roomCreated(TrucoRoom trucoRoom);
@@ -13,8 +15,9 @@ public interface TrucoRoomListener {
 
     public void userLeftTheRoom(String roomId, TrucoRoomEvent trucoRoomEvent);
 
-
     void roomTableCreated(String roomId, TrucoRoomTable trucoRoomTable);
 
     void trucoRoomTableEventReceived(String roomId, TrucoRoomTableEvent trucoRoomTableEvent);
+
+    void trucoGameEvent(String routingKey, Map gameEvent);
 }
