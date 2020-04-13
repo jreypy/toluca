@@ -1,9 +1,6 @@
 package py.com.roshka.toluca.websocket.service;
 
-import py.com.roshka.truco.api.TrucoRoom;
-import py.com.roshka.truco.api.TrucoRoomEvent;
-import py.com.roshka.truco.api.TrucoRoomTable;
-import py.com.roshka.truco.api.TrucoRoomTableEvent;
+import py.com.roshka.truco.api.*;
 import py.com.roshka.truco.api.request.JoinRoomTableRequest;
 import py.com.roshka.truco.api.request.StartGameRequest;
 import py.com.roshka.truco.api.request.TablePositionRequest;
@@ -27,4 +24,6 @@ public interface RoomService {
     TrucoRoomTableEvent joinRoomTable(JoinRoomTableRequest trucoRoomTable);
 
     TrucoRoomTableEvent startGame(StartGameRequest startGameRequest);
+
+    TrucoRoomTableEvent play(TrucoGamePlay trucoGamePlay);
 }

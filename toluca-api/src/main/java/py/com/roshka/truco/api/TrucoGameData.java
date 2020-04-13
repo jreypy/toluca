@@ -7,6 +7,7 @@ public class TrucoGameData {
     private Integer points;
     private TrucoGameTeam team1;
     private TrucoGameTeam team2;
+    private int handNumber;
 
     public String getId() {
         return id;
@@ -40,6 +41,14 @@ public class TrucoGameData {
         this.team2 = team2;
     }
 
+    public int getHandNumber() {
+        return handNumber;
+    }
+
+    public void setHandNumber(int handNumber) {
+        this.handNumber = handNumber;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -56,11 +65,12 @@ public class TrucoGameData {
 
     @Override
     public String toString() {
-        return "TrucoGame{" +
+        return "TrucoGameData{" +
                 "id='" + id + '\'' +
                 ", points=" + points +
                 ", team1=" + team1 +
                 ", team2=" + team2 +
+                ", handNumber=" + handNumber +
                 '}';
     }
 }

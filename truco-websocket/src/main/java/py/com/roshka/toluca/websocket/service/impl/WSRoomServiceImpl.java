@@ -66,6 +66,11 @@ public class WSRoomServiceImpl implements RoomService {
     }
 
     @Override
+    public TrucoRoomTableEvent play(TrucoGamePlay trucoGamePlay) {
+        return restTemplate.postForObject(trucoServerHost + "/api/room/" + trucoGamePlay.getRoomId() + "/table/" + trucoGamePlay.getTableId() + "/play", trucoGamePlay, TrucoGameEvent.class);
+    }
+
+    @Override
     public TrucoRoom findRoomById(String id) {
         return restTemplate.getForObject(trucoServerHost + "/api/room/" + id, TrucoRoom.class);
     }

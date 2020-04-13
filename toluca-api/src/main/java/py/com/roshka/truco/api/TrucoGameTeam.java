@@ -13,4 +13,11 @@ public class TrucoGameTeam {
     public void setPlayers(List<Player> players) {
         this.players = players;
     }
+
+    @Override
+    public String toString() {
+        return "TrucoGameTeam{" +
+                "players=" + players +
+                '}';
+    }
 }

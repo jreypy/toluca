@@ -36,6 +36,7 @@ public class WebSocketSessionManager extends TextWebSocketHandler {
     }
 
     public void sendEvent(Event event) {
+        logger.debug("Firing WS Event [" + event + "]");
         for (WebSocketSession session : sessions.values()) {
             sendEvent(session, event);
         }

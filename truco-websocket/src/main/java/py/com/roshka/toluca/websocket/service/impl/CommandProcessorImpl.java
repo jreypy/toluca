@@ -6,6 +6,7 @@ import py.com.roshka.toluca.websocket.beans.Command;
 import py.com.roshka.toluca.websocket.beans.CommandResponse;
 import py.com.roshka.toluca.websocket.service.CommandProcessor;
 import py.com.roshka.toluca.websocket.service.RoomService;
+import py.com.roshka.truco.api.TrucoGamePlay;
 import py.com.roshka.truco.api.TrucoRoom;
 import py.com.roshka.truco.api.TrucoRoomTable;
 import py.com.roshka.truco.api.request.JoinRoomTableRequest;
@@ -31,7 +32,10 @@ public class CommandProcessorImpl extends Processor implements CommandProcessor 
 
     @Override
     public CommandResponse processCommand(Command command) {
-        if (START_GAME.equalsIgnoreCase(command.getCommand())) {
+        if (PLAY.equalsIgnoreCase(command.getCommand())) {
+            return getCommandResponse(command, roomService.play(objectMapper.convertValue(command.getData(), TrucoGamePlay.class)));
+        }
+        else if (START_GAME.equalsIgnoreCase(command.getCommand())) {
             return getCommandResponse(command, roomService.startGame(objectMapper.convertValue(command.getData(), StartGameRequest.class)));
         } else if (JOIN_ROOM_TABLE.equalsIgnoreCase(command.getCommand())) {
             return getCommandResponse(command, roomService.joinRoomTable(objectMapper.convertValue(command.getData(), JoinRoomTableRequest.class)));

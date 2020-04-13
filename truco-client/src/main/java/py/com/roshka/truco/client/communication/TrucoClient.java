@@ -12,4 +12,6 @@ public interface TrucoClient {
     void connect() throws TrucoClientException;
 
     void send(String commandName, Object commandData) throws TrucoClientException;
+
+    TrucoPrincipal getTrucoPrincipal();
 }

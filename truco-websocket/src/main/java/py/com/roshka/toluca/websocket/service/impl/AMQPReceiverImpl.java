@@ -67,6 +67,7 @@ public class AMQPReceiverImpl implements AMQPReceiver {
             queues = "truco_game_client"
     )
     void trucoGameClient(final @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey, final RabbitResponse rabbitResponse) {
+        logger.debug("Receiving Truco Game Event [" + routingKey + "][" + rabbitResponse + "]");
         trucoRoomListener.trucoGameEvent(routingKey,rabbitResponse.getData());
     }
 }

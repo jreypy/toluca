@@ -22,6 +22,8 @@ public class Event {
     public static String HAND_STARTED = "HAND_STARTED";
     public static String GIVING_CARDS = "GIVING_CARDS";
 
+    public static String PLAY_CARD = "PLAY_CARD";
+
     public static String PLAY_REQUEST = "PLAY_REQUEST";
     public static String PLAY_REQUEST_CARD = "CARD";
     public static String PLAY_REQUEST_TRUCO = "TRUCO";
@@ -34,6 +36,10 @@ public class Event {
     public static final String PLAY_REQUEST_CONTRAFLOR = "COTRAFLOR";
     public static final String PLAY_REQUEST_ENVIDO_VALUE = "ENVIDO_VALUE";
     public static final String PLAY_REQUEST_FLOR_VALUE = "FLOR_VALUE";
+
+
+    //
+    public static String PLAY_RESPONSE = "PLAY_RESPONSE";
 
 
 }

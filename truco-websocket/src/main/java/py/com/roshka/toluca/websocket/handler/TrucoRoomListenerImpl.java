@@ -1,5 +1,7 @@
 package py.com.roshka.toluca.websocket.handler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import py.com.roshka.toluca.websocket.global.Events;
 import py.com.roshka.toluca.websocket.service.EventProcessor;
@@ -10,6 +12,7 @@ import java.util.Map;
 
 @Component
 public class TrucoRoomListenerImpl implements TrucoRoomListener {
+    Logger logger = LoggerFactory.getLogger(TrucoRoomListenerImpl.class);
 
     RoomHandler roomHandler;
     EventProcessor eventProcessor;

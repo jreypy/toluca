@@ -9,7 +9,7 @@ public class Commands {
     final static public String JOIN_ROOM = "JOIN_ROOM";
     final static public String GET_ROOMS = "GET_ROOMS";
     final static public String GET_ROOM = "GET_ROOM";
-
+    final static public String PLAY = "PLAY";
 
 
 }

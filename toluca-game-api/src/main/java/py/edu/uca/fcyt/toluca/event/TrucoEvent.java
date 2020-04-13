@@ -526,20 +526,6 @@ public class TrucoEvent {
     }
 
 
-    @Override
-    public String toString() {
-        return "TrucoEvent{" +
-                "game=" + game +
-                ", hand=" + hand +
-                ", player=" + player +
-                ", type=" + type +
-                ", cards=" + Arrays.toString(cards) +
-                ", card=" + card +
-                ", tableNumber=" + tableNumber +
-                ", value=" + value +
-                '}';
-    }
-
     public String description() {
         if (type == ENVIDO)
             return "ENVIDO";
@@ -604,6 +590,20 @@ public class TrucoEvent {
         }
 
         return "NO_IDENTIFICADA";
+    }
+
+    @Override
+    public String toString() {
+        return "TrucoEvent{" +
+                "game=" + game +
+                ", hand=" + hand +
+                ", player=" + player +
+                ", type=" + type +
+                ", cards=" + Arrays.toString(cards) +
+                ", card=" + card +
+                ", tableNumber=" + tableNumber +
+                ", value=" + value +
+                '}';
     }
 } // end TrucoEvent
 

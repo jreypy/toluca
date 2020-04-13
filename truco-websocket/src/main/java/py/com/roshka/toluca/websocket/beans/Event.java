@@ -41,4 +41,12 @@ public class Event {
         map.put("items", list);
         this.data = map;
     }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "type='" + type + '\'' +
+                ", data=" + data +
+                '}';
+    }
 }

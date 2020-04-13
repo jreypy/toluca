@@ -2,10 +2,11 @@ package py.com.roshka.truco.ui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
+import py.com.roshka.truco.api.TrucoGamePlay;
 import py.com.roshka.truco.api.TrucoPrincipal;
 import py.com.roshka.truco.api.TrucoRoomTable;
-import py.com.roshka.truco.api.TrucoRoomTableEvent;
 import py.com.roshka.truco.api.constants.Commands;
+import py.com.roshka.truco.api.helper.TolucaHelper;
 import py.com.roshka.truco.api.request.JoinRoomTableRequest;
 import py.com.roshka.truco.api.request.StartGameRequest;
 import py.com.roshka.truco.api.request.TablePositionRequest;
@@ -17,10 +18,11 @@ import py.edu.uca.fcyt.net.CommunicatorClient;
 import py.edu.uca.fcyt.toluca.RoomClient;
 import py.edu.uca.fcyt.toluca.event.RoomEvent;
 import py.edu.uca.fcyt.toluca.event.TableEvent;
+import py.edu.uca.fcyt.toluca.event.TrucoEvent;
 import py.edu.uca.fcyt.toluca.event.TrucoListener;
+import py.edu.uca.fcyt.toluca.game.TrucoPlay;
 import py.edu.uca.fcyt.toluca.game.TrucoPlayer;
 import py.edu.uca.fcyt.toluca.net.EventDispatcherClient;
-import py.edu.uca.fcyt.toluca.table.TableServer;
 
 import java.io.IOException;
 import java.util.Map;
@@ -31,6 +33,7 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
     static Logger logger = Logger.getLogger(TrucoFrame.class);
 
     TrucoClient trucoClient = null;
+
     private RoomClient roomClient;
 
     ObjectMapper objectMapper = new ObjectMapper();
@@ -38,11 +41,14 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
     TrucoListener trucoListener = new WebSocketTrucoListener(this);
 
     public WebSocketCommunicatorClient(RoomClient client, String serverString, Integer portNumber) throws IOException {
-        super(new EventDispatcherClient());
+        super();
         eventDispatcher.setRoom(client);
         roomClient = client;
-        ((EventDispatcherClient) getEventDispatcher()).setCommClient(this);
-        trucoClientDispatcher = new TrucoClientDispatcher(objectMapper, getEventDispatcher(), roomClient, trucoListener);
+        EventDispatcherClient eventDispatcherClient = new EventDispatcherClient();
+        eventDispatcherClient.setCommClient(this);
+
+//        EventDispatcherClient eventDispatcherClient = new EventDispatcherClient();
+        trucoClientDispatcher = new TrucoClientDispatcher(this, objectMapper, eventDispatcherClient, roomClient, trucoListener);
     }
 
 
@@ -173,15 +179,6 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
         trucoClient.connect();
 
 
-        // TODO Notify Login Success
-        RoomEvent roomEvent = new RoomEvent();
-        roomEvent.setPlayer(new TrucoPlayer());
-        roomEvent.getPlayer().setName(trucoPrincipal.getUsername());
-        roomEvent.getPlayer().setFullName(trucoPrincipal.getUsername());
-        roomEvent.getPlayer().setId(trucoPrincipal.getUsername());
-        roomEvent.setTablesServers(new TableServer[0]);
-        getEventDispatcher().loginCompleted(roomEvent);
-
         /// addTable
 //        {
 //            RoomEvent table = new RoomEvent();
@@ -221,5 +218,29 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
 
     private void executeCommand(String commandName, Object data) throws TrucoClientException {
         trucoClient.send(commandName, data);
+    }
+
+    TrucoClient getTrucoClient() {
+        return trucoClient;
+    }
+
+    @Override
+    public void play(TrucoEvent event) {
+        if (event.getPlayer().getName().equals(getTrucoPlayer().getName())) {
+            TrucoPlay trucoPlay = event.toTrucoPlay();
+            TrucoGamePlay trucoGamePlay = TolucaHelper.getPlay(trucoPlay);
+            try {
+                trucoGamePlay.setRoomId(TrucoFrame.MAIN_ROOM_ID);
+                trucoGamePlay.setTableId(Integer.toString(event.getTableNumber()));
+                executeCommand(Commands.PLAY, trucoGamePlay);
+            } catch (TrucoClientException e) {
+                logger.error(e.getMessage(), e);
+            }
+        }
+    }
+
+    @Override
+    public TrucoPlayer getTrucoPlayer() {
+        return new TrucoPlayer(trucoClient.getTrucoPrincipal().getUsername());
     }
 }

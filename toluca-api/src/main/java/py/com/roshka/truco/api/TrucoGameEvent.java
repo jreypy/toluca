@@ -48,4 +48,16 @@ public class TrucoGameEvent extends TrucoRoomTableEvent {
     public void setGame(TrucoGameData game) {
         this.game = game;
     }
+
+
+    @Override
+    public String toString() {
+        return "TrucoGameEvent{" +
+                "player=" + player +
+                ", cards=" + cards +
+                ", card=" + card +
+                ", request='" + request + '\'' +
+                ", game=" + game +
+                "} " + super.toString();
+    }
 }

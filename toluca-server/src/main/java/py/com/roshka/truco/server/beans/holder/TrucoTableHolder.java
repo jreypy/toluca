@@ -2,6 +2,7 @@ package py.com.roshka.truco.server.beans.holder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import py.com.roshka.truco.api.TrucoGamePlay;
 import py.com.roshka.truco.api.TrucoRoomTable;
 import py.com.roshka.truco.api.TrucoUser;
 
@@ -51,6 +52,10 @@ public class TrucoTableHolder {
         trucoGameHolder.getPositions()[index] = trucoUser;
         users.add(trucoUser);
         return trucoUser;
+    }
+
+    public void play(TrucoGamePlay trucoGamePlay) {
+        trucoGameHolder.play(trucoGamePlay);
     }
 
     public void joinUser(TrucoUser user) {

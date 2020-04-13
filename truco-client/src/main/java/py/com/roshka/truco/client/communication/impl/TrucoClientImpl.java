@@ -24,7 +24,7 @@ public class TrucoClientImpl implements TrucoClient, WebSocketClientListener {
     private String authentication;
     private ObjectMapper objectMapper = new ObjectMapper();
     private TrucoClientHandler trucoClientHandler;
-
+    private TrucoPrincipal trucoPrincipal = null;
 
     public TrucoClientImpl(String serverHost, String websocketHost) {
         this.serverHost = serverHost;
@@ -63,7 +63,7 @@ public class TrucoClientImpl implements TrucoClient, WebSocketClientListener {
                 }
                 in.close();
                 con.disconnect();
-                TrucoPrincipal trucoPrincipal = objectMapper.readValue(content.toString(), TrucoPrincipal.class);
+                trucoPrincipal = objectMapper.readValue(content.toString(), TrucoPrincipal.class);
                 authentication = trucoPrincipal.getAuthKey();
                 trucoClientHandler.afterLogin(trucoPrincipal);
                 return trucoPrincipal;
@@ -104,6 +104,11 @@ public class TrucoClientImpl implements TrucoClient, WebSocketClientListener {
         } catch (JsonProcessingException e) {
             throw new TrucoClientException("Message was not be sent", e);
         }
+    }
+
+    @Override
+    public TrucoPrincipal getTrucoPrincipal() {
+        return trucoPrincipal;
     }
 
     @Override
