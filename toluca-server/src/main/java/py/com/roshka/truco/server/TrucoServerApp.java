@@ -11,6 +11,6 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 @SpringBootApplication
 public class TrucoServerApp {
     public static void main(String[] args) {
-        SpringApplication.run(TrucoServerApp.class);
+        SpringApplication.run(TrucoServerApp.class, args);
     }
 }

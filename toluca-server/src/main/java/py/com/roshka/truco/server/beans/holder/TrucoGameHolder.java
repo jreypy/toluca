@@ -103,6 +103,12 @@ public class TrucoGameHolder extends TrucoGame implements TrucoListener {
     public void play(TrucoGamePlay trucoGamePlay) {
         TrucoPlay trucoPlay = TolucaHelper.getPlay(trucoGamePlay);
         trucoPlay.setPlayer(getPlayer(trucoGamePlay.getPlayer().getId()));
+
+        if (trucoPlay.getPlayer() == null){
+            throw new IllegalArgumentException("Player is required to play");
+        }
+
+        logger.debug(trucoPlay.getPlayer() + "plays " + trucoPlay);
         target.play(trucoPlay);
     }
 
