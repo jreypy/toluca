@@ -6,10 +6,10 @@ import java.util.Map;
 
 public class Event {
     private String type;
-    private Map data;
+    private Object data;
 
 
-    public Event(String type, Map data) {
+    public Event(String type, Object data) {
         this.type = type;
         this.data = data;
     }
@@ -28,7 +28,7 @@ public class Event {
         this.type = type;
     }
 
-    public Map getData() {
+    public Object getData() {
         return data;
     }
 

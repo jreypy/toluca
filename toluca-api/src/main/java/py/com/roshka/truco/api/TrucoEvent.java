@@ -7,6 +7,10 @@ public class TrucoEvent {
     public TrucoEvent() {
     }
 
+    protected TrucoEvent(String eventName, String message) {
+        this.eventName = eventName;
+        this.message = message;
+    }
 
     public TrucoEvent(String message) {
         this.message = message;
@@ -26,5 +30,14 @@ public class TrucoEvent {
 
     public void setEventName(String eventName) {
         this.eventName = eventName;
+    }
+
+
+    @Override
+    public String toString() {
+        return "TrucoEvent{" +
+                "eventName='" + eventName + '\'' +
+                ", message='" + message + '\'' +
+                '}';
     }
 }

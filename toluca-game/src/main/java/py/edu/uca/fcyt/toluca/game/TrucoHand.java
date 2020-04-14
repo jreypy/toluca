@@ -205,7 +205,6 @@ public class TrucoHand {
      * Inicia el TrucoHand.
      */
     public void startHand() {
-
         System.out.println("---------------------------------------");
         System.out.println("---- EMPIEZA LA MANO  ----");
         playTurn(); //asignar turno
@@ -246,42 +245,40 @@ public class TrucoHand {
     }
 
     /* repartir cartas a todos los players del game */
-    protected void dealtCards() throws InvalidPlayExcepcion {
+    protected void dealtCards() {
         int i;
         TrucoCard[] cardsToPlayer;
         TrucoPlayer pl;
-        try {
-            for (i = 0; i < cantidadDePlayers; i++) {
-                pl = teams[i % 2].getTrucoPlayerNumber(i / 2);
-                cardsToPlayer = statusTable.getPlayerCards(i); //2pregunto al
-                // estado de la
-                // mesa cuales
-                // son sus cartas
-                if (cardsToPlayer == null)
-                    System.out.println("error null en dealtcards de TrucoHand");
-                game.dealtCards(pl, cardsToPlayer); //3les envio al player las
-                // cartas
-                /*
-                 * pl = teams[0].getPlayerNumber(i); cardsToPlayer =
-                 * statusTable.getPlayerCards((2*i)); //2pregunto al estado de
-                 * la mesa cuales son sus cartas
-                 * game.dealCards(pl,cardsToPlayer); //3les envio al player las
-                 * cartas pl = teams[1].getPlayerNumber(i); cardsToPlayer =
-                 * statusTable.getPlayerCards((2*i+1)); // " '" """"2
-                 * game.dealCards(pl,cardsToPlayer); //" """ 3
-                 */
-            }
-            // TODO COMMENTED-out porque daba una excepci?n:
-            // Teor?a de PS: No hace falta. Llamada al pedo que no va a volver
-            // Teor?a de AA: Est? mal el tipo del evento nom?s.
-            //game.fireCardsDealt();
-        } catch (InvalidPlayExcepcion e) {
-            throw e;
+
+        for (i = 0; i < cantidadDePlayers; i++) {
+            pl = teams[i % 2].getTrucoPlayerNumber(i / 2);
+            cardsToPlayer = statusTable.getPlayerCards(i); //2pregunto al
+            // estado de la
+            // mesa cuales
+            // son sus cartas
+            if (cardsToPlayer == null)
+                System.out.println("error null en dealtcards de TrucoHand");
+            game.dealtCards(pl, cardsToPlayer); //3les envio al player las
+            // cartas
+            /*
+             * pl = teams[0].getPlayerNumber(i); cardsToPlayer =
+             * statusTable.getPlayerCards((2*i)); //2pregunto al estado de
+             * la mesa cuales son sus cartas
+             * game.dealCards(pl,cardsToPlayer); //3les envio al player las
+             * cartas pl = teams[1].getPlayerNumber(i); cardsToPlayer =
+             * statusTable.getPlayerCards((2*i+1)); // " '" """"2
+             * game.dealCards(pl,cardsToPlayer); //" """ 3
+             */
         }
+        // TODO COMMENTED-out porque daba una excepci?n:
+        // Teor?a de PS: No hace falta. Llamada al pedo que no va a volver
+        // Teor?a de AA: Est? mal el tipo del evento nom?s.
+        //game.fireCardsDealt();
+
     }
 
     /* asignar al player el turno */
-    protected void playTurn() throws InvalidPlayExcepcion {
+    protected void playTurn()  {
         if (statusTable.estaCerrado(playTurnNumber)) {
             nextPlayTurn();
             return;
@@ -292,7 +289,7 @@ public class TrucoHand {
         game.fireTurnEvent(playTurn, TrucoEvent.TURNO_JUGAR_CARTA);
     }
 
-    protected void nextPlayTurn() throws InvalidPlayExcepcion {
+    protected void nextPlayTurn() {
         cartasJugadas++;
         if (cartasJugadas % cantidadDePlayers == 0) {
             winRound[numeroDeRonda - 1] = statusTable
@@ -321,7 +318,7 @@ public class TrucoHand {
         playTurn();/* asignar turno */
     }
 
-    protected boolean finDeRonda() throws InvalidPlayExcepcion {
+    protected boolean finDeRonda()  {
         sePuedeCantarFlor = false;
         sePuedeCantarEnvido = false;
 
@@ -490,7 +487,7 @@ public class TrucoHand {
      * @param win el nro de equipo que gan? (0, 1)
      * @throws InvalidPlayExcepcion
      */
-    protected void finDeMano(int win) throws InvalidPlayExcepcion {
+    protected void finDeMano(int win)  {
         logger.debug("Fin de Mano win [" + win + "]");
         if (seTerminoLaMano)
             return;
@@ -1355,6 +1352,7 @@ public class TrucoHand {
 
     /* el player juega una carta */
     protected void jugarCarta(TrucoPlay tp) throws InvalidPlayExcepcion { //alguien
+
         logger.debug("playing [ " + tp + "]");
         // juega
         // una
@@ -1382,7 +1380,7 @@ public class TrucoHand {
             // necesito
             // de choco
             throw (new InvalidPlayExcepcion(
-                    "TrucoHand - jugarCarta(TrucoPlay ) > el player no puede jugar esa carta"));
+                    "TrucoHand - jugarCarta(TrucoPlay ) > el player [" + tp.getPlayer() + "]no puede jugar esa carta [" + tp.getCard() + "]", tp));
 
         //if (this instanceof TrucoHandClient) {
         //if ()

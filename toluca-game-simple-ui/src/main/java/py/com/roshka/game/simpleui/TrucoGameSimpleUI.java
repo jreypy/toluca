@@ -1,14 +1,17 @@
 package py.com.roshka.game.simpleui;
 
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import py.edu.uca.fcyt.toluca.game.TrucoGame;
 import py.edu.uca.fcyt.toluca.game.TrucoGameImpl;
 import py.edu.uca.fcyt.toluca.game.TrucoPlayer;
 import py.edu.uca.fcyt.toluca.game.TrucoTeam;
 import py.edu.uca.fcyt.toluca.game.ui.TPlayer;
+import py.edu.uca.fcyt.toluca.game.ui.TrucoGameClientTest;
 
 import javax.swing.*;
+import java.util.List;
 
 public class TrucoGameSimpleUI {
     Logger logger = Logger.getLogger(TrucoGameSimpleUI.class);
@@ -34,8 +37,8 @@ public class TrucoGameSimpleUI {
 
         TrucoGame tg = new TrucoGameImpl(cBenitezTeam, jreyTeam);
 
-        TPlayer tp1 = new TPlayer(jrey, tg, cBenitezTeam, jreyTeam);
-        TPlayer tp2 = new TPlayer(cBenitez, tg, cBenitezTeam, jreyTeam);
+        TPlayer tp1 = new TPlayer(jrey, tg, jreyTeam.getPlayers().size() + cBenitezTeam.getPlayers().size());
+        TPlayer tp2 = new TPlayer(cBenitez, tg, jreyTeam.getPlayers().size() + cBenitezTeam.getPlayers().size());
 
 //            TPlayer tp3 = new TPlayer(zid1, tg, cBenitezTeam, jreyTeam);
 //            TPlayer tp4 = new TPlayer(zid2, tg, cBenitezTeam, jreyTeam);
@@ -43,10 +46,6 @@ public class TrucoGameSimpleUI {
         tg.addTrucoListener(tp2);
 //            tg.addTrucoListener(tp3);
 //            tg.addTrucoListener(tp4);
-
-
-
-
 
 //            tp3.show();
 //            tp4.show();
@@ -57,8 +56,16 @@ public class TrucoGameSimpleUI {
 
     public static void main(String[] args) throws Exception {
         BasicConfigurator.configure();
-        System.out.println("Hooola+++");
-        TrucoGameSimpleUI ti = new TrucoGameSimpleUI();
+        Logger root = Logger.getLogger("");
+        root.setLevel(Level.DEBUG);
 
+        System.out.println("Hooola+++");
+//        TrucoGameSimpleUI ti = new TrucoGameSimpleUI();
+        {
+            TrucoGameClientTest[] players = new TrucoGameClientTest[]{
+                    new TrucoGameClientTest("mano_amiga")
+            };
+            new TrucoGameClientTest("julio", players).connect();
+        }
     }
 }

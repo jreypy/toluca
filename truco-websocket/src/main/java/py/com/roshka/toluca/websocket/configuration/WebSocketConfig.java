@@ -1,5 +1,8 @@
 package py.com.roshka.toluca.websocket.configuration;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
@@ -10,14 +13,16 @@ import py.com.roshka.toluca.websocket.handler.RoomHandler;
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
-  RoomHandler roomHandler;
+    RoomHandler roomHandler;
 
-  public WebSocketConfig(RoomHandler roomHandler) {
-    this.roomHandler = roomHandler;
-  }
+    public WebSocketConfig(RoomHandler roomHandler) {
+        this.roomHandler = roomHandler;
+    }
 
-  @Override
-  public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
-    webSocketHandlerRegistry.addHandler(roomHandler, "/ws").setAllowedOrigins("*");
-  }
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry webSocketHandlerRegistry) {
+        webSocketHandlerRegistry.addHandler(roomHandler, "/ws").setAllowedOrigins("*");
+    }
+
+
 }

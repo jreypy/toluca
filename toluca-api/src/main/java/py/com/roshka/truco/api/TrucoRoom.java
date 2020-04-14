@@ -3,32 +3,14 @@ package py.com.roshka.truco.api;
 import java.util.HashSet;
 import java.util.Set;
 
-public class TrucoRoom {
-    private String id;
-    private String name;
+public class TrucoRoom extends TrucoRoomDescriptor {
     private Set<TrucoRoomUser> users = new HashSet<>();
 
     public TrucoRoom() {
     }
 
-    public TrucoRoom(String id) {
-        this.id = id;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public TrucoRoom(String id, String name) {
+        super(id, name);
     }
 
     public Set<TrucoRoomUser> getUsers() {
@@ -37,5 +19,12 @@ public class TrucoRoom {
 
     public void setUsers(Set<TrucoRoomUser> users) {
         this.users = users;
+    }
+
+    @Override
+    public String toString() {
+        return "TrucoRoom{" +
+                "users=" + users +
+                "} " + super.toString();
     }
 }

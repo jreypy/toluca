@@ -43,17 +43,15 @@ public class TPlayer extends JFrame
 
     JPanel elPanel = new JPanel();
     JButton cartasJugadas[];
-    TrucoTeam team;
-    TrucoTeam team2;
+
     int nCartasJugadas = 0;
     int cartasAJugar = 0;
     JSpinner elSpinner = new JSpinner();
 
-    public TPlayer(TrucoPlayer pl, TrucoGame TG, TrucoTeam team, TrucoTeam team2) throws Exception {
-        this.team = team;
-        this.team2 = team2;
+    public TPlayer(TrucoPlayer pl, TrucoGame TG, int players) throws Exception {
+
         int i = 0;
-        cartasAJugar = 2 * team.getNumberOfPlayers() * 3;
+        cartasAJugar = 2 * players * 3;
         cartasJugadas = new JButton[cartasAJugar];
         //elPanel.setMinimumSize(new Dimension(1000,1000));    
         elPanel.setPreferredSize(new Dimension(1460, 800));
@@ -251,7 +249,8 @@ public class TPlayer extends JFrame
     }
 
     public void handStarted(TrucoEvent event) {
-        setTitle("Truco - " + TG.getNumberOfHand() + " - " + asociado.getName() + " // " + team.getPoints() + " - " + team2.getPoints());//el titulo del panel
+        setTitle("Truco - " + TG.getNumberOfHand() + " - " + asociado.getName() + " // " + " Puntos..." + " - " + " Puntos..");//el titulo del panel
+
         for (int i = 0; i < cartasAJugar; i++) {
             try {
                 cartasJugadas[i].setIcon(getImage(DORSO));
@@ -259,6 +258,7 @@ public class TPlayer extends JFrame
                 logger.error(e.getMessage(), e);
             }
         }
+
         nCartasJugadas = 0;
         textfield.setText("\nempieza mano..");
 //        System.out.println("hand Started");

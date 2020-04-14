@@ -6,19 +6,19 @@ import java.util.List;
 
 public interface TrucoRoomSvc {
 
-    List<TrucoRoom> findAllRooms();
+    TrucoRoomEvent findAllRooms();
 
-    TrucoRoom findRoomById(String roomId);
+    TrucoRoomEvent findRoomById(String roomId);
 
-    TrucoRoom create(TrucoRoom trucoRoom);
+    TrucoRoomEvent create(TrucoRoom trucoRoom);
 
-    TrucoRoomEvent joinRoom(String roomId, TrucoUser user);
+    TrucoRoomEvent joinRoom(String roomId);
 
-    TrucoRoom delete(TrucoRoom trucoRoom);
+    TrucoRoomEvent delete(TrucoRoom trucoRoom);
 
-    TrucoRoomTable addTable(String roomId, TrucoRoomTable trucoRoomTable);
+    TrucoRoomEvent addTable(String roomId, TrucoRoomTable trucoRoomTable);
 
-    TrucoRoomTableEvent joinRoomTable(String roomId, String tableId);
+    TrucoRoomEvent joinRoomTable(String roomId, String tableId);
 
     TrucoRoomTableEvent setTablePosition(String roomId, String tableId, Integer position);
 

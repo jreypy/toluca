@@ -1,9 +1,14 @@
 package py.com.roshka.truco.api;
 
 public class Event {
+
+    public static String TRUCO_ROOM_EVENT = "TRUCO_ROOM_EVENT";
+    public static String TRUCO_TABLE_EVENT = "TRUCO_TABLE_EVENT";
     public static String TRUCO_GAME_EVENT = "TRUCO_GAME_EVENT";
 
+
     public static String LOGOUT = "LOGOUT";
+    public static String ROOM_FOUND = "ROOM_FOUND";
     public static String ROOM_CREATED = "ROOM_CREATED";
     public static String TABLE_POSITION_SETTED = "TABLE_POSITION_SETTED";
 

@@ -10,6 +10,7 @@ import py.com.roshka.toluca.websocket.service.CommandProcessor;
 import py.com.roshka.truco.api.TrucoRoomUser;
 import py.com.roshka.truco.api.TrucoUser;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -28,19 +29,7 @@ public abstract class WebSocketHandler extends WebSocketSessionManager {
         this.commandProcessor = commandProcessor;
     }
 
-    @Override
-    public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        addSession(session);
-        super.afterConnectionEstablished(session);
 
-    }
-
-    @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        removeSession(session);
-        super.afterConnectionClosed(session, status);
-
-    }
 
     public void sendRoomEvent(String roomId, TrucoUser trucoUser, Event event) {
         TrucoRoomHandler trucoRoomHandler = getTrucoRoomHandler(roomId);
@@ -62,10 +51,7 @@ public abstract class WebSocketHandler extends WebSocketSessionManager {
     }
 
 
-    public void addListeners(String roomId, TrucoRoomUser... users) {
-        TrucoRoomHandler trucoRoomHandler = getTrucoRoomHandler(roomId);
 
-    }
 
     public TrucoRoomHandler getTrucoRoomHandler(String roomId) {
         TrucoRoomHandler trucoRoomHandler = rooms.get(roomId);
@@ -85,14 +71,12 @@ public abstract class WebSocketHandler extends WebSocketSessionManager {
 
     class TrucoRoomHandler extends WebSocketSessionManager {
         private String id;
-        private Map<String, WebSocketSession> sessions = new HashMap<>();
+
 
         public TrucoRoomHandler(ObjectMapper objectMapper, String id) {
             super(objectMapper);
             this.id = id;
         }
-
-
     }
 
 }

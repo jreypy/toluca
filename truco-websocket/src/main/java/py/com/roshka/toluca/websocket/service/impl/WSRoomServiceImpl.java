@@ -9,11 +9,11 @@ import org.springframework.web.client.RestTemplate;
 import py.com.roshka.toluca.websocket.service.RoomService;
 import py.com.roshka.truco.api.*;
 import py.com.roshka.truco.api.request.JoinRoomTableRequest;
+import py.com.roshka.truco.api.request.RoomRequest;
 import py.com.roshka.truco.api.request.StartGameRequest;
 import py.com.roshka.truco.api.request.TablePositionRequest;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Map;
 
 
 @Component
@@ -30,49 +30,49 @@ public class WSRoomServiceImpl implements RoomService {
     }
 
     @Override
-    public TrucoRoom createRoom(TrucoRoom trucoRoom) {
-        return restTemplate.postForObject(trucoServerHost + "/api/room", trucoRoom, TrucoRoom.class);
+    public Map createRoom(TrucoRoom trucoRoom) {
+        return restTemplate.postForObject(trucoServerHost + "/api/room", trucoRoom, Map.class);
     }
 
     @Override
-    public TrucoRoomEvent joinRoom(TrucoRoom trucoRoom) {
-        return restTemplate.postForObject(trucoServerHost + "/api/room/" + trucoRoom.getId() + "/join", null, TrucoRoomEvent.class);
+    public Map joinRoom(RoomRequest roomRequest) {
+        return restTemplate.postForObject(trucoServerHost + "/api/room/" + roomRequest.getRoomId() + "/join", null, Map.class);
     }
 
 
     @Override
-    public List<TrucoRoom> findAllRooms() {
-        return Arrays.asList(restTemplate.getForObject(trucoServerHost + "/api/room", TrucoRoom[].class));
+    public Map findAllRooms() {
+        return restTemplate.getForObject(trucoServerHost + "/api/room", Map.class);
     }
 
     @Override
-    public TrucoRoomTable createRoomTable(TrucoRoomTable trucoRoomTable) {
-        return restTemplate.postForObject(trucoServerHost + "/api/room/" + trucoRoomTable.getRoomId() + "/table", trucoRoomTable, TrucoRoomTable.class);
+    public Map createRoomTable(TrucoRoomTable trucoRoomTable) {
+        return restTemplate.postForObject(trucoServerHost + "/api/room/" + trucoRoomTable.getRoomId() + "/table", trucoRoomTable, Map.class);
     }
 
     @Override
-    public TrucoRoomTableEvent setTablePosition(TablePositionRequest tablePositionRequest) {
-        return putForObject(trucoServerHost + "/api/room/" + tablePositionRequest.getRoomId() + "/table/" + tablePositionRequest.getTableId() + "/position/" + tablePositionRequest.getChair(), null, TrucoRoomTableEvent.class);
+    public Map setTablePosition(TablePositionRequest tablePositionRequest) {
+        return putForObject(trucoServerHost + "/api/room/" + tablePositionRequest.getRoomId() + "/table/" + tablePositionRequest.getTableId() + "/position/" + tablePositionRequest.getChair(), null, Map.class);
     }
 
     @Override
-    public TrucoRoomTableEvent joinRoomTable(JoinRoomTableRequest tablePositionRequest) {
-        return restTemplate.postForObject(trucoServerHost + "/api/room/" + tablePositionRequest.getRoomId() + "/table/" + tablePositionRequest.getTableId() + "/join", null, TrucoRoomTableEvent.class);
+    public Map joinRoomTable(JoinRoomTableRequest tablePositionRequest) {
+        return restTemplate.postForObject(trucoServerHost + "/api/room/" + tablePositionRequest.getRoomId() + "/table/" + tablePositionRequest.getTableId() + "/join", null, Map.class);
     }
 
     @Override
-    public TrucoGameEvent startGame(StartGameRequest startGameRequest) {
-        return restTemplate.postForObject(trucoServerHost + "/api/room/" + startGameRequest.getRoomId() + "/table/" + startGameRequest.getTableId() + "/start-game", null, TrucoGameEvent.class);
+    public Map startGame(StartGameRequest startGameRequest) {
+        return restTemplate.postForObject(trucoServerHost + "/api/room/" + startGameRequest.getRoomId() + "/table/" + startGameRequest.getTableId() + "/start-game", null, Map.class);
     }
 
     @Override
-    public TrucoRoomTableEvent play(TrucoGamePlay trucoGamePlay) {
-        return restTemplate.postForObject(trucoServerHost + "/api/room/" + trucoGamePlay.getRoomId() + "/table/" + trucoGamePlay.getTableId() + "/play", trucoGamePlay, TrucoGameEvent.class);
+    public Map play(TrucoGamePlay trucoGamePlay) {
+        return restTemplate.postForObject(trucoServerHost + "/api/room/" + trucoGamePlay.getRoomId() + "/table/" + trucoGamePlay.getTableId() + "/play", trucoGamePlay, Map.class);
     }
 
     @Override
-    public TrucoRoom findRoomById(String id) {
-        return restTemplate.getForObject(trucoServerHost + "/api/room/" + id, TrucoRoom.class);
+    public Map findRoomById(String id) {
+        return restTemplate.getForObject(trucoServerHost + "/api/room/" + id, Map.class);
     }
 
     private <T> T putForObject(String url, Object o, java.lang.Class<T> responseType) {
@@ -85,6 +85,5 @@ public class WSRoomServiceImpl implements RoomService {
                 .exchange(url, method, request, responseType);
         return response.getBody();
     }
-
 
 }

@@ -14,7 +14,7 @@ import java.util.Map;
 public class WebSocketSessionManager extends TextWebSocketHandler {
     Logger logger = LoggerFactory.getLogger(WebSocketSessionManager.class);
 
-    protected Map<String, WebSocketSession> sessions = new HashMap<>();
+    protected Map<String, WebSocketSessionHandler> sessions = new HashMap<>();
     protected ObjectMapper objectMapper;
     int count;
 
@@ -22,17 +22,21 @@ public class WebSocketSessionManager extends TextWebSocketHandler {
         this.objectMapper = objectMapper;
     }
 
-    public void addSession(WebSocketSession session) {
+
+    public void addSession(WebSocketSessionHandler handler) {
         count++;
-        logger.debug("Adding Session [" + session + "][" + count + "]");
-        sessions.put(session.getId(), session);
+        logger.debug("Adding Session [" + handler + "][" + count + "]");
+        //
+        sessions.put(handler.getId(), handler);
 
     }
 
-    public void removeSession(WebSocketSession session) {
+    public void removeSession(WebSocketSessionHandler session) {
         count--;
         logger.debug("Removing Session [" + session + "][" + count + "]");
         sessions.remove(session.getId());
+        //remove from rooms
+
     }
 
     public void sendEvent(Event event) {

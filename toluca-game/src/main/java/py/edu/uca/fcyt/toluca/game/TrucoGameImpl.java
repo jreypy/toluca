@@ -334,10 +334,12 @@ public class TrucoGameImpl extends TrucoGame {
         }
     }
 
-    protected void newHand() { //nueva mano
+    protected void newHand()  { //nueva mano
         logger.info("NewHand");
         if (teams[0].getNumberOfPlayers() != teams[1].getNumberOfPlayers())
-            throw (new InvalidPlayExcepcion("TrucoGame.newHand - la cantidad de players de los Teams son distintos"));
+            throw new TrucoGameRuntimeException("TrucoGame.newHand - la cantidad de players de los Teams son distintos");
+
+
         //reparteCartas=(++reparteCartas)%getNumberOfPlayers();/*incrementa el que reparte las cartas*/
         ///System.out.println("despues va repartir las cartas" + reparteCartas + "numero de players" + getNumberOfPlayers());
 

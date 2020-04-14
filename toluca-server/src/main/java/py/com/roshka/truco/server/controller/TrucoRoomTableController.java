@@ -1,6 +1,7 @@
 package py.com.roshka.truco.server.controller;
 
 import org.springframework.web.bind.annotation.*;
+import py.com.roshka.truco.api.TrucoRoomEvent;
 import py.com.roshka.truco.api.TrucoRoomTable;
 import py.com.roshka.truco.api.TrucoRoomTableEvent;
 import py.com.roshka.truco.server.service.TrucoRoomSvc;
@@ -20,10 +21,9 @@ public class TrucoRoomTableController {
     }
 
     @PostMapping("")
-    public TrucoRoomTable createTrucoRoom(@PathVariable("roomId") String roomId, @RequestBody TrucoRoomTable trucoRoomTable) {
+    public TrucoRoomEvent createTrucoRoom(@PathVariable("roomId") String roomId, @RequestBody TrucoRoomTable trucoRoomTable) {
         return trucoRoomSvc.addTable(roomId, trucoRoomTable);
     }
-
 
     @PutMapping("{tableId}/position/{position}")
     public TrucoRoomTableEvent setTablePosition(@PathVariable("roomId") String roomId, @PathVariable("tableId") String tableId, @PathVariable("position") Integer position) {
@@ -31,7 +31,7 @@ public class TrucoRoomTableController {
     }
 
     @PostMapping("/{tableId}/join")
-    public TrucoRoomTableEvent joinTrucoRoomTable(@PathVariable("roomId") String roomId, @PathVariable("tableId") String tableId) {
+    public TrucoRoomEvent joinTrucoRoomTable(@PathVariable("roomId") String roomId, @PathVariable("tableId") String tableId) {
         return trucoRoomSvc.joinRoomTable(roomId, tableId);
     }
 

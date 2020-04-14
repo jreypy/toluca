@@ -10,6 +10,7 @@ import py.com.roshka.truco.api.TrucoGamePlay;
 import py.com.roshka.truco.api.TrucoRoom;
 import py.com.roshka.truco.api.TrucoRoomTable;
 import py.com.roshka.truco.api.request.JoinRoomTableRequest;
+import py.com.roshka.truco.api.request.RoomRequest;
 import py.com.roshka.truco.api.request.StartGameRequest;
 import py.com.roshka.truco.api.request.TablePositionRequest;
 
@@ -44,7 +45,7 @@ public class CommandProcessorImpl extends Processor implements CommandProcessor 
         } else if (SET_TABLE_POSITION.equalsIgnoreCase(command.getCommand())) {
             return getCommandResponse(command, roomService.setTablePosition(objectMapper.convertValue(command.getData(), TablePositionRequest.class)));
         } else if (JOIN_ROOM.equalsIgnoreCase(command.getCommand())) {
-            return getCommandResponse(command, roomService.joinRoom(objectMapper.convertValue(command.getData(), TrucoRoom.class)));
+            return getCommandResponse(command, roomService.joinRoom(objectMapper.convertValue(command.getData(), RoomRequest.class)));
         } else if (GET_ROOMS.equalsIgnoreCase(command.getCommand())) {
             return getCommandResponse(command, roomService.findAllRooms());
         } else if (GET_ROOM.equalsIgnoreCase(command.getCommand())) {

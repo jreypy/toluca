@@ -1,11 +1,8 @@
 package py.com.roshka.toluca.websocket.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.netflix.discovery.converters.Auto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -20,12 +17,15 @@ import py.com.roshka.toluca.websocket.beans.Event;
 import py.com.roshka.toluca.websocket.global.Events;
 import py.com.roshka.toluca.websocket.service.AMQPDispatcher;
 import py.com.roshka.toluca.websocket.service.CommandProcessor;
-import py.com.roshka.truco.api.RabbitResponse;
-import py.com.roshka.truco.api.TrucoEvent;
 import py.com.roshka.truco.api.TrucoPrincipal;
+import py.com.roshka.truco.api.TrucoUser;
+import py.com.roshka.truco.api.event.LogoutEvent;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Component
 public class RoomHandler extends WebSocketHandler {
@@ -115,7 +115,8 @@ public class RoomHandler extends WebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         TrucoPrincipal trucoPrincipal = getTrucoPrincipal(session);
-        session.getAttributes().put("username", trucoPrincipal.getUsername());
+        WebSocketSessionHandler sessionHandler = new WebSocketSessionHandler(trucoPrincipal.getUsername(), trucoPrincipal.getUsername(), session);
+
         String query = session.getUri().getQuery();
         String message = "Hello! " + trucoPrincipal.getUsername() + " is connected [" + query + "]";
         {
@@ -123,18 +124,17 @@ public class RoomHandler extends WebSocketHandler {
             map.put("message", message);
             session.sendMessage(new TextMessage(objectMapper.writeValueAsString(map)));
         }
-
         // Remove others connections
         //Iterator it = map.entrySet().iterator();
-        Iterator<Map.Entry<String, WebSocketSession>> it = sessions.entrySet().iterator();
+        Iterator<Map.Entry<String, WebSocketSessionHandler>> it = sessions.entrySet().iterator();
         while (it.hasNext()) {
-            WebSocketSession s = it.next().getValue();
-            if (s.getAttributes().get("username").equals(trucoPrincipal.getUsername())) {
+            WebSocketSessionHandler s = it.next().getValue();
+            if (s.getUsername().equals(trucoPrincipal.getUsername())) {
                 if (s.isOpen()) {
                     // Disconnect
                     logger.debug("Disconect because is already connected");
                     Map goodBye = new LinkedHashMap<>();
-                    s.getAttributes().put(Events.USER_FIRED_BY_SERVER, Events.USER_FIRED_BY_SERVER);
+                    s.setFired(true);
                     goodBye.put("message", "Usuario se conectó utilizando otra aplicación");
                     Event event = new Event(Events.USER_FIRED_BY_SERVER, goodBye);
                     sendEvent(event);
@@ -147,21 +147,30 @@ public class RoomHandler extends WebSocketHandler {
             }
         }
         super.afterConnectionEstablished(session);
+        addSession(sessionHandler);
         // roomService.connect(auth.split("-")[0]);
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        if (!Events.USER_FIRED_BY_SERVER.equals(session.getAttributes().get(Events.USER_FIRED_BY_SERVER))) {
-            String username = (String) session.getAttributes().get("username");
+        WebSocketSessionHandler sessionHandler = sessions.get(session.getId());
+        if (!sessionHandler.isFired()) {
+            String username = sessionHandler.getUsername();
             logger.debug("Users was disconnected [" + username + "]");
             Map map = new LinkedHashMap();
             map.put("username", username);
-            amqpDispatcher.send("truco_user_event", "logout", new RabbitResponse(py.com.roshka.truco.api.Event.LOGOUT, Map.class.getCanonicalName(), map));
+            amqpDispatcher.send("truco_user_event", "logout", py.com.roshka.truco.api.Event.LOGOUT, new LogoutEvent(py.com.roshka.truco.api.Event.LOGOUT, new TrucoUser(sessionHandler.getUsername(), sessionHandler.getUsername())));
         }
-        super.afterConnectionClosed(session, status);
-
+        removeSession(sessionHandler);
     }
 
+    public void addToRoom(String roomId, String username) {
+        TrucoRoomHandler roomHandler = getTrucoRoomHandler(roomId);
+        sessions.values().forEach(s -> {
+            if (s.getUsername().equalsIgnoreCase(username)) {
+                roomHandler.addSession(s);
+            }
+        });
+    }
 
 }

@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 import py.com.roshka.truco.api.Event;
-import py.com.roshka.truco.api.RabbitRequest;
 import py.com.roshka.truco.api.RabbitResponse;
+import py.com.roshka.truco.api.event.LogoutEvent;
 import py.com.roshka.truco.server.service.AMQPReceiver;
 import py.com.roshka.truco.server.service.TrucoRoomSvc;
 
@@ -24,12 +24,12 @@ public class AMQPReceiverImpl implements AMQPReceiver {
     }
 
     @RabbitListener(queues = "truco_server")
-    void receiveTrucoServerQueue(final RabbitRequest rabbitRequest) {
-        logger.debug("Receiving [" + rabbitRequest + "]");
-        if (rabbitRequest.getType().equalsIgnoreCase(RabbitResponse.class.getCanonicalName())) {
-            RabbitResponse rabbitResponse = objectMapper.convertValue(rabbitRequest.getData(), RabbitResponse.class);
+    void receiveTrucoServerQueue(final RabbitResponse rabbitResponse) {
+        logger.debug("Receiving [" + rabbitResponse + "]");
+        if (Event.LOGOUT.equalsIgnoreCase(rabbitResponse.getEventName())) {
+            LogoutEvent logoutEvent = objectMapper.convertValue(rabbitResponse.getData(), LogoutEvent.class);
             if (Event.LOGOUT.equalsIgnoreCase(rabbitResponse.getEventName())) {
-                trucoRoomSvc.logout(((String) (rabbitResponse.getData().get("username"))));
+                trucoRoomSvc.logout(logoutEvent.getTrucoUser().getUsername());
             }
         }
     }

@@ -5,16 +5,22 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 import py.com.roshka.truco.api.*;
 import py.com.roshka.truco.server.beans.holder.TrucoRoomHolder;
+import py.com.roshka.truco.server.beans.holder.TrucoTableHolder;
 import py.com.roshka.truco.server.service.TrucoRoomSvc;
 import py.com.roshka.truco.server.service.TrucoUserService;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Component
 public class TrucoRoomSvcImpl implements TrucoRoomSvc {
-    static String TRUCO_EVENT = "truco_event";
     static String TRUCO_ROOM_EVENT = "truco_room_event";
-    static String ROOM_ROUTING_KEY = "room";
+
+    static String ROOM_ALL_ROUTING_KEY = "room_all";
+    static String ROOM_ID_ROUTING_KEY = "room_id";
+    static String ROOM_JOIN_ROUTING_KEY = "room_join";
+    static String ROOM_LOGOUT_ROUTING_KEY = "room_logout";
+
 
     org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(TrucoRoomSvcImpl.class);
 
@@ -39,46 +45,43 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
 
 
     @Override
-    public List<TrucoRoom> findAllRooms() {
-        return new ArrayList<>(rooms.values());
+    public TrucoRoomEvent findAllRooms() {
+        TrucoRoomEvent trucoRoomEvent = TrucoRoomEvent.builder(Event.ROOM_FOUND).user(trucoUserService.getTrucoUser()).rooms(rooms.values()).build();
+        return trucoRoomEvent;
     }
 
     @Override
-    public TrucoRoom findRoomById(String roomId) {
+    public TrucoRoomEvent findRoomById(String roomId) {
         TrucoRoom trucoRoom = rooms.get(roomId);
+
         if (trucoRoom == null)
             throw new IllegalArgumentException("Room not found [" + roomId + "]");
 
-        return trucoRoom;
+        return TrucoRoomEvent.builder(Event.ROOM_FOUND).message("Truco Room [" + roomId + " was found").user(trucoUserService.getTrucoUser()).room(trucoRoom).build();
     }
 
-    public TrucoRoom create(TrucoRoom trucoRoom) {
+    public TrucoRoomEvent create(TrucoRoom trucoRoom) {
         trucoRoom.setId(Integer.toString(++_roomId));
         this.rooms.put(trucoRoom.getId(), trucoRoom);
         this.roomsHolder.put(trucoRoom.getId(), new TrucoRoomHolder(trucoRoom, objectMapper, rabbitTemplate));
         // Notify was created
-        rabbitTemplate.convertAndSend(TRUCO_EVENT, ROOM_ROUTING_KEY, new RabbitResponse(Event.ROOM_CREATED, trucoRoom.getClass().getCanonicalName(), objectMapper.convertValue(trucoRoom, HashMap.class)));
-        return trucoRoom;
+        TrucoRoomEvent trucoRoomEvent = TrucoRoomEvent.builder(Event.ROOM_CREATED).message("Truco Room [" + trucoRoom.getId() + " was created").user(trucoUserService.getTrucoUser()).room(trucoRoom).build();
+        convertAndSend(trucoRoomEvent);
+        return trucoRoomEvent;
     }
 
     @Override
-    public TrucoRoomEvent joinRoom(String roomId, TrucoUser user) {
+    public TrucoRoomEvent joinRoom(String roomId) {
+        TrucoUser user = trucoUserService.getTrucoUser();
         logger.debug("User [" + user.getUsername() + "] joining to room [" + roomId + "]");
-        TrucoRoom trucoRoom = rooms.get(roomId);
-        if (trucoRoom != null) {
-            trucoRoom.getUsers().add(new TrucoRoomUser(user, true));
-            TrucoRoomEvent trucoRoomEvent = new TrucoRoomEvent();
-            trucoRoomEvent.setEventName(Event.ROOM_USER_JOINED);
-            trucoRoomEvent.setMessage("User joined to the Room [" + roomId + "]");
-            trucoRoomEvent.setUser(user);
-            trucoRoomEvent.setRoom(trucoRoom);
-            rabbitTemplate.convertAndSend(TRUCO_ROOM_EVENT, roomId, new RabbitResponse(Event.ROOM_USER_JOINED, trucoRoomEvent.getClass().getCanonicalName(), objectMapper.convertValue(trucoRoomEvent, HashMap.class)));
-            logger.debug("User [" + user.getUsername() + "] joined to the room [" + roomId + "]");
-            return trucoRoomEvent;
-        } else {
-            logger.warn("Truco Room not found [" + roomId + "]");
-        }
-        return null;
+        TrucoRoom trucoRoom = getTrucoRoomHolder(roomId).getTrucoRoom();
+        trucoRoom.getUsers().add(new TrucoRoomUser(user, true));
+        TrucoRoomEvent trucoRoomEvent = TrucoRoomEvent.builder(Event.ROOM_USER_JOINED).message("User joined to the Room [" + roomId + "]").user(user).room(trucoRoom).build();
+
+        convertAndSend(roomId, user, trucoRoomEvent);
+        logger.debug("User [" + user.getUsername() + "] joined to the room [" + roomId + "]");
+        return trucoRoomEvent;
+
     }
 
     @Override
@@ -86,57 +89,61 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
         TrucoUser user = trucoUserService.getTrucoUser();
         logger.debug("User [" + user.getUsername() + "]  wants to sit at [" + roomId + "][" + index + "]");
         TrucoRoomHolder trucoRoomHolder = getTrucoRoomHolder(roomId);
-        if (trucoRoomHolder != null) {
-            trucoRoomHolder.getTrucoTableHolder(tableId).sitDownPlayer(user, index);
-            TrucoRoomTableEvent trucoRoomTableEvent = new TrucoRoomTableEvent();
-            trucoRoomTableEvent.setEventName(Event.TABLE_POSITION_SETTED);
-            trucoRoomTableEvent.setMessage("User sat down to the Table [" + roomId + "][" + index + "]");
-            trucoRoomTableEvent.setUser(user);
-            trucoRoomTableEvent.setRoomId(roomId);
-            trucoRoomTableEvent.setTableId(tableId);
-            trucoRoomTableEvent.setChair(index);
-            rabbitTemplate.convertAndSend(TRUCO_ROOM_EVENT, roomId, new RabbitResponse(Event.TABLE_POSITION_SETTED, trucoRoomTableEvent.getClass().getCanonicalName(), objectMapper.convertValue(trucoRoomTableEvent, HashMap.class)));
-            logger.debug("User [" + user.getUsername() + "] joined to the room [" + roomId + "]");
-            return trucoRoomTableEvent;
-        } else {
-            logger.warn("Truco Room not found [" + roomId + "]");
-        }
+
+        trucoRoomHolder.getTrucoTableHolder(tableId).sitDownPlayer(user, index);
+        TrucoRoomTableEvent trucoRoomTableEvent = new TrucoRoomTableEvent();
+        trucoRoomTableEvent.setEventName(Event.TABLE_POSITION_SETTED);
+        trucoRoomTableEvent.setMessage("User sat down to the Table [" + roomId + "][" + index + "]");
+        trucoRoomTableEvent.setUser(user);
+        trucoRoomTableEvent.setRoomId(roomId);
+        trucoRoomTableEvent.setTableId(tableId);
+        trucoRoomTableEvent.setChair(index);
+        convertAndSend(roomId, trucoRoomTableEvent);
+        logger.debug("User [" + user.getUsername() + "] joined to the room [" + roomId + "]");
+        return trucoRoomTableEvent;
+    }
+
+    public TrucoRoomEvent delete(TrucoRoom trucoRoom) {
         return null;
     }
 
-    public TrucoRoom delete(TrucoRoom trucoRoom) {
-        return null;
-    }
-
-    public TrucoRoomTable addTable(String roomId, TrucoRoomTable trucoRoomTable) {
+    public TrucoRoomEvent addTable(String roomId, TrucoRoomTable trucoRoomTable) {
         TrucoUser user = trucoUserService.getTrucoUser();
         logger.debug("User [" + user.getUsername() + "] joining to room [" + roomId + "]");
         TrucoRoomHolder trucoRoomHolder = getTrucoRoomHolder(roomId);
         final int tableId = ++_tableId;
         trucoRoomHolder.addTable(Integer.toString(tableId), user, trucoRoomTable);
-        rabbitTemplate.convertAndSend(TRUCO_ROOM_EVENT, roomId, new RabbitResponse(Event.ROOM_TABLE_CREATED, trucoRoomTable.getClass().getCanonicalName(), objectMapper.convertValue(trucoRoomTable, HashMap.class)));
-        return trucoRoomTable;
+        TrucoRoomEvent trucoRoomEvent = TrucoRoomEvent.builder(Event.ROOM_TABLE_CREATED).table(trucoRoomTable).room(trucoRoomHolder.descriptor()).user(user).build();
+        convertAndSend(roomId, trucoRoomEvent);
+        return trucoRoomEvent;
     }
 
     @Override
-    public TrucoRoomTableEvent joinRoomTable(String roomId, String tableId) {
+    public TrucoRoomEvent joinRoomTable(String roomId, String tableId) {
         TrucoUser user = trucoUserService.getTrucoUser();
         logger.debug("User [" + user.getUsername() + "] joining to room [" + roomId + "]");
         TrucoRoomHolder trucoRoomHolder = getTrucoRoomHolder(roomId);
-
+        TrucoTableHolder trucoTableHolder = trucoRoomHolder.getTrucoTableHolder(tableId);
         trucoRoomHolder.getTrucoTableHolder(tableId).joinUser(user);
-        TrucoRoomTableEvent trucoRoomTableEvent = new TrucoRoomTableEvent();
-        trucoRoomTableEvent.setEventName(Event.ROOM_TABLE_USER_JOINED);
-        trucoRoomTableEvent.setMessage("User joined to the Room Table [" + roomId + "][" + tableId + "]");
-        trucoRoomTableEvent.setUser(user);
-        trucoRoomTableEvent.setRoomId(roomId);
-        trucoRoomTableEvent.setTableId(tableId);
-        rabbitTemplate.convertAndSend(TRUCO_ROOM_EVENT, roomId, new RabbitResponse(Event.ROOM_TABLE_USER_JOINED, trucoRoomTableEvent.getClass().getCanonicalName(), objectMapper.convertValue(trucoRoomTableEvent, HashMap.class)));
+        TrucoRoomEvent trucoRoomEvent = TrucoRoomEvent.builder(Event.ROOM_TABLE_USER_JOINED).user(user).table(trucoTableHolder.descriptor()).build();
+        // TODO JOIN TO TABLE LISTENER
+//        rabbitTemplate.convertAndSend(TRUCO_ROOM_EVENT, ROOM_ID_ROUTING_KEY, new RabbitResponse(Event.TRUCO_ROOM_EVENT, roomId, trucoRoomEvent));
+        convertAndSend(roomId, trucoRoomEvent);
         logger.debug("User [" + user.getUsername() + "] joined to the room [" + roomId + "]");
-        return trucoRoomTableEvent;
-
+        return trucoRoomEvent;
     }
 
+    private void convertAndSend(TrucoEvent trucoEvent) {
+        rabbitTemplate.convertAndSend(TRUCO_ROOM_EVENT, ROOM_ALL_ROUTING_KEY, new RabbitResponse(Event.TRUCO_ROOM_EVENT, trucoEvent));
+    }
+
+    private void convertAndSend(String roomId, TrucoUser trucoUser, TrucoEvent trucoEvent) {
+        rabbitTemplate.convertAndSend(TRUCO_ROOM_EVENT, ROOM_JOIN_ROUTING_KEY, new JoinRabbitResponse(roomId, trucoUser, new RabbitResponse(Event.TRUCO_ROOM_EVENT, roomId, trucoEvent)));
+    }
+
+    private void convertAndSend(String roomId, TrucoEvent trucoEvent) {
+        rabbitTemplate.convertAndSend(TRUCO_ROOM_EVENT, ROOM_ID_ROUTING_KEY, new RabbitResponse(Event.TRUCO_ROOM_EVENT, roomId, trucoEvent));
+    }
 
     public TrucoRoomTable deleteTable(String roomId, String tableId) {
         return null;
@@ -162,7 +169,7 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
                 trucoRoomEvent.setMessage("User left the Room [" + room.getId() + "]");
                 trucoRoomEvent.setUser(trucoRoomUser.getUser());
                 trucoRoomEvent.setRoom(room);
-                rabbitTemplate.convertAndSend(TRUCO_ROOM_EVENT, room.getId(), new RabbitResponse(Event.ROOM_USER_JOINED, trucoRoomEvent.getClass().getCanonicalName(), objectMapper.convertValue(trucoRoomEvent, HashMap.class)));
+                rabbitTemplate.convertAndSend(TRUCO_ROOM_EVENT, ROOM_LOGOUT_ROUTING_KEY, new RabbitResponse(Event.ROOM_USER_JOINED, trucoRoomEvent.getClass().getCanonicalName(), trucoRoomEvent));
                 logger.debug("User [" + trucoRoomUser.getUser().getUsername() + "] left the room [" + room.getId() + "]");
             }
         });

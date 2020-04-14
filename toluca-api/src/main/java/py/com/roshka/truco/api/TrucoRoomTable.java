@@ -3,7 +3,7 @@ package py.com.roshka.truco.api;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrucoRoomTable {
+public class TrucoRoomTable extends TrucoRoomTableDescriptor{
 
     final static public String NEW = "NEW";
     final static public String PROGRESS = "PROGRESS";
@@ -14,23 +14,33 @@ public class TrucoRoomTable {
     private TrucoUser owner;
     private boolean privateTable;
     private List<Chair> chairs = new ArrayList<Chair>();
-    private String status = NEW;
-    private Integer points;
 
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public void setId(String id) {
         this.id = id;
     }
 
+    @Override
     public String getRoomId() {
         return roomId;
     }
 
+    @Override
     public void setRoomId(String roomId) {
         this.roomId = roomId;
+    }
+
+    public TrucoUser getOwner() {
+        return owner;
+    }
+
+    public void setOwner(TrucoUser owner) {
+        this.owner = owner;
     }
 
     public boolean isPrivateTable() {
@@ -49,19 +59,14 @@ public class TrucoRoomTable {
         this.chairs = chairs;
     }
 
-    public TrucoUser getOwner() {
-        return owner;
-    }
-
-    public void setOwner(TrucoUser owner) {
-        this.owner = owner;
-    }
-
-    public Integer getPoints() {
-        return points;
-    }
-
-    public void setPoints(Integer points) {
-        this.points = points;
+    @Override
+    public String toString() {
+        return "TrucoRoomTable{" +
+                "id='" + id + '\'' +
+                ", roomId='" + roomId + '\'' +
+                ", owner=" + owner +
+                ", privateTable=" + privateTable +
+                ", chairs=" + chairs +
+                "} " + super.toString();
     }
 }

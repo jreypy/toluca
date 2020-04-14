@@ -4,11 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import py.com.roshka.truco.api.TrucoGamePlay;
 import py.com.roshka.truco.api.TrucoRoomTable;
+import py.com.roshka.truco.api.TrucoRoomTableDescriptor;
 import py.com.roshka.truco.api.TrucoUser;
 
 import java.util.*;
 
-public class TrucoTableHolder {
+public class TrucoTableHolder extends TrucoRoomTableDescriptor {
     private TrucoRoomTable table;
     private Set<TrucoUser> users = new HashSet<>();
 
@@ -17,11 +18,11 @@ public class TrucoTableHolder {
     private ObjectMapper objectMapper;
 
     public TrucoTableHolder(TrucoRoomTable table, ObjectMapper objectMapper, RabbitTemplate rabbitTemplate) {
+        super(table);
         if (table.getOwner() == null)
             throw new IllegalArgumentException("TrucoUser owner is required");
         this.table = table;
         this.objectMapper = objectMapper;
-
         this.users.add(table.getOwner());
 
         this.trucoGameHolder = new TrucoGameHolder(this, objectMapper, rabbitTemplate);

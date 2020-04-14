@@ -2,28 +2,29 @@ package py.com.roshka.toluca.websocket.service;
 
 import py.com.roshka.truco.api.*;
 import py.com.roshka.truco.api.request.JoinRoomTableRequest;
+import py.com.roshka.truco.api.request.RoomRequest;
 import py.com.roshka.truco.api.request.StartGameRequest;
 import py.com.roshka.truco.api.request.TablePositionRequest;
 
-import java.util.List;
+import java.util.Map;
 
 public interface RoomService {
 
-    TrucoRoom createRoom(TrucoRoom trucoRoom);
+    Map createRoom(TrucoRoom trucoRoom);
 
-    TrucoRoomEvent joinRoom(TrucoRoom trucoRoom);
+    Map joinRoom(RoomRequest trucoRoom);
 
-    TrucoRoom findRoomById(String id);
+    Map findRoomById(String id);
 
-    List<TrucoRoom> findAllRooms();
+    Map findAllRooms();
 
-    TrucoRoomTable createRoomTable(TrucoRoomTable trucoRoomTable);
+    Map createRoomTable(TrucoRoomTable trucoRoomTable);
 
-    TrucoRoomTableEvent setTablePosition(TablePositionRequest tablePositionRequest);
+    Map setTablePosition(TablePositionRequest tablePositionRequest);
 
-    TrucoRoomTableEvent joinRoomTable(JoinRoomTableRequest trucoRoomTable);
+    Map joinRoomTable(JoinRoomTableRequest trucoRoomTable);
 
-    TrucoRoomTableEvent startGame(StartGameRequest startGameRequest);
+    Map startGame(StartGameRequest startGameRequest);
 
-    TrucoRoomTableEvent play(TrucoGamePlay trucoGamePlay);
+    Map play(TrucoGamePlay trucoGamePlay);
 }

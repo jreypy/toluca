@@ -28,7 +28,7 @@ public class TrucoClientTest {
 
     @Test
     public void connectToWs() throws TrucoClientException {
-        TrucoClient trucoClient = new TrucoClientImpl("p://localhost:8091", "ws://localhost:8050");
+        TrucoClient trucoClient = new TrucoClientImpl("http://localhost:8091", "ws://localhost:8050");
         TrucoPrincipal trucoPrincipal = trucoClient.login("prueba", "prueba", null);
         ((TrucoClientImpl) trucoClient).connect();
         logger.debug("TrucoClient was connected to Websocket");

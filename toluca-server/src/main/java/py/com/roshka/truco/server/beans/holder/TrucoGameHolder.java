@@ -104,12 +104,18 @@ public class TrucoGameHolder extends TrucoGame implements TrucoListener {
         TrucoPlay trucoPlay = TolucaHelper.getPlay(trucoGamePlay);
         trucoPlay.setPlayer(getPlayer(trucoGamePlay.getPlayer().getId()));
 
-        if (trucoPlay.getPlayer() == null){
+        if (trucoPlay.getPlayer() == null) {
             throw new IllegalArgumentException("Player is required to play");
         }
-
-        logger.debug(trucoPlay.getPlayer() + "plays " + trucoPlay);
-        target.play(trucoPlay);
+        logger.debug("=========== Receiving Play ===========");
+        logger.debug("[" + trucoPlay.getPlayer() + "] PLAYS [" + trucoPlay + "]");
+        try {
+            target.play(trucoPlay);
+        } catch (InvalidPlayExcepcion invalidPlayExcepcion) {
+            //invalidPlayExcepcion.printStackTrace();
+            logger.error("Error in TrucoPlay [" + invalidPlayExcepcion.getTrucoPlay() + "]", invalidPlayExcepcion);
+        }
+        logger.debug("=========== Play Finished ===========");
     }
 
     @Override
@@ -199,8 +205,9 @@ public class TrucoGameHolder extends TrucoGame implements TrucoListener {
         // TODO Change to Table
         logger.debug("firing TrucoGame Event  [" + trucoGameEvent + "]");
         rabbitTemplate.convertAndSend(TRUCO_GAME_EVENT, trucoTableHolder.getTable().getRoomId(), new RabbitResponse(Event.TRUCO_GAME_EVENT,
-                trucoGameEvent.getClass().getCanonicalName(),
-                objectMapper.convertValue(trucoGameEvent, HashMap.class)));
+                trucoTableHolder.getRoomId(),
+                trucoTableHolder.getTable().getId(),
+                trucoGameEvent));
 
 
     }

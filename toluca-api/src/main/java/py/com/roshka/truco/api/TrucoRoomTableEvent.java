@@ -37,4 +37,14 @@ public class TrucoRoomTableEvent extends TrucoEvent {
     public void setUser(TrucoUser user) {
         this.user = user;
     }
+
+    @Override
+    public String toString() {
+        return "TrucoRoomTableEvent{" +
+                "roomId='" + roomId + '\'' +
+                ", user=" + user +
+                ", tableId='" + tableId + '\'' +
+                ", chair=" + chair +
+                "} " + super.toString();
+    }
 }

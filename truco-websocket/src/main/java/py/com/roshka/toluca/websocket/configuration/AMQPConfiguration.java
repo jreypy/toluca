@@ -21,83 +21,117 @@ import org.springframework.messaging.handler.annotation.support.DefaultMessageHa
 @Configuration
 public class AMQPConfiguration implements RabbitListenerConfigurer {
 
+    /**
+     * Eventos Genericos
+     *
+     * @param topicName
+     * @return
+     */
+
+    static String ROOM_ALL_ROUTING_KEY = "room_all";
+    static String ROOM_ID_ROUTING_KEY = "room_id";
+    static String ROOM_JOIN_ROUTING_KEY = "room_join";
+    static String ROOM_LOGOUT_ROUTING_KEY = "room_logout";
+
+
+    /**
+     * Eventos de Room
+     *
+     * @param topicName
+     * @return
+     */
 
     @Bean
-    public TopicExchange topicExchange1(@Value("truco_event") final String topicName) {
+    public TopicExchange trucoRoomTopic(@Value("truco_room_event") final String topicName) {
+        return new TopicExchange(topicName, false, false);
+    }
+
+    /**
+     * Queue para todos
+     *
+     * @param queueName
+     * @return
+     */
+    @Bean
+    public Queue trucoRoomQueue(@Value("truco_room_all_client") final String queueName) {
+        return new Queue(queueName, true);
+    }
+
+    /**
+     * Queue para un Room Especifico
+     *
+     * @param queueName
+     * @return
+     */
+    @Bean
+    public Queue trucoRoomIdQueue(@Value("truco_room_id_client") final String queueName) {
+        return new Queue(queueName, true);
+    }
+
+    /**
+     * Queue para JOIN de Room
+     *
+     * @param queueName
+     * @return
+     */
+    @Bean
+    public Queue trucoRoomJoinQueue(@Value("truco_room_join_client") final String queueName) {
+        return new Queue(queueName, true);
+    }
+
+    /**
+     * Binding para todos los Rooms
+     *
+     * @return
+     */
+    @Bean
+    public Binding trucoRoomBinding(final Queue trucoRoomQueue, final TopicExchange trucoRoomTopic) {
+        return BindingBuilder
+                .bind(trucoRoomQueue).to(trucoRoomTopic).with(ROOM_ALL_ROUTING_KEY);
+    }
+
+    /**
+     * Binding para un Room en Especifico
+     *
+     * @return
+     */
+    @Bean
+    public Binding trucoRoomIdBinding(final Queue trucoRoomIdQueue, final TopicExchange trucoRoomTopic) {
+        return BindingBuilder
+                .bind(trucoRoomIdQueue).to(trucoRoomTopic).with(ROOM_ID_ROUTING_KEY);
+    }
+
+    /**
+     * Binding para J
+     *
+     * @return
+     */
+    @Bean
+    public Binding trucoRoomJoinBinding(final Queue trucoRoomJoinQueue, final TopicExchange trucoRoomTopic) {
+        return BindingBuilder
+                .bind(trucoRoomJoinQueue).to(trucoRoomTopic).with(ROOM_JOIN_ROUTING_KEY);
+    }
+
+
+    /**
+     * Eventos para Table / Game
+     */
+
+    @Bean
+    public TopicExchange trucoTableTopic(@Value("truco_table_event") final String topicName) {
         return new TopicExchange(topicName, false, false);
     }
 
     @Bean
-    public TopicExchange topicExchange2(@Value("truco_room_event") final String topicName) {
-        return new TopicExchange(topicName, false, false);
-    }
-
-    @Bean
-    public TopicExchange trucoGameTopic(@Value("truco_game_event") final String topicName) {
-        return new TopicExchange(topicName, false, false);
-    }
-
-    @Bean
-    public Queue queue1(@Value("truco_client") final String queueName) {
+    public Queue trucoTableQueue(@Value("truco_table_client") final String queueName) {
         return new Queue(queueName, true);
     }
 
     @Bean
-    public Queue queue2(@Value("truco_room_client") final String queueName) {
-        return new Queue(queueName, true);
-    }
-
-    @Bean
-    public Queue trucoGameClient(@Value("truco_game_client") final String queueName) {
-        return new Queue(queueName, true);
-    }
-
-    @Bean
-    public Binding binding1(final Queue queue1, final TopicExchange topicExchange1) {
+    public Binding trucoTableBinding(final Queue trucoTableQueue, final TopicExchange trucoTableTopic) {
         return BindingBuilder
-                .bind(queue1).to(topicExchange1).with("*");
+                .bind(trucoTableQueue).to(trucoTableTopic).with("*");
     }
-
-    @Bean
-    public Binding binding2(final Queue queue2, final TopicExchange topicExchange2) {
-        return BindingBuilder
-                .bind(queue2).to(topicExchange2).with("*");
-    }
-
-    @Bean
-    public Binding trucoGameBinding(final Queue trucoGameClient, final TopicExchange trucoGameTopic) {
-        return BindingBuilder
-                .bind(trucoGameClient).to(trucoGameTopic).with("*");
-    }
-
-//    @Bean
-//    public SimpleMessageListenerContainer simpleRabbitListener1(
-//            final ConnectionFactory connectionFactory,
-//            final Queue queue1
-//    ) {
-//        SimpleMessageListenerContainer listenerContainer = new SimpleMessageListenerContainer(connectionFactory);
-//        listenerContainer.addQueues(queue1);
-//        listenerContainer.setMessageConverter(new Jackson2JsonMessageConverter());
-//
-//        return listenerContainer;
-//    }
-//
-//    @Bean
-//    public SimpleMessageListenerContainer simpleRabbitListener2(
-//            final ConnectionFactory connectionFactory,
-//            final Queue queue2
-//    ) {
-//        SimpleMessageListenerContainer listenerContainer = new SimpleMessageListenerContainer(connectionFactory);
-//        listenerContainer.addQueues(queue2);
-//        listenerContainer.setMessageListener(
-//                message -> {
-//                    System.out.println("Message simple listener 1 [" + message + "]");
-//                }
-//        );
-//        listenerContainer.setMessageConverter(new Jackson2JsonMessageConverter());
-//        return listenerContainer;
-//    }
-
 
     @Bean
     public RabbitTemplate rabbitTemplate(final ConnectionFactory connectionFactory) {
