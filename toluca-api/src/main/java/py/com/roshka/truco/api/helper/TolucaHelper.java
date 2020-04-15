@@ -38,6 +38,9 @@ public class TolucaHelper {
 
 
     public static TrucoPlayer getPlayer(TrucoUser trucoUser) {
+        if (trucoUser == null)
+            return null;
+
         return new TrucoPlayer(trucoUser.getId());
     }
 

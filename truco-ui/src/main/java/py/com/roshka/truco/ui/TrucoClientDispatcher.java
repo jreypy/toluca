@@ -5,6 +5,8 @@ import org.apache.log4j.Logger;
 import py.com.roshka.truco.api.*;
 import py.com.roshka.truco.api.constants.Commands;
 import py.com.roshka.truco.api.helper.TolucaHelper;
+import py.com.roshka.truco.api.request.RoomRequest;
+import py.com.roshka.truco.client.communication.exception.TrucoClientException;
 import py.edu.uca.fcyt.net.CommunicatorClient;
 import py.edu.uca.fcyt.toluca.RoomClient;
 import py.edu.uca.fcyt.toluca.event.RoomEvent;
@@ -21,7 +23,6 @@ import java.util.Map;
 import static py.edu.uca.fcyt.toluca.event.TableEvent.EVENT_playerSit;
 
 public class TrucoClientDispatcher extends CommunicatorClient {
-
     Logger logger = Logger.getLogger(TrucoClientDispatcher.class);
 
     private ObjectMapper objectMapper;
@@ -30,24 +31,35 @@ public class TrucoClientDispatcher extends CommunicatorClient {
     private TrucoUser trucoUser;
     WebSocketCommunicatorClient communicatorClient;
 
+    final TrucoRoomEventDispatcher roomEventDispatcher;
+    final TrucoRoomTableEventDispatcher tableEventDispatcher;
+    final TrucoGameEventDispatcher gameEventDispatcher;
+
     public TrucoClientDispatcher(WebSocketCommunicatorClient webSocketCommunicatorClient, ObjectMapper objectMapper, EventDispatcherClient eventDispatcher, RoomClient client, TrucoListener trucoListener) {
         this.communicatorClient = webSocketCommunicatorClient;
         this.objectMapper = objectMapper;
         this.target = eventDispatcher;
         this.target.setRoom(client);
         this.trucoListener = trucoListener;
+
+        gameEventDispatcher = new TrucoGameEventDispatcher(webSocketCommunicatorClient, target);
+        tableEventDispatcher = new TrucoRoomTableEventDispatcher(webSocketCommunicatorClient, target);
+        roomEventDispatcher = new TrucoRoomEventDispatcher(webSocketCommunicatorClient, tableEventDispatcher, target);
+
     }
 
     public void dispatchEvent(Map event) {
         String type = (String) event.get("type");
         logger.debug("Dispatching event [" + type + "]");
 
-        if (Event.COMMAND_RESPONSE.equalsIgnoreCase(type)){
+        if (Event.COMMAND_RESPONSE.equalsIgnoreCase(type)) {
             dispatchCommandResponse((String) event.get("command"), (String) event.get("id"), (Map) event.get("data"));
-        }
-        else if (Event.TRUCO_ROOM_EVENT.equalsIgnoreCase(type)){
+        } else if (Event.TRUCO_ROOM_EVENT.equalsIgnoreCase(type)) {
             TrucoRoomEvent trucoRoomEvent = objectMapper.convertValue(event.get("data"), TrucoRoomEvent.class);
-            dispatchRoomEvent(trucoRoomEvent);
+            roomEventDispatcher.dispatchRoomEvent(trucoRoomEvent);
+        } else if (Event.TRUCO_TABLE_EVENT.equalsIgnoreCase(type)) {
+            TrucoRoomTableEvent trucoRoomTableEvent = objectMapper.convertValue(event.get("data"), TrucoRoomTableEvent.class);
+            tableEventDispatcher.dispatchRoomTableEvent(trucoRoomTableEvent);
         }
 
 
@@ -72,136 +84,32 @@ public class TrucoClientDispatcher extends CommunicatorClient {
     }
 
 
-    private void handleGivingCards(TrucoGameEvent trucoGameEvent) {
-
-        TrucoEvent trucoEvent = new TrucoEvent();
-        trucoEvent.setType(TrucoEvent.ENVIAR_CARTAS);
-        trucoEvent.setPlayer(TolucaHelper.getPlayer(trucoGameEvent.getPlayer()));
-        trucoEvent.setTableNumber(Integer.parseInt(trucoGameEvent.getGame().getId()));
-        trucoEvent.setPlayer(TolucaHelper.getPlayer(trucoGameEvent.getPlayer()));
-        trucoEvent.setCards(TolucaHelper.getCards(trucoGameEvent.getCards()));
-        target.receiveCards(trucoEvent);
-
-    }
-
-
-    private void dispatchTrucoGameEvent(TrucoGameEvent trucoGameEvent) {
-        TrucoEvent trucoEvent = TolucaHelper.trucoEvent(trucoGameEvent);
-
-        if (Event.GAME_STARTED.equalsIgnoreCase(trucoGameEvent.getEventName())) {
-            TableEvent tableEvent = new TableEvent();
-            tableEvent.setEvent(TableEvent.EVENT_gameStarted);
-            tableEvent.setTableServer(new TableServer());
-            tableEvent.getTableServer().setTableNumber(trucoEvent.getTableNumber());
-            target.dispatchEvent(tableEvent);
-        }
-        else {
-            logger.debug("Fire Truco Game Event [ " + trucoGameEvent + "]");
-
-            target.dispatchEvent(trucoEvent);
-        }
-
-    }
-
-
-
-
     private void dispatchCommandResponse(String command, String id, Map data) {
         if (Commands.JOIN_ROOM.equalsIgnoreCase(command)) {
             logger.debug("Login Completed!! ");
             loginCompleted(this.communicatorClient.getTrucoClient().getTrucoPrincipal());
-        }
-    }
-
-    void dispatchRoomEvent(Map eventData) {
-        logger.debug("Dispatching event [" + eventData + "]");
-        TrucoRoomEvent trucoRoomEvent = objectMapper.convertValue(eventData, TrucoRoomEvent.class);
-
-        dispatchRoomEvent(trucoRoomEvent);
-    }
-
-    void dispatchRoomEvent(TrucoRoomEvent trucoRoomEvent) {
-        if (TrucoFrame.MAIN_ROOM_ID.equalsIgnoreCase(trucoRoomEvent.getRoom().getId())) {
-            if (Event.ROOM_USER_JOINED.equalsIgnoreCase(trucoRoomEvent.getEventName())) {
-                if (trucoRoomEvent.getUser().getUsername().equals(communicatorClient.getTrucoClient().getTrucoPrincipal().getUsername())) {
-                    trucoRoomEvent.getRoom().getUsers().stream().forEach(s -> {
-                        RoomEvent roomEvent = new RoomEvent();
-                        roomEvent.setType(RoomEvent.TYPE_PLAYER_JOINED);
-                        roomEvent.setPlayer(TolucaHelper.getPlayer(s.getUser()));
-                        target.dispatchEvent(roomEvent);
-                    });
-                } else {
-                    RoomEvent roomEvent = new RoomEvent();
-                    roomEvent.setType(RoomEvent.TYPE_PLAYER_JOINED);
-                    roomEvent.setPlayer(TolucaHelper.getPlayer(trucoRoomEvent.getUser()));
-                    target.dispatchEvent(roomEvent);
-                }
-
+            try {
+                communicatorClient.executeCommand(Commands.GET_ROOM, new RoomRequest(TrucoFrame.MAIN_ROOM_ID));
+            } catch (TrucoClientException e) {
+                logger.error("Error executing command", e);
             }
-            else if (Event.ROOM_TABLE_CREATED.equalsIgnoreCase(trucoRoomEvent.getEventName())){
-                RoomEvent table = new RoomEvent();
-                table.setTableServer(new TableServer());
-                table.getTableServer().setHost(new TrucoPlayer());
-                table.getTableServer().getHost().setId(trucoRoomEvent.getUser().getId());
-                table.getTableServer().getHost().setName(trucoRoomEvent.getUser().getUsername());
-                table.setType(RoomEvent.TYPE_TABLE_CREATED);
-                table.setGamePoints(trucoRoomEvent.getTable().getPoints());
-                table.setPlayers(new LinkedHashMap());
-                table.getTableServer().setTableNumber(Integer.parseInt(trucoRoomEvent.getTable().getId()));
-                table.setTableNumber(table.getTableServer().getTableNumber());
-                target.dispatchEvent(table);
-            }
-            else if (Event.ROOM_TABLE_USER_JOINED.equalsIgnoreCase(trucoRoomEvent.getEventName())) {
-                TrucoRoomTableEvent trucoRoomTableEvent = new TrucoRoomTableEvent();
-                trucoRoomTableEvent.setEventName(trucoRoomEvent.getEventName());
-                trucoRoomTableEvent.setTableId(trucoRoomEvent.getTable().getId());
-                trucoRoomTableEvent.setUser(trucoRoomEvent.getUser());
-
-                dispatchRoomEvent(RoomEvent.TYPE_TABLE_JOINED, trucoRoomTableEvent);
-            }
-            else if (Event.ROOM_USER_LEFT.equalsIgnoreCase(trucoRoomEvent.getEventName())) {
-                trucoUserLeft(trucoRoomEvent.getUser());
-            }
-
+        } else if (Commands.GET_ROOM.equalsIgnoreCase(command)) {
+            TrucoRoomEvent trucoRoomEvent = objectMapper.convertValue(data, TrucoRoomEvent.class);
+            roomEventDispatcher.dispatchRoomEvent(trucoRoomEvent);
         }
     }
 
 
-    void trucoUserLeft(TrucoUser trucoUser) {
+    public void loginCompleted(TrucoPrincipal trucoPrincipal) {
+        this.trucoUser = new TrucoUser(trucoPrincipal.getUsername(), trucoPrincipal.getUsername());
         RoomEvent roomEvent = new RoomEvent();
-        roomEvent.setType(RoomEvent.TYPE_PLAYER_LEFT);
-        roomEvent.setPlayer(new TrucoPlayer());
-        roomEvent.getPlayer().setName(trucoUser.getUsername());
-        roomEvent.getPlayer().setId(trucoUser.getId());
-        target.dispatchEvent(roomEvent);
-    }
-
-
-    public void dispatchRoomTableEvent(Integer eventType, Map eventData) {
-        TrucoRoomTableEvent trucoRoomTableEvent = objectMapper.convertValue(eventData, TrucoRoomTableEvent.class);
-        TableEvent tableEvent = new TableEvent();
-        tableEvent.setEvent(eventType);
-        tableEvent.setTableServer(new TableServer());
-        tableEvent.getTableServer().setTableNumber(Integer.parseInt(trucoRoomTableEvent.getTableId()));
-        TrucoPlayer trucoPlayer = new TrucoPlayer();
-        trucoPlayer.setId(trucoRoomTableEvent.getUser().getId());
-        trucoPlayer.setName(trucoRoomTableEvent.getUser().getUsername());
-        tableEvent.setPlayer(new TrucoPlayer[]{trucoPlayer});
-        tableEvent.setValue(trucoRoomTableEvent.getChair());
-        target.dispatchEvent(tableEvent);
-
-    }
-
-    public void dispatchRoomEvent(Integer eventType, TrucoRoomTableEvent eventData) {
-        RoomEvent roomEvent = new RoomEvent();
-        roomEvent.setType(eventType);
-        roomEvent.setPlayer(new TrucoPlayer());
-        roomEvent.getPlayer().setName(eventData.getUser().getUsername());
-        roomEvent.getPlayer().setId(eventData.getUser().getId());
-        roomEvent.setTableServer(new TableServer());
-        roomEvent.getTableServer().setTableNumber(Integer.parseInt(eventData.getTableId()));
-        target.dispatchEvent(roomEvent);
-
+        roomEvent.setType(RoomEvent.TYPE_PLAYER_JOINED);
+        // Tables are retrieved after Get Room
+        roomEvent.setTablesServers(new TableServer[0]);
+        roomEvent.setPlayer(TolucaHelper.getPlayer(new Player(trucoUser.getId(), trucoUser.getUsername())));
+        roomEvent.setPlayers(new LinkedHashMap());
+        roomEvent.getPlayers().put(roomEvent.getPlayer().getId(), roomEvent.getPlayer());
+        target.loginCompleted(roomEvent);
     }
 
 
@@ -237,31 +145,6 @@ public class TrucoClientDispatcher extends CommunicatorClient {
 
     @Override
     public void chatMessageSent(RoomEvent event) {
-
-    }
-
-
-    public void loginCompleted(TrucoPrincipal trucoPrincipal) {
-        //        RoomEvent roomEvent = new RoomEvent();
-//        roomEvent.setType(RoomEvent.TYPE_PLAYER_JOINED);
-//        roomEvent.setTablesServers(new TableServer[0]);
-//        roomEvent.setPlayer(TrucoConverter.getPlayer(new Player(trucoUser.getId(), trucoUser.getUsername())));
-//        roomEvent.getPlayer().setName(trucoUser.getUsername());
-//        roomEvent.getPlayer().setId(trucoUser.getId());
-//        eventDispatcher.dispatchEvent(roomEvent);
-
-        // Players...
-//        roomEvent.setPlayers(new LinkedHashMap());
-//        roomEvent.getPlayers().put(trucoUser.getUsername(), TrucoConverter.getPlayer(new Player(trucoUser.getUsername(), trucoUser.getUsername())));
-        this.trucoUser = new TrucoUser(trucoPrincipal.getUsername(), trucoPrincipal.getUsername());
-        RoomEvent roomEvent = new RoomEvent();
-        roomEvent.setType(RoomEvent.TYPE_PLAYER_JOINED);
-        //TODO Tables
-        roomEvent.setTablesServers(new TableServer[0]);
-        roomEvent.setPlayer(TolucaHelper.getPlayer(new Player(trucoUser.getId(), trucoUser.getUsername())));
-        roomEvent.setPlayers(new LinkedHashMap());
-        roomEvent.getPlayers().put(roomEvent.getPlayer().getId(), roomEvent.getPlayer());
-        target.loginCompleted(roomEvent);
 
     }
 

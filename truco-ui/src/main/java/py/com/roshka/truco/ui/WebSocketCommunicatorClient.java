@@ -149,7 +149,7 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
             TablePositionRequest tablePositionRequest = new TablePositionRequest();
             tablePositionRequest.setRoomId(TrucoFrame.MAIN_ROOM_ID);
             tablePositionRequest.setTableId(Integer.toString(ev.getTableBeanRepresentation().getId()));
-            tablePositionRequest.setChair(ev.getValue());
+            tablePositionRequest.setPosition(ev.getValue());
             executeCommand(Commands.SET_TABLE_POSITION, tablePositionRequest);
 
         } catch (TrucoClientException e) {
@@ -214,14 +214,13 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
     @Override
     public void ready() {
         try {
-            executeCommand(Commands.GET_ROOM, new RoomRequest(TrucoFrame.MAIN_ROOM_ID));
             executeCommand(Commands.JOIN_ROOM, new RoomRequest(TrucoFrame.MAIN_ROOM_ID));
         } catch (TrucoClientException e) {
             logger.error("Error on Client Message sending", e);
         }
     }
 
-    private void executeCommand(String commandName, Object data) throws TrucoClientException {
+    void executeCommand(String commandName, Object data) throws TrucoClientException {
         trucoClient.send(commandName, data);
     }
 
@@ -247,5 +246,9 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
     @Override
     public TrucoPlayer getTrucoPlayer() {
         return new TrucoPlayer(trucoClient.getTrucoPrincipal().getUsername());
+    }
+
+    ObjectMapper getObjectMapper() {
+        return objectMapper;
     }
 }

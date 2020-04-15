@@ -1,5 +1,6 @@
 package py.com.roshka.truco.server.beans.holder;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import py.edu.uca.fcyt.toluca.event.TrucoListener;
 import py.edu.uca.fcyt.toluca.game.*;
 
 import java.util.*;
+
 
 public class TrucoGameHolder extends TrucoGame implements TrucoListener {
     static String TRUCO_GAME_EVENT = "truco_game_event";

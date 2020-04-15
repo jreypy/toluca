@@ -1,11 +1,17 @@
 package py.com.roshka.truco.api;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class TrucoRoomDescriptor {
     protected String id;
     protected String name;
     protected Set<TrucoRoomUser> users = null;
+    protected Set<TrucoRoomTableDescriptor> tables;
+
+
+
 
 
     public TrucoRoomDescriptor() {
@@ -48,6 +54,16 @@ public class TrucoRoomDescriptor {
     public void setUsers(Set<TrucoRoomUser> users) {
         this.users = users;
     }
+
+    public Set<TrucoRoomTableDescriptor> getTables() {
+        return tables;
+    }
+
+    public void setTables(Set<TrucoRoomTableDescriptor> tables) {
+        this.tables = tables;
+    }
+
+
 
     @Override
     public String toString() {

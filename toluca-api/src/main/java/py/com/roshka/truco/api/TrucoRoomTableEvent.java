@@ -4,7 +4,7 @@ public class TrucoRoomTableEvent extends TrucoEvent {
     private String roomId;
     private TrucoUser user;
     private String tableId;
-    private Integer chair;
+    private Integer position;
 
     public String getRoomId() {
         return roomId;
@@ -22,12 +22,12 @@ public class TrucoRoomTableEvent extends TrucoEvent {
         this.tableId = tableId;
     }
 
-    public Integer getChair() {
-        return chair;
+    public Integer getPosition() {
+        return position;
     }
 
-    public void setChair(Integer chair) {
-        this.chair = chair;
+    public void setPosition(Integer position) {
+        this.position = position;
     }
 
     public TrucoUser getUser() {
@@ -44,7 +44,7 @@ public class TrucoRoomTableEvent extends TrucoEvent {
                 "roomId='" + roomId + '\'' +
                 ", user=" + user +
                 ", tableId='" + tableId + '\'' +
-                ", chair=" + chair +
+                ", position=" + position +
                 "} " + super.toString();
     }
 }

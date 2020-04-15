@@ -42,7 +42,7 @@ Join to Room Table
     
 Set Table Position
 --------
-    $ {"command":"set_table_position", "data" : {"roomId":"1","tableId":"1", "chair":0}}
+    $ {"command":"set_table_position", "data" : {"roomId":"1","tableId":"1", "position":2}}
 
 Start Game
 --------

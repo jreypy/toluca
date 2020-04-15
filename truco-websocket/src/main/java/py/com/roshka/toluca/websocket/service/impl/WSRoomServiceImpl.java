@@ -52,7 +52,7 @@ public class WSRoomServiceImpl implements RoomService {
 
     @Override
     public Map setTablePosition(TablePositionRequest tablePositionRequest) {
-        return putForObject(trucoServerHost + "/api/room/" + tablePositionRequest.getRoomId() + "/table/" + tablePositionRequest.getTableId() + "/position/" + tablePositionRequest.getChair(), null, Map.class);
+        return putForObject(trucoServerHost + "/api/room/" + tablePositionRequest.getRoomId() + "/table/" + tablePositionRequest.getTableId() + "/position/" + tablePositionRequest.getPosition(), null, Map.class);
     }
 
     @Override

@@ -3,7 +3,7 @@ package py.com.roshka.truco.api.request;
 public class TablePositionRequest {
     private String roomId;
     private String tableId;
-    private Integer chair;
+    private Integer position;
 
     public String getRoomId() {
         return roomId;
@@ -21,11 +21,11 @@ public class TablePositionRequest {
         this.tableId = tableId;
     }
 
-    public Integer getChair() {
-        return chair;
+    public Integer getPosition() {
+        return position;
     }
 
-    public void setChair(Integer chair) {
-        this.chair = chair;
+    public void setPosition(Integer position) {
+        this.position = position;
     }
 }
