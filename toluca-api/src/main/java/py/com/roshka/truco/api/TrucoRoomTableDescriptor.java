@@ -13,6 +13,10 @@ public class TrucoRoomTableDescriptor {
         this.points = points;
     }
 
+    protected TrucoRoomTableDescriptor descriptor(TrucoRoomTableDescriptor table) {
+        return new TrucoRoomTableDescriptor(table.getId(), table.getStatus(), table.getRoomId(), table.getPoints());
+    }
+
     protected TrucoRoomTableDescriptor(TrucoRoomTableDescriptor descriptor) {
         this.id = descriptor.id;
         this.status = descriptor.status;
@@ -56,7 +60,7 @@ public class TrucoRoomTableDescriptor {
     }
 
     public TrucoRoomTableDescriptor descriptor() {
-        return new TrucoRoomTableDescriptor(id, status, roomId, points);
+        return descriptor(this);
     }
 
     @Override

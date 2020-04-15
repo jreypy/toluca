@@ -38,7 +38,7 @@ Create Table
 
 Join to Room Table
 --------
-    $ {"command":"join_room_table", "data" : {"roomId":"1","tableId":"7"}}
+    $ {"command":"join_room_table", "data" : {"roomId":"1","tableId":"1"}}
     
 Set Table Position
 --------

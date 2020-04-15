@@ -7,10 +7,11 @@ import py.com.roshka.truco.api.TrucoRoomTable;
 import py.com.roshka.truco.api.TrucoRoomTableDescriptor;
 import py.com.roshka.truco.api.TrucoUser;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class TrucoTableHolder extends TrucoRoomTableDescriptor {
-    private TrucoRoomTable table;
+    private TrucoRoomTable target;
     private Set<TrucoUser> users = new HashSet<>();
 
 
@@ -21,19 +22,20 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
         super(table);
         if (table.getOwner() == null)
             throw new IllegalArgumentException("TrucoUser owner is required");
-        this.table = table;
+
+
+        this.target = table;
         this.objectMapper = objectMapper;
         this.users.add(table.getOwner());
-
         this.trucoGameHolder = new TrucoGameHolder(this, objectMapper, rabbitTemplate);
     }
 
     public TrucoRoomTable getTable() {
-        return table;
+        return target;
     }
 
     public void setTable(TrucoRoomTable table) {
-        this.table = table;
+        this.target = table;
     }
 
     public TrucoUser sitDownPlayer(TrucoUser trucoUser, Integer index) {
@@ -72,4 +74,8 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
     }
 
 
+    @Override
+    public TrucoRoomTableDescriptor descriptor() {
+        return descriptor(target);
+    }
 }

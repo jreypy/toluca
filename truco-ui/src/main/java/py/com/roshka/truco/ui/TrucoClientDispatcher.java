@@ -151,6 +151,14 @@ public class TrucoClientDispatcher extends CommunicatorClient {
                 table.setTableNumber(table.getTableServer().getTableNumber());
                 target.dispatchEvent(table);
             }
+            else if (Event.ROOM_TABLE_USER_JOINED.equalsIgnoreCase(trucoRoomEvent.getEventName())) {
+                TrucoRoomTableEvent trucoRoomTableEvent = new TrucoRoomTableEvent();
+                trucoRoomTableEvent.setEventName(trucoRoomEvent.getEventName());
+                trucoRoomTableEvent.setTableId(trucoRoomEvent.getTable().getId());
+                trucoRoomTableEvent.setUser(trucoRoomEvent.getUser());
+
+                dispatchRoomEvent(RoomEvent.TYPE_TABLE_JOINED, trucoRoomTableEvent);
+            }
             else if (Event.ROOM_USER_LEFT.equalsIgnoreCase(trucoRoomEvent.getEventName())) {
                 trucoUserLeft(trucoRoomEvent.getUser());
             }
@@ -190,11 +198,8 @@ public class TrucoClientDispatcher extends CommunicatorClient {
         roomEvent.setPlayer(new TrucoPlayer());
         roomEvent.getPlayer().setName(eventData.getUser().getUsername());
         roomEvent.getPlayer().setId(eventData.getUser().getId());
-
         roomEvent.setTableServer(new TableServer());
         roomEvent.getTableServer().setTableNumber(Integer.parseInt(eventData.getTableId()));
-
-
         target.dispatchEvent(roomEvent);
 
     }
