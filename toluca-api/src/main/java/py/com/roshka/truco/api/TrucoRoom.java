@@ -4,7 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class TrucoRoom extends TrucoRoomDescriptor {
-    private Set<TrucoRoomUser> users = new HashSet<>();
+    {
+        users = new HashSet<>();
+    }
 
     public TrucoRoom() {
     }

@@ -24,7 +24,7 @@ Create Room
 
 Get Room
 --------
-    $ {"command":"get_room", "data" : {"id":"1"}}
+    $ {"command":"get_room", "data" : {"roomId":"1"}}
 
 
 Join to Room

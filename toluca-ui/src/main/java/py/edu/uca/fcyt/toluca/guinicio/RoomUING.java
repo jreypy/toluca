@@ -452,7 +452,6 @@ public class RoomUING extends JApplet {
         this.setContentPane(getCcontenPane());
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-
                 getChatPanel().getJtInput().requestFocus();
 
             }

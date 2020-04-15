@@ -1,5 +1,6 @@
 package py.com.roshka.truco.ui;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
 import py.com.roshka.truco.api.TrucoGamePlay;
@@ -8,6 +9,7 @@ import py.com.roshka.truco.api.TrucoRoomTable;
 import py.com.roshka.truco.api.constants.Commands;
 import py.com.roshka.truco.api.helper.TolucaHelper;
 import py.com.roshka.truco.api.request.JoinRoomTableRequest;
+import py.com.roshka.truco.api.request.RoomRequest;
 import py.com.roshka.truco.api.request.StartGameRequest;
 import py.com.roshka.truco.api.request.TablePositionRequest;
 import py.com.roshka.truco.client.communication.TrucoClient;
@@ -37,6 +39,9 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
     private RoomClient roomClient;
 
     ObjectMapper objectMapper = new ObjectMapper();
+    {
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
     TrucoClientDispatcher trucoClientDispatcher = null;
     TrucoListener trucoListener = new WebSocketTrucoListener(this);
 
@@ -209,8 +214,8 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
     @Override
     public void ready() {
         try {
-            executeCommand(Commands.GET_ROOM, TrucoFrame.MAIN_ROOM);
-            executeCommand(Commands.JOIN_ROOM, TrucoFrame.MAIN_ROOM);
+            executeCommand(Commands.GET_ROOM, new RoomRequest(TrucoFrame.MAIN_ROOM_ID));
+            executeCommand(Commands.JOIN_ROOM, new RoomRequest(TrucoFrame.MAIN_ROOM_ID));
         } catch (TrucoClientException e) {
             logger.error("Error on Client Message sending", e);
         }

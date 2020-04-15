@@ -125,7 +125,7 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
         TrucoRoomHolder trucoRoomHolder = getTrucoRoomHolder(roomId);
         TrucoTableHolder trucoTableHolder = trucoRoomHolder.getTrucoTableHolder(tableId);
         trucoRoomHolder.getTrucoTableHolder(tableId).joinUser(user);
-        TrucoRoomEvent trucoRoomEvent = TrucoRoomEvent.builder(Event.ROOM_TABLE_USER_JOINED).user(user).table(trucoTableHolder.descriptor()).build();
+        TrucoRoomEvent trucoRoomEvent = TrucoRoomEvent.builder(Event.ROOM_TABLE_USER_JOINED).user(user).room(trucoRoomHolder.descriptor()).table(trucoTableHolder.descriptor()).build();
         // TODO JOIN TO TABLE LISTENER
 //        rabbitTemplate.convertAndSend(TRUCO_ROOM_EVENT, ROOM_ID_ROUTING_KEY, new RabbitResponse(Event.TRUCO_ROOM_EVENT, roomId, trucoRoomEvent));
         convertAndSend(roomId, trucoRoomEvent);

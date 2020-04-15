@@ -23,11 +23,7 @@ import py.edu.uca.fcyt.toluca.TolucaConstants;
 import py.edu.uca.fcyt.toluca.event.RoomEvent;
 import py.edu.uca.fcyt.toluca.event.TableEvent;
 import py.edu.uca.fcyt.toluca.event.TrucoEvent;
-import py.edu.uca.fcyt.toluca.game.TrucoCard;
-import py.edu.uca.fcyt.toluca.game.TrucoGameClient;
-import py.edu.uca.fcyt.toluca.game.TrucoPlay;
-import py.edu.uca.fcyt.toluca.game.TrucoPlayer;
-import py.edu.uca.fcyt.toluca.game.TrucoTeam;
+import py.edu.uca.fcyt.toluca.game.*;
 import py.edu.uca.fcyt.toluca.sound.PlaySound;
 import py.edu.uca.fcyt.toluca.table.Table;
 import py.edu.uca.fcyt.toluca.table.TableException;
@@ -725,7 +721,11 @@ public class EventDispatcherClient extends EventDispatcher {
             // tp.getPlayer().getName());
             TrucoPlay tp = new TrucoPlay(playerClient, TrucoPlay.JUGAR_CARTA,
                     cartaClient);
-            trucoGameClient.play(tp);
+            try {
+                trucoGameClient.play(tp);
+            } catch (InvalidPlayExcepcion invalidPlayExcepcion) {
+                throw new RuntimeException(invalidPlayExcepcion.getMessage(), invalidPlayExcepcion);
+            }
         }
 
         trucoGameClient.playResponse(playerClient, cartaClient);
@@ -775,7 +775,11 @@ public class EventDispatcherClient extends EventDispatcher {
             TrucoEvent ev = new TrucoEvent(trucoGameClient, event.getHand(),
                     playerClient, event.getType());
             TrucoPlay tp = ev.toTrucoPlay();
-            trucoGameClient.play(tp);
+            try {
+                trucoGameClient.play(tp);
+            } catch (InvalidPlayExcepcion invalidPlayExcepcion) {
+                throw new RuntimeException(invalidPlayExcepcion.getMessage(), invalidPlayExcepcion);
+            }
         }
 
         trucoGameClient.playResponse(playerClient, event.getType());
@@ -818,7 +822,11 @@ public class EventDispatcherClient extends EventDispatcher {
             TrucoEvent ev = new TrucoEvent(trucoGameClient, event.getHand(),
                     playerClient, event.getType(), event.getValue());
             TrucoPlay tp = ev.toTrucoPlay();
-            trucoGameClient.play(tp);
+            try {
+                trucoGameClient.play(tp);
+            } catch (InvalidPlayExcepcion invalidPlayExcepcion) {
+                throw new RuntimeException(invalidPlayExcepcion.getMessage(), invalidPlayExcepcion);
+            }
         }
 
         trucoGameClient.playResponse(playerClient, event.getType(), event

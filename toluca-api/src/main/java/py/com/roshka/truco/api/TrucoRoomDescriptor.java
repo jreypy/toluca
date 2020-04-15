@@ -1,8 +1,12 @@
 package py.com.roshka.truco.api;
 
+import java.util.Set;
+
 public class TrucoRoomDescriptor {
-    private String id;
-    private String name;
+    protected String id;
+    protected String name;
+    protected Set<TrucoRoomUser> users = null;
+
 
     public TrucoRoomDescriptor() {
     }
@@ -37,11 +41,20 @@ public class TrucoRoomDescriptor {
         return new TrucoRoomDescriptor(this.id, this.name);
     }
 
+    public Set<TrucoRoomUser> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<TrucoRoomUser> users) {
+        this.users = users;
+    }
+
     @Override
     public String toString() {
         return "TrucoRoomDescriptor{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
+                ", users=" + users +
                 '}';
     }
 }

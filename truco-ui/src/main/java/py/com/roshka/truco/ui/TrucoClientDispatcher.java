@@ -42,23 +42,32 @@ public class TrucoClientDispatcher extends CommunicatorClient {
         String type = (String) event.get("type");
         logger.debug("Dispatching event [" + type + "]");
 
-        if (Event.TRUCO_GAME_EVENT.equalsIgnoreCase(type)) {
-            TrucoGameEvent trucoGameEvent = objectMapper.convertValue((Map) event.get("data"), TrucoGameEvent.class);
-            dispatchTrucoGameEvent(trucoGameEvent);
-        } else if (Event.COMMAND_RESPONSE.equalsIgnoreCase(type)) {
+        if (Event.COMMAND_RESPONSE.equalsIgnoreCase(type)){
             dispatchCommandResponse((String) event.get("command"), (String) event.get("id"), (Map) event.get("data"));
-        } else if (Event.ROOM_USER_JOINED.equalsIgnoreCase(type)) {
-            dispatchRoomEvent((Map) event.get("data"));
-        } else if (Event.ROOM_USER_LEFT.equalsIgnoreCase(type)) {
-            dispatchRoomEvent((Map) event.get("data"));
-        } else if (Event.ROOM_TABLE_CREATED.equalsIgnoreCase(type)) {
-            dispatchRoomTableCreated((Map) event.get("data"));
-        } else if (Event.TABLE_POSITION_SETTED.equalsIgnoreCase(type)) {
-            dispatchRoomTableEvent(EVENT_playerSit, (Map) event.get("data"));
-        } else if (Event.ROOM_TABLE_USER_JOINED.equalsIgnoreCase(type)) {
-            TrucoRoomTableEvent trucoRoomTableEvent = objectMapper.convertValue((Map) event.get("data"), TrucoRoomTableEvent.class);
-            dispatchRoomEvent(RoomEvent.TYPE_TABLE_JOINED, trucoRoomTableEvent);
         }
+        else if (Event.TRUCO_ROOM_EVENT.equalsIgnoreCase(type)){
+            TrucoRoomEvent trucoRoomEvent = objectMapper.convertValue(event.get("data"), TrucoRoomEvent.class);
+            dispatchRoomEvent(trucoRoomEvent);
+        }
+
+
+//        if (Event.TRUCO_GAME_EVENT.equalsIgnoreCase(type)) {
+//            TrucoGameEvent trucoGameEvent = objectMapper.convertValue((Map) event.get("data"), TrucoGameEvent.class);
+//            dispatchTrucoGameEvent(trucoGameEvent);
+//        } else if (Event.COMMAND_RESPONSE.equalsIgnoreCase(type)) {
+//            dispatchCommandResponse((String) event.get("command"), (String) event.get("id"), (Map) event.get("data"));
+//        } else if (Event.ROOM_USER_JOINED.equalsIgnoreCase(type)) {
+//            dispatchRoomEvent((Map) event.get("data"));
+//        } else if (Event.ROOM_USER_LEFT.equalsIgnoreCase(type)) {
+//            dispatchRoomEvent((Map) event.get("data"));
+//        } else if (Event.ROOM_TABLE_CREATED.equalsIgnoreCase(type)) {
+//            dispatchRoomTableCreated((Map) event.get("data"));
+//        } else if (Event.TABLE_POSITION_SETTED.equalsIgnoreCase(type)) {
+//            dispatchRoomTableEvent(EVENT_playerSit, (Map) event.get("data"));
+//        } else if (Event.ROOM_TABLE_USER_JOINED.equalsIgnoreCase(type)) {
+//            TrucoRoomTableEvent trucoRoomTableEvent = objectMapper.convertValue((Map) event.get("data"), TrucoRoomTableEvent.class);
+//            dispatchRoomEvent(RoomEvent.TYPE_TABLE_JOINED, trucoRoomTableEvent);
+//        }
 
     }
 
@@ -85,7 +94,8 @@ public class TrucoClientDispatcher extends CommunicatorClient {
             tableEvent.setTableServer(new TableServer());
             tableEvent.getTableServer().setTableNumber(trucoEvent.getTableNumber());
             target.dispatchEvent(tableEvent);
-        } else {
+        }
+        else {
             logger.debug("Fire Truco Game Event [ " + trucoGameEvent + "]");
 
             target.dispatchEvent(trucoEvent);
@@ -94,23 +104,11 @@ public class TrucoClientDispatcher extends CommunicatorClient {
     }
 
 
-    private void dispatchRoomTableCreated(Map eventData) {
-        TrucoRoomTable trucoRoomTable = objectMapper.convertValue(eventData, TrucoRoomTable.class);
-        RoomEvent table = new RoomEvent();
-        table.setTableServer(new TableServer());
-        table.getTableServer().setHost(new TrucoPlayer());
-        table.getTableServer().getHost().setId(trucoRoomTable.getOwner().getId());
-        table.getTableServer().getHost().setName(trucoRoomTable.getOwner().getUsername());
-        table.setType(RoomEvent.TYPE_TABLE_CREATED);
-        table.setGamePoints(trucoRoomTable.getPoints());
-        table.setPlayers(new LinkedHashMap());
-        table.getTableServer().setTableNumber(Integer.parseInt(trucoRoomTable.getId()));
-        table.setTableNumber(table.getTableServer().getTableNumber());
-        target.dispatchEvent(table);
-    }
+
 
     private void dispatchCommandResponse(String command, String id, Map data) {
         if (Commands.JOIN_ROOM.equalsIgnoreCase(command)) {
+            logger.debug("Login Completed!! ");
             loginCompleted(this.communicatorClient.getTrucoClient().getTrucoPrincipal());
         }
     }
@@ -139,8 +137,21 @@ public class TrucoClientDispatcher extends CommunicatorClient {
                     target.dispatchEvent(roomEvent);
                 }
 
-
-            } else if (Event.ROOM_USER_LEFT.equalsIgnoreCase(trucoRoomEvent.getEventName())) {
+            }
+            else if (Event.ROOM_TABLE_CREATED.equalsIgnoreCase(trucoRoomEvent.getEventName())){
+                RoomEvent table = new RoomEvent();
+                table.setTableServer(new TableServer());
+                table.getTableServer().setHost(new TrucoPlayer());
+                table.getTableServer().getHost().setId(trucoRoomEvent.getUser().getId());
+                table.getTableServer().getHost().setName(trucoRoomEvent.getUser().getUsername());
+                table.setType(RoomEvent.TYPE_TABLE_CREATED);
+                table.setGamePoints(trucoRoomEvent.getTable().getPoints());
+                table.setPlayers(new LinkedHashMap());
+                table.getTableServer().setTableNumber(Integer.parseInt(trucoRoomEvent.getTable().getId()));
+                table.setTableNumber(table.getTableServer().getTableNumber());
+                target.dispatchEvent(table);
+            }
+            else if (Event.ROOM_USER_LEFT.equalsIgnoreCase(trucoRoomEvent.getEventName())) {
                 trucoUserLeft(trucoRoomEvent.getUser());
             }
 

@@ -49,7 +49,7 @@ public class CommandProcessorImpl extends Processor implements CommandProcessor 
         } else if (GET_ROOMS.equalsIgnoreCase(command.getCommand())) {
             return getCommandResponse(command, roomService.findAllRooms());
         } else if (GET_ROOM.equalsIgnoreCase(command.getCommand())) {
-            return getCommandResponse(command, roomService.findRoomById(objectMapper.convertValue(command.getData(), TrucoRoom.class).getId()));
+            return getCommandResponse(command, roomService.findRoomById(objectMapper.convertValue(command.getData(), RoomRequest.class).getRoomId()));
         } else if (CREATE_ROOM.equalsIgnoreCase(command.getCommand())) {
             return getCommandResponse(command, roomService.createRoom(objectMapper.convertValue(command.getData(), TrucoRoom.class)));
         } else {
