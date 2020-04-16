@@ -32,7 +32,7 @@ import java.util.Map;
 public class WebSocketCommunicatorClient extends CommunicatorClient implements TrucoClientHandler {
 
 
-    static Logger logger = Logger.getLogger(TrucoFrame.class);
+    static Logger logger = Logger.getLogger(WebSocketCommunicatorClient.class);
 
     TrucoClient trucoClient = null;
 
@@ -182,8 +182,7 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
     public void afterLogin(TrucoPrincipal trucoPrincipal) throws TrucoClientException {
         logger.debug("After Login [" + trucoPrincipal + "]");
         trucoClient.connect();
-
-
+        TrucoGameClient2.principal = trucoPrincipal;
         /// addTable
 //        {
 //            RoomEvent table = new RoomEvent();

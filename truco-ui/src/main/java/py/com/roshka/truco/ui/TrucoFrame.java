@@ -3,8 +3,12 @@ package py.com.roshka.truco.ui;
 import org.apache.log4j.Logger;
 import py.com.roshka.truco.api.TrucoRoom;
 import py.com.roshka.truco.api.TrucoRoomDescriptor;
+import py.com.roshka.truco.ui.room.PanelComandos2;
+import py.com.roshka.truco.ui.room.TableGame2;
 import py.edu.uca.fcyt.net.CommunicatorProvider;
+import py.edu.uca.fcyt.toluca.guinicio.PanelComandos;
 import py.edu.uca.fcyt.toluca.guinicio.RoomUING;
+import py.edu.uca.fcyt.toluca.guinicio.TableGame;
 
 import javax.swing.*;
 
@@ -16,6 +20,7 @@ public class TrucoFrame extends RoomUING {
 
 
     JFrame frameContainer;
+    private TableGame newTableGame = null;
 
     public TrucoFrame(JFrame frameContainer) {
         this.frameContainer = frameContainer;
@@ -34,5 +39,12 @@ public class TrucoFrame extends RoomUING {
         return "";
     }
 
+    public TableGame getTableGame() {
+        return TableGame2.instance;
+    }
 
+    @Override
+    protected PanelComandos getPanelComandos() {
+        return PanelComandos2.instance;
+    }
 }

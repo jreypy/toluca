@@ -200,12 +200,13 @@ public class TrucoGameHolder extends TrucoGame implements TrucoListener {
 
     public void convertAndSend(String eventName, TrucoGameEvent trucoGameEvent) {
         trucoGameEvent.setEventName(eventName);
+        trucoGameEvent.setRoomId(trucoTableHolder.getRoomId());
         trucoGameEvent.setTableId(Integer.toString(target.getTableNumber()));
         trucoGameEvent.setGame(trucoGameData);
 
         // TODO Change to Table
         logger.debug("firing TrucoGame Event  [" + trucoGameEvent + "]");
-        amqpSender.convertAndSend(AMQPSenderImpl.CHANNEL_ROOM_ID + trucoGameEvent.getRoomId() + AMQPSenderImpl.CHANNEL_TABLE_ID + trucoGameEvent.getTableId(), trucoGameEvent);
+        amqpSender.convertAndSend(trucoGameEvent);
 
 
     }

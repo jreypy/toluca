@@ -31,7 +31,7 @@ import py.edu.uca.fcyt.toluca.table.TableServer;
 
 /**
  * @author dcricco
- * 
+ * <p>
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
@@ -42,7 +42,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#loginRequested(py.edu.uca.fcyt.toluca.event.RoomEvent)
      */
     private TrucoPlayer trucoPlayer;
@@ -55,7 +55,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#loginCompleted(py.edu.uca.fcyt.toluca.event.RoomEvent)
      */
     synchronized public void loginCompleted(RoomEvent event) {
@@ -125,8 +125,8 @@ public class EventDispatcherClient extends EventDispatcher {
                         //logeador.log(TolucaConstants.CLIENT_DEBUG_LOG_LEVEL,
                         // "En el login ya se hace un sitPlayer de"+playerClient
                         // +" en la chair "+asiento);
-                    	TolucaConstants.log(TolucaConstants.CLIENT_DEBUG_LOG_LEVEL, "Sentando a: " + playerClient.getName() + " en el asiento: "+ asiento.intValue());
-                   	
+                        TolucaConstants.log(TolucaConstants.CLIENT_DEBUG_LOG_LEVEL, "Sentando a: " + playerClient.getName() + " en el asiento: " + asiento.intValue());
+
                         table.sitPlayer(playerClient, asiento.intValue());
                         ((RoomClient) room).setearPlayerTable(playerClient,
                                 table, asiento.intValue());
@@ -138,7 +138,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#playerJoined(py.edu.uca.fcyt.toluca.event.RoomEvent)
      */
     synchronized public void playerJoined(RoomEvent event) {
@@ -147,22 +147,21 @@ public class EventDispatcherClient extends EventDispatcher {
         //el trucoPlayer nomas que fue creado en loginCompleted
         if (!trucoPlayer.getName().equals(event.getPlayer().getName())) {
             room.addPlayer(event.getPlayer());
-            ((RoomClient)room).showSystemMessage(event.getPlayer().getName() + " se ha unido al Room");
-        }
-        else
+            ((RoomClient) room).showSystemMessage(event.getPlayer().getName() + " se ha unido al Room");
+        } else
             room.addPlayer(trucoPlayer);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#playerLeft(py.edu.uca.fcyt.toluca.event.RoomEvent)
      */
     synchronized public void playerLeft(RoomEvent event) {
 
         //logeador.log(TolucaConstants.CLIENT_DEBUG_LOG_LEVEL, " salioooooo
         // "+event.getPlayer());
-        ((RoomClient)room).showSystemMessage(event.getPlayer().getName() + " se ha retirado del Room");
+        ((RoomClient) room).showSystemMessage(event.getPlayer().getName() + " se ha retirado del Room");
         TrucoPlayer playerServer = event.getPlayer();
 
         room.removePlayer(room.getPlayer(playerServer.getName()));
@@ -170,7 +169,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#loginFailed(py.edu.uca.fcyt.toluca.event.RoomEvent)
      */
     public void loginFailed(RoomEvent event) {
@@ -179,7 +178,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#chatRequested(py.edu.uca.fcyt.toluca.event.RoomEvent)
      */
     public void chatRequested(RoomEvent event) {
@@ -189,7 +188,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#chatSend(py.edu.uca.fcyt.toluca.event.RoomEvent)
      */
     public void chatSend(RoomEvent event) {
@@ -215,7 +214,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#createTableRequest(py.edu.uca.fcyt.toluca.event.RoomEvent)
      */
     public void createTableRequest(RoomEvent event) {
@@ -231,8 +230,7 @@ public class EventDispatcherClient extends EventDispatcher {
     }
 
     /**
-     * @param commClient
-     *            The commClient to set.
+     * @param commClient The commClient to set.
      */
     public void setCommClient(CommunicatorClient commClient) {
         this.commClient = commClient;
@@ -240,7 +238,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#tableCreated(py.edu.uca.fcyt.toluca.event.RoomEvent)
      */
     public void tableCreated(RoomEvent event) {
@@ -258,7 +256,13 @@ public class EventDispatcherClient extends EventDispatcher {
                 // ref en el cliente
                 TrucoPlayer playerCreador = room.getPlayer(playerOwner
                         .getName());
-                addTable(playerCreador, tableServer.getTableNumber(), event.getGamePoints());
+                // Fix Julio Rey -> El Player ya no está logueado
+                if (playerCreador != null) {
+                    addTable(playerCreador, tableServer.getTableNumber(), event.getGamePoints());
+                } else {
+                    logeador.warning("El Player [" + playerOwner.getId() + "] ya no está");
+                }
+
             } else
                 System.out
                         .println("NO salieron las cosas con el RoomEvent-tableServer :((");
@@ -268,16 +272,15 @@ public class EventDispatcherClient extends EventDispatcher {
     }
 
     /**
-     * 
      * @param playerCreador
      * @param tableNumber
      * @return
-     * 
      * @deprecated
      */
     private Table addTable(TrucoPlayer playerCreador, int tableNumber) {
-    	return addTable(playerCreador, tableNumber, 30);
+        return addTable(playerCreador, tableNumber, 30);
     }
+
     private Table addTable(TrucoPlayer playerCreador, int tableNumber, int points) {//crea
         // una
         // Tabla
@@ -296,7 +299,7 @@ public class EventDispatcherClient extends EventDispatcher {
             // EL MSG
 
             table = new Table(playerCreador, true, points);
-            mostrar = true;            
+            mostrar = true;
         } else {//fue otro el que creo
             table = new Table(trucoPlayer, false, points);
         }
@@ -319,7 +322,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#tableJoinRequested(py.edu.uca.fcyt.toluca.event.RoomEvent)
      */
     public void tableJoinRequested(RoomEvent event) {
@@ -337,25 +340,30 @@ public class EventDispatcherClient extends EventDispatcher {
 
         Table table = room.getTable(tableServer.getTableNumber());
         TrucoPlayer playerClient = room.getPlayer(playerServer.getName());
+        // Fix Julio Rey -> el Player ya no está
+        if (playerClient != null && table != null) {
+            table.addPlayer(playerClient);
+            if (playerClient.getName().equals(trucoPlayer.getName())) {
+                table.initResources();
+                table.getJFrame().setVisible(true);
+                table.getJTrucoTable().addSystemLog("Para sentarte, haz Click en uno de los cuadrados vacios");
+            }
 
-        table.addPlayer(playerClient);
-        if (playerClient.getName().equals(trucoPlayer.getName())) {
-            table.initResources();
-            table.getJFrame().setVisible(true);
-            table.getJTrucoTable().addSystemLog("Para sentarte, haz Click en uno de los cuadrados vacios");
+            /*
+             * Play sound if the player is inside.
+             */
+            if (table.isInside(playerClient.getName())) {
+                PlaySound.play(PlaySound.ENTER_SOUND);
+            }
+        } else {
+            logeador.warning("El player o la tabla Ya no están!!![" + playerServer.getName() + "]");
         }
 
-        /*
-         * Play sound if the player is inside.
-         */
-        if (table.isInside(playerClient.getName())) {
-            PlaySound.play(PlaySound.ENTER_SOUND);
-        }
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#playerSitRequest(py.edu.uca.fcyt.toluca.event.TableEvent)
      */
     public void playerSitRequest(TableEvent event) {
@@ -365,7 +373,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#playerSit(py.edu.uca.fcyt.toluca.event.TableEvent)
      */
     synchronized public void playerSit(TableEvent event) {
@@ -385,7 +393,7 @@ public class EventDispatcherClient extends EventDispatcher {
         TrucoPlayer playerClient = room.getPlayer(playerServer.getName());
 
         //logeador.log(TolucaConstants.CLIENT_DEBUG_LOG_LEVEL, "La silla de
-        
+
         try {
             table.sitPlayer(playerClient, chair);
         } catch (TableException e) {
@@ -401,7 +409,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#playerStandRequest(py.edu.uca.fcyt.toluca.event.TableEvent)
      */
     public void playerStandRequest(TableEvent event) {
@@ -411,7 +419,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#playerStand(py.edu.uca.fcyt.toluca.event.TableEvent)
      */
     public void playerStand(TableEvent event) {
@@ -447,7 +455,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#playerKickRequest(py.edu.uca.fcyt.toluca.event.TableEvent)
      */
     public void playerKickRequest(TableEvent event) {
@@ -457,7 +465,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#playerKicked(py.edu.uca.fcyt.toluca.event.TableEvent)
      */
     public void playerKicked(TableEvent event) {
@@ -481,8 +489,8 @@ public class EventDispatcherClient extends EventDispatcher {
 
             //Sali el HOST y hay que autoeliminarse de esa mesa
             if (table.getPlayers().contains(trucoPlayer)) {//solamente si la
-                                                           // tabla le tiene al
-                                                           // player del cliente
+                // tabla le tiene al
+                // player del cliente
 
                 table.selfKick();
                 ((RoomClient) getRoom())
@@ -492,7 +500,7 @@ public class EventDispatcherClient extends EventDispatcher {
                                 "La mesa "
                                         + table.getTableNumber()
                                         + " se ha cerrado porque el creador la ha abandonado",
-                                new String[] { "[", "]" });
+                                new String[]{"[", "]"});
             }
 
         }
@@ -500,7 +508,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#playerLeft(py.edu.uca.fcyt.toluca.event.TableEvent)
      */
     public void playerLeft(TableEvent event) {
@@ -510,7 +518,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#gameStartRequest(py.edu.uca.fcyt.toluca.event.TableEvent)
      */
     public void gameStartRequest(TableEvent event) {
@@ -520,7 +528,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#gameStarted(py.edu.uca.fcyt.toluca.event.TableEvent)
      */
     public void gameStarted(TableEvent event) {
@@ -532,7 +540,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
         TrucoTeam[] trucoTeam = table.createTeams();
         TrucoGameClient trucoGameClient = new TrucoGameClient(trucoTeam[0],
-        		trucoTeam[1], table.getGamePoints());
+                trucoTeam[1], table.getGamePoints());
         trucoGameClient.setTableNumber(tableServer.getTableNumber());
         trucoGameClient.addTrucoListener(commClient);
 
@@ -547,7 +555,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#signSendRequest(py.edu.uca.fcyt.toluca.event.TableEvent)
      */
     public void signSendRequest(TableEvent event) {
@@ -557,7 +565,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#signSend(py.edu.uca.fcyt.toluca.event.TableEvent)
      */
     public void signSend(TableEvent event) {
@@ -656,14 +664,14 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#play(py.edu.uca.fcyt.toluca.game.TrucoPlay)
      */
     public void play(TrucoPlay event) {
         /*
          * logeador.log(TolucaConstants.CLIENT_DEBUG_LOG_LEVEL, " se resivio un
          * play con un trucoplay desc:");
-         * 
+         *
          * logeador.log(TolucaConstants.CLIENT_DEBUG_LOG_LEVEL, "SE resive un
          * play de "+event.getPlayer().getName());
          * logeador.log(TolucaConstants.CLIENT_DEBUG_LOG_LEVEL, "TAbla :
@@ -674,10 +682,10 @@ public class EventDispatcherClient extends EventDispatcher {
          * "+event.getCard().getKind() +" val "+event.getCard().getValue());
          * logeador.log(TolucaConstants.CLIENT_DEBUG_LOG_LEVEL, "value >
          * "+event.getValue());
-         * 
+         *
          * Table table=room.getTable(event.getTableNumber()); TrucoGameClient
          * trucoGameClient=(TrucoGameClient) table.getTGame();
-         * 
+         *
          * TrucoPlayer playerServer=event.getPlayer(); TrucoPlayer
          * playerClient=room.getPlayer(playerServer.getName());
          * event.setPlayer(playerClient); trucoGameClient.play(event);
@@ -733,7 +741,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#playerConfirmado(py.edu.uca.fcyt.toluca.game.TrucoPlay)
      */
     public void playerConfirmado(TrucoPlay event) {
@@ -743,7 +751,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#canto(py.edu.uca.fcyt.toluca.event.TrucoEvent)
      */
     public void canto(TrucoEvent event) {
@@ -787,7 +795,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#cantarTanto(py.edu.uca.fcyt.toluca.event.TrucoEvent)
      */
     public void cantarTanto(TrucoEvent event) {
@@ -835,7 +843,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#tableDestroyed(py.edu.uca.fcyt.toluca.event.TableEvent)
      */
     synchronized public void tableDestroyed(TableEvent event) {
@@ -862,7 +870,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#rankingChanged(py.edu.uca.fcyt.toluca.event.RoomEvent)
      */
     public void rankingChanged(RoomEvent event) {
@@ -897,7 +905,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#invitacion(py.edu.uca.fcyt.toluca.event.RoomEvent)
      */
     public void invitacion(RoomEvent event) {
@@ -907,7 +915,7 @@ public class EventDispatcherClient extends EventDispatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#invitacionRejected(py.edu.uca.fcyt.toluca.event.RoomEvent)
      */
     public void invitacionRejected(RoomEvent event) {

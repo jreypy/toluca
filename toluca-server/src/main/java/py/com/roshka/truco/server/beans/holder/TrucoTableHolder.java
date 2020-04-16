@@ -89,4 +89,9 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
     public TrucoRoomTableDescriptor descriptor() {
         return descriptor(target);
     }
+
+    @Override
+    public String getRoomId() {
+        return target.getRoomId();
+    }
 }

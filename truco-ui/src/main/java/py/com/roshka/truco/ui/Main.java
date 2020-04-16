@@ -1,7 +1,9 @@
 package py.com.roshka.truco.ui;
 
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.log4j.lf5.LogLevel;
 
 import javax.swing.*;
 
@@ -10,7 +12,7 @@ public class Main {
 
     public static void main(String[] args) {
         BasicConfigurator.configure();
-
+        Logger.getRootLogger().setLevel(Level.DEBUG);
         logger.debug("Starting JFrame");
 
         Runnable r = new Runnable() {

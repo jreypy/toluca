@@ -115,6 +115,15 @@ public class AMQPReceiverImpl implements AMQPReceiver {
         channelSvc.sendChannelEvent(rabbitResponse.getChannel(), new Event(rabbitResponse.getEventName(), rabbitResponse.getData()));
     }
 
+    @RabbitListener(
+            queues = "truco_game_client"
+    )
+    void trucoGameEvent(final @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey, final RabbitResponse rabbitResponse) {
+        logger.debug("Receiving Truco Game Event [" + routingKey + "][" + rabbitResponse + "]");
+        // TODO Send to Table
+        channelSvc.sendChannelEvent(rabbitResponse.getChannel(), new Event(rabbitResponse.getEventName(), rabbitResponse.getData()));
+    }
+
 
     @RabbitListener(
             queues = "direct_message_queue"

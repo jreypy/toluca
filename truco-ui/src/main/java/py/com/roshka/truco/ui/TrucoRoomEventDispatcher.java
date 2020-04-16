@@ -4,14 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
 import py.com.roshka.truco.api.*;
 import py.com.roshka.truco.api.helper.TolucaHelper;
+import py.com.roshka.truco.ui.room.TableGame2;
 import py.edu.uca.fcyt.toluca.event.RoomEvent;
-import py.edu.uca.fcyt.toluca.event.TableEvent;
 import py.edu.uca.fcyt.toluca.game.TrucoPlayer;
 import py.edu.uca.fcyt.toluca.net.EventDispatcherClient;
+import py.edu.uca.fcyt.toluca.table.Table;
 import py.edu.uca.fcyt.toluca.table.TableServer;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class TrucoRoomEventDispatcher {
     Logger logger = Logger.getLogger(TrucoRoomEventDispatcher.class);
@@ -23,6 +23,7 @@ public class TrucoRoomEventDispatcher {
 
 
     final ObjectMapper objectMapper;
+
 
     public TrucoRoomEventDispatcher(WebSocketCommunicatorClient communicatorClient, TrucoRoomTableEventDispatcher roomTableEventDispatcher, EventDispatcherClient target) {
         this.communicatorClient = communicatorClient;
@@ -99,7 +100,9 @@ public class TrucoRoomEventDispatcher {
         trucoRoomEvent.setUser(table.getOwner());
         trucoRoomEvent.setTable(table);
         tableCreated(trucoRoomEvent);
+
     }
+
 
     private void tableCreated(TrucoRoomEvent trucoRoomEvent) {
         RoomEvent table = new RoomEvent();
@@ -117,10 +120,18 @@ public class TrucoRoomEventDispatcher {
         table.setTableNumber(table.getTableServer().getTableNumber());
         table.setGamePoints(trucoRoomEvent.getTable().getPoints());
 
-        target.dispatchEvent(table);
+        if (trucoRoomEvent.getTable().getOwner().getUsername().equals(TrucoGameClient2.principal.getUsername())) {
+            TrucoGameClient2.getTrucoGameClient2(trucoRoomEvent, true);
+        }
+
+        //target.dispatchEvent(table);
     }
 
     private void userTableJoined(TrucoRoomEvent trucoRoomEvent) {
+        if (trucoRoomEvent.getUser().getUsername().equals(TrucoGameClient2.principal.getUsername())) {
+            logger.warn("*** Ingresar a Tabla ****");
+            TrucoGameClient2.getTrucoGameClient2(trucoRoomEvent, false);
+        }
         userTableJoined(trucoRoomEvent.getRoom().getId(), trucoRoomEvent.getTable().getId(), trucoRoomEvent.getUser());
     }
 
@@ -130,11 +141,10 @@ public class TrucoRoomEventDispatcher {
         trucoRoomTableEvent.setRoomId(roomId);
         trucoRoomTableEvent.setTableId(tableId);
         trucoRoomTableEvent.setUser(user);
+
         roomTableEventDispatcher.dispatchRoomTableEvent(trucoRoomTableEvent);
+
     }
-
-
-
 
 
     void trucoUserLeft(TrucoUser trucoUser) {

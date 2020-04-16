@@ -114,7 +114,7 @@ public class AMQPConfiguration implements RabbitListenerConfigurer {
 
 
     /**
-     * Eventos para Table / Game
+     * Eventos para Table
      */
 
     @Bean
@@ -133,6 +133,25 @@ public class AMQPConfiguration implements RabbitListenerConfigurer {
                 .bind(trucoTableQueue).to(trucoTableTopic).with("*");
     }
 
+    /**
+     *
+     * Eventos para TrucoGame
+     */
+    @Bean
+    public TopicExchange trucoGameTopic(@Value("truco_game_event") final String topicName) {
+        return new TopicExchange(topicName, false, false);
+    }
+
+    @Bean
+    public Queue trucoGameQueue(@Value("truco_game_client") final String queueName) {
+        return new Queue(queueName, true);
+    }
+
+    @Bean
+    public Binding trucoGameBinding(final Queue trucoGameQueue, final TopicExchange trucoGameTopic) {
+        return BindingBuilder
+                .bind(trucoGameQueue).to(trucoGameTopic).with("*");
+    }
 
     //Direct Message
     @Bean

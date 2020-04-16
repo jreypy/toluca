@@ -9,7 +9,7 @@ import javax.swing.table.AbstractTableModel;
 
 
 public class TableModelGame extends AbstractTableModel{
-	private ArrayList datos;
+	protected ArrayList datos;
 	private final String [] columnNames={"Mesa","Silla 1","Silla 2","Silla 3","Silla 4","Silla 5","Silla 6"};
     public static final int INDICE_MESA = 0;
 	

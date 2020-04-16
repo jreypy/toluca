@@ -13,7 +13,7 @@ public interface AMQPSender {
 
     void convertAndSend(String channel, TrucoRoomTableEvent trucoEvent);
 
-    void convertAndSend(String channel, String tableId, TrucoGameEvent trucoGameEvent);
+    void convertAndSend(TrucoGameEvent trucoGameEvent);
 
     void convertAndSendDirectMessage(String userId, TrucoGameEvent trucoEvent);
 }

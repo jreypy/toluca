@@ -51,8 +51,8 @@ public class AMQPSenderImpl implements AMQPSender {
     }
 
     @Override
-    public void convertAndSend(String roomId, String tableId, TrucoGameEvent trucoGameEvent) {
-        rabbitTemplate.convertAndSend(TRUCO_GAME_EVENT, trucoGameEvent.getRoomId(), new RabbitResponse(Event.TRUCO_GAME_EVENT,
+    public void convertAndSend(TrucoGameEvent trucoGameEvent) {
+        rabbitTemplate.convertAndSend(TRUCO_GAME_EVENT, ROOM_ID_ROUTING_KEY, new RabbitResponse(Event.TRUCO_GAME_EVENT,
                 CHANNEL_ROOM_ID + trucoGameEvent.getRoomId() + CHANNEL_TABLE_ID + trucoGameEvent.getTableId(),
                 trucoGameEvent));
     }

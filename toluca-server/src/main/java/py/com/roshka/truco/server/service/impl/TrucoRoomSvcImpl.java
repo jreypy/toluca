@@ -127,7 +127,7 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
         final int tableId = ++_tableId;
         trucoRoomHolder.addTable(Integer.toString(tableId), user, trucoRoomTable);
         TrucoRoomEvent trucoRoomEvent = TrucoRoomEvent.builder(Event.ROOM_TABLE_CREATED).table(trucoRoomTable).room(trucoRoomHolder.descriptor()).user(user).build();
-        amqpSender.convertAndSend(AMQPSenderImpl.CHANNEL_ROOM_ID + roomId, trucoRoomEvent);
+        amqpSender.joinToChannel(AMQPSenderImpl.CHANNEL_ROOM_ID + roomId, user, trucoRoomEvent, AMQPSenderImpl.CHANNEL_ROOM_ID + roomId + AMQPSenderImpl.CHANNEL_TABLE_ID + tableId);
         return trucoRoomEvent;
     }
 

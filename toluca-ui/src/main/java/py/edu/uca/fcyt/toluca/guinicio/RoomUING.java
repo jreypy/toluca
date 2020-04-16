@@ -261,7 +261,7 @@ public class RoomUING extends JApplet {
      *
      * @return py.edu.uca.fcyt.toluca.guinicio.PanelComandos
      */
-    private PanelComandos getPanelComandos() {
+    protected PanelComandos getPanelComandos() {
         if (panelComandos == null) {
             panelComandos = new PanelComandos();
             //  panelComandos.add(Box.createRigidArea(new Dimension(margen, 0)),
