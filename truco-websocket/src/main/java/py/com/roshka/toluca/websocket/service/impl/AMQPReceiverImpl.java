@@ -103,7 +103,7 @@ public class AMQPReceiverImpl implements AMQPReceiver {
     void trucoRoomJoinEvent(final @Header(AmqpHeaders.RECEIVED_EXCHANGE) String topic, final @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey, final JoinRabbitResponse joinRabbitResponse) {
         logger.debug("Receiving Truco Room Join Event [" + topic + "][" + routingKey + "][" + joinRabbitResponse + "]");
         channelSvc.addToChannel(joinRabbitResponse.getChannel(), joinRabbitResponse.getTrucoUser().getUsername());
-        channelSvc.sendChannelEvent(joinRabbitResponse.getChannel(), new Event(joinRabbitResponse.getRabbitResponse().getEventName(), joinRabbitResponse.getRabbitResponse().getData()));
+        channelSvc.sendChannelEvent(joinRabbitResponse.getRabbitResponse().getChannel(), new Event(joinRabbitResponse.getRabbitResponse().getEventName(), joinRabbitResponse.getRabbitResponse().getData()));
     }
 
     @RabbitListener(
