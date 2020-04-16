@@ -1,14 +1,10 @@
 package py.com.roshka.truco.api;
 
-import java.util.Map;
-
 // TODO Change to Rabbit Message
 public class RabbitResponse {
     String eventName;
     private Object data;
-
-    private String roomId;
-    private String tableId;
+    private String channel;
 
     public RabbitResponse() {
     }
@@ -19,18 +15,12 @@ public class RabbitResponse {
         this.data = data;
     }
 
-    public RabbitResponse(String eventName, String roomId, TrucoEvent data) {
+    public RabbitResponse(String eventName, String channel, TrucoEvent data) {
         this.eventName = eventName;
         this.data = data;
-        this.roomId = roomId;
+        this.channel = channel;
     }
 
-    public RabbitResponse(String eventName, String roomId, String tableId, TrucoEvent data) {
-        this.eventName = eventName;
-        this.data = data;
-        this.roomId = roomId;
-        this.tableId = tableId;
-    }
 
     public String getEventName() {
         return eventName;
@@ -49,21 +39,6 @@ public class RabbitResponse {
         this.data = data;
     }
 
-    public String getRoomId() {
-        return roomId;
-    }
-
-    public void setRoomId(String roomId) {
-        this.roomId = roomId;
-    }
-
-    public String getTableId() {
-        return tableId;
-    }
-
-    public void setTableId(String tableId) {
-        this.tableId = tableId;
-    }
 
     @Override
     public String toString() {
@@ -71,5 +46,13 @@ public class RabbitResponse {
                 "eventName='" + eventName + '\'' +
                 ", data=" + data +
                 '}';
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
 }

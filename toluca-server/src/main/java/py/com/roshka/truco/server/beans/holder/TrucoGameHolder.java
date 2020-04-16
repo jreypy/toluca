@@ -1,12 +1,13 @@
 package py.com.roshka.truco.server.beans.holder;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import py.com.roshka.truco.api.*;
 import py.com.roshka.truco.api.helper.TolucaHelper;
+import py.com.roshka.truco.server.service.AMQPSender;
+import py.com.roshka.truco.server.service.impl.AMQPSenderImpl;
 import py.edu.uca.fcyt.toluca.event.TrucoEvent;
 import py.edu.uca.fcyt.toluca.event.TrucoListener;
 import py.edu.uca.fcyt.toluca.game.*;
@@ -15,7 +16,7 @@ import java.util.*;
 
 
 public class TrucoGameHolder extends TrucoGame implements TrucoListener {
-    static String TRUCO_GAME_EVENT = "truco_game_event";
+
 
     static final int TEAM_1 = 0;
     static final int TEAM_2 = 1;
@@ -26,14 +27,14 @@ public class TrucoGameHolder extends TrucoGame implements TrucoListener {
     private TrucoUser[] positions = new TrucoUser[MAX];
     private TrucoTableHolder trucoTableHolder;
     TrucoGame target = null;
-    private RabbitTemplate rabbitTemplate;
-    private ObjectMapper objectMapper;
     private TrucoGameData trucoGameData = null;
+    final private AMQPSender amqpSender;
+    final private ObjectMapper objectMapper;
 
-    public TrucoGameHolder(TrucoTableHolder trucoTableHolder, ObjectMapper objectMapper, RabbitTemplate rabbitTemplate) {
+    public TrucoGameHolder(TrucoTableHolder trucoTableHolder, AMQPSender amqpSender, ObjectMapper objectMapper) {
         this.trucoTableHolder = trucoTableHolder;
         this.objectMapper = objectMapper;
-        this.rabbitTemplate = rabbitTemplate;
+        this.amqpSender = amqpSender;
     }
 
     public TrucoUser[] getPositions() {
@@ -198,18 +199,24 @@ public class TrucoGameHolder extends TrucoGame implements TrucoListener {
     }
 
     public void convertAndSend(String eventName, TrucoGameEvent trucoGameEvent) {
-        String routing = Integer.toString(target.getTableNumber());
-
         trucoGameEvent.setEventName(eventName);
         trucoGameEvent.setTableId(Integer.toString(target.getTableNumber()));
         trucoGameEvent.setGame(trucoGameData);
 
         // TODO Change to Table
         logger.debug("firing TrucoGame Event  [" + trucoGameEvent + "]");
-        rabbitTemplate.convertAndSend(TRUCO_GAME_EVENT, trucoTableHolder.getTable().getRoomId(), new RabbitResponse(Event.TRUCO_GAME_EVENT,
-                trucoTableHolder.getRoomId(),
-                trucoTableHolder.getTable().getId(),
-                trucoGameEvent));
+        amqpSender.convertAndSend(AMQPSenderImpl.CHANNEL_ROOM_ID + trucoGameEvent.getRoomId() + AMQPSenderImpl.CHANNEL_TABLE_ID + trucoGameEvent.getTableId(), trucoGameEvent);
+
+
+    }
+
+    public void convertAndSendDirectMessage(String eventName, TrucoUser trucoUser, TrucoGameEvent trucoGameEvent) {
+        trucoGameEvent.setEventName(eventName);
+        trucoGameEvent.setTableId(Integer.toString(target.getTableNumber()));
+        trucoGameEvent.setGame(trucoGameData);
+        // TODO Change to Table
+        logger.debug("firing Direct TrucoGame Event  [" + trucoGameEvent + "]");
+        amqpSender.convertAndSendDirectMessage(trucoUser.getId(), trucoGameEvent);
 
 
     }

@@ -133,6 +133,23 @@ public class AMQPConfiguration implements RabbitListenerConfigurer {
                 .bind(trucoTableQueue).to(trucoTableTopic).with("*");
     }
 
+
+    //Direct Message
+    @Bean
+    public TopicExchange directMessageTopic(@Value("direct_message") final String directMessage) {
+        return new TopicExchange(directMessage, false, false);
+    }
+    @Bean
+    public Queue directMessageQueue(@Value("direct_message_queue") final String queueName) {
+        return new Queue(queueName, true);
+    }
+    @Bean
+    public Binding directMessageBinding(final Queue directMessageQueue, final TopicExchange directMessageTopic) {
+        return BindingBuilder
+                .bind(directMessageQueue).to(directMessageTopic).with("*");
+    }
+
+
     @Bean
     public RabbitTemplate rabbitTemplate(final ConnectionFactory connectionFactory) {
         final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);

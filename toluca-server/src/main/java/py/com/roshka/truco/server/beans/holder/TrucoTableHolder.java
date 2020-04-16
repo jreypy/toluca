@@ -1,13 +1,12 @@
 package py.com.roshka.truco.server.beans.holder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import py.com.roshka.truco.api.TrucoGamePlay;
 import py.com.roshka.truco.api.TrucoRoomTable;
 import py.com.roshka.truco.api.TrucoRoomTableDescriptor;
 import py.com.roshka.truco.api.TrucoUser;
+import py.com.roshka.truco.server.service.AMQPSender;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,16 +15,18 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
 
     private TrucoGameHolder trucoGameHolder = null;
     private ObjectMapper objectMapper;
+    final private AMQPSender amqpSender;
 
-    public TrucoTableHolder(TrucoRoomTable table, ObjectMapper objectMapper, RabbitTemplate rabbitTemplate) {
+    public TrucoTableHolder(TrucoRoomTable table, ObjectMapper objectMapper, AMQPSender amqpSender) {
         super(table);
+        this.objectMapper = objectMapper;
+        this.amqpSender = amqpSender;
         if (table.getOwner() == null)
             throw new IllegalArgumentException("TrucoUser owner is required");
         this.target = table;
-        this.objectMapper = objectMapper;
         this.target.setUsers(new HashSet<>());
         this.target.getUsers().add(table.getOwner());
-        this.trucoGameHolder = new TrucoGameHolder(this, objectMapper, rabbitTemplate);
+        this.trucoGameHolder = new TrucoGameHolder(this, amqpSender, objectMapper);
     }
 
     public TrucoRoomTable getTable() {

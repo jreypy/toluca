@@ -1,11 +1,11 @@
 package py.com.roshka.truco.server.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 import py.com.roshka.truco.api.*;
 import py.com.roshka.truco.server.beans.holder.TrucoRoomHolder;
 import py.com.roshka.truco.server.beans.holder.TrucoTableHolder;
+import py.com.roshka.truco.server.service.AMQPSender;
 import py.com.roshka.truco.server.service.TrucoRoomSvc;
 import py.com.roshka.truco.server.service.TrucoUserService;
 
@@ -16,33 +16,28 @@ import java.util.stream.Collectors;
 
 @Component
 public class TrucoRoomSvcImpl implements TrucoRoomSvc {
-    static String TRUCO_ROOM_EVENT = "truco_room_event";
-
-    static String ROOM_ALL_ROUTING_KEY = "room_all";
-    static String ROOM_ID_ROUTING_KEY = "room_id";
-    static String ROOM_JOIN_ROUTING_KEY = "room_join";
-    static String ROOM_LOGOUT_ROUTING_KEY = "room_logout";
 
 
     org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(TrucoRoomSvcImpl.class);
 
-    RabbitTemplate rabbitTemplate;
     ObjectMapper objectMapper;
     private TrucoUserService trucoUserService;
     Map<String, TrucoRoomHolder> roomsHolder = new LinkedHashMap<>();
     Map<String, TrucoRoom> rooms = new LinkedHashMap<>();
     int _roomId = 0;
     int _tableId = 0;
+    final AMQPSender amqpSender;
 
-    public TrucoRoomSvcImpl(RabbitTemplate rabbitTemplate, ObjectMapper objectMapper, TrucoUserService trucoUserService) {
-        this.rabbitTemplate = rabbitTemplate;
+    public TrucoRoomSvcImpl(ObjectMapper objectMapper, TrucoUserService trucoUserService, AMQPSender amqpSender) {
+
         this.objectMapper = objectMapper;
         this.trucoUserService = trucoUserService;
+        this.amqpSender = amqpSender;
         TrucoRoom trucoRoom = new TrucoRoom();
         trucoRoom.setId(Integer.toString(++_roomId));
         trucoRoom.setName("Principal");
         this.rooms.put(trucoRoom.getId(), trucoRoom);
-        this.roomsHolder.put(trucoRoom.getId(), new TrucoRoomHolder(trucoRoom, objectMapper, rabbitTemplate));
+        this.roomsHolder.put(trucoRoom.getId(), new TrucoRoomHolder(trucoRoom, amqpSender, objectMapper));
     }
 
 
@@ -83,10 +78,10 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
     public TrucoRoomEvent create(TrucoRoom trucoRoom) {
         trucoRoom.setId(Integer.toString(++_roomId));
         this.rooms.put(trucoRoom.getId(), trucoRoom);
-        this.roomsHolder.put(trucoRoom.getId(), new TrucoRoomHolder(trucoRoom, objectMapper, rabbitTemplate));
+        this.roomsHolder.put(trucoRoom.getId(), new TrucoRoomHolder(trucoRoom, amqpSender, objectMapper));
         // Notify was created
         TrucoRoomEvent trucoRoomEvent = TrucoRoomEvent.builder(Event.ROOM_CREATED).message("Truco Room [" + trucoRoom.getId() + " was created").user(trucoUserService.getTrucoUser()).room(trucoRoom).build();
-        convertAndSend(trucoRoomEvent);
+        amqpSender.convertAndSend(trucoRoomEvent);
         return trucoRoomEvent;
     }
 
@@ -97,7 +92,7 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
         TrucoRoom trucoRoom = getTrucoRoomHolder(roomId).getTrucoRoom();
         trucoRoom.getUsers().add(new TrucoRoomUser(user, true));
         TrucoRoomEvent trucoRoomEvent = TrucoRoomEvent.builder(Event.ROOM_USER_JOINED).message("User joined to the Room [" + roomId + "]").user(user).room(trucoRoom).build();
-        convertAndSend(roomId, user, trucoRoomEvent);
+        amqpSender.joinToChannel(AMQPSenderImpl.CHANNEL_ROOM_ID + roomId, user, trucoRoomEvent, AMQPSenderImpl.CHANNEL_ROOM_ID + roomId);
         logger.debug("User [" + user.getUsername() + "] joined to the room [" + roomId + "]");
         return trucoRoomEvent;
     }
@@ -116,7 +111,7 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
         trucoRoomTableEvent.setRoomId(roomId);
         trucoRoomTableEvent.setTableId(tableId);
         trucoRoomTableEvent.setPosition(index);
-        convertAndSend(roomId, trucoRoomTableEvent);
+        amqpSender.convertAndSend(AMQPSenderImpl.CHANNEL_ROOM_ID + roomId, trucoRoomTableEvent);
         logger.debug("User [" + user.getUsername() + "] joined to the room [" + roomId + "]");
         return trucoRoomTableEvent;
     }
@@ -132,7 +127,7 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
         final int tableId = ++_tableId;
         trucoRoomHolder.addTable(Integer.toString(tableId), user, trucoRoomTable);
         TrucoRoomEvent trucoRoomEvent = TrucoRoomEvent.builder(Event.ROOM_TABLE_CREATED).table(trucoRoomTable).room(trucoRoomHolder.descriptor()).user(user).build();
-        convertAndSend(roomId, trucoRoomEvent);
+        amqpSender.convertAndSend(AMQPSenderImpl.CHANNEL_ROOM_ID + roomId, trucoRoomEvent);
         return trucoRoomEvent;
     }
 
@@ -144,28 +139,11 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
         TrucoTableHolder trucoTableHolder = trucoRoomHolder.getTrucoTableHolder(tableId);
         trucoRoomHolder.getTrucoTableHolder(tableId).joinUser(user);
         TrucoRoomEvent trucoRoomEvent = TrucoRoomEvent.builder(Event.ROOM_TABLE_USER_JOINED).user(user).room(trucoRoomHolder.descriptor()).table(trucoTableHolder.descriptor()).build();
-        // TODO JOIN TO TABLE LISTENER
-//        rabbitTemplate.convertAndSend(TRUCO_ROOM_EVENT, ROOM_ID_ROUTING_KEY, new RabbitResponse(Event.TRUCO_ROOM_EVENT, roomId, trucoRoomEvent));
-        convertAndSend(roomId, trucoRoomEvent);
+        amqpSender.joinToChannel(AMQPSenderImpl.CHANNEL_ROOM_ID + roomId, user, trucoRoomEvent, AMQPSenderImpl.CHANNEL_ROOM_ID + roomId + AMQPSenderImpl.CHANNEL_TABLE_ID + tableId);
         logger.debug("User [" + user.getUsername() + "] joined to the room [" + roomId + "]");
         return trucoRoomEvent;
     }
 
-    private void convertAndSend(TrucoEvent trucoEvent) {
-        rabbitTemplate.convertAndSend(TRUCO_ROOM_EVENT, ROOM_ALL_ROUTING_KEY, new RabbitResponse(Event.TRUCO_ROOM_EVENT, trucoEvent));
-    }
-
-    private void convertAndSend(String roomId, TrucoUser trucoUser, TrucoEvent trucoEvent) {
-        rabbitTemplate.convertAndSend(TRUCO_ROOM_EVENT, ROOM_JOIN_ROUTING_KEY, new JoinRabbitResponse(roomId, trucoUser, new RabbitResponse(Event.TRUCO_ROOM_EVENT, roomId, trucoEvent)));
-    }
-
-    private void convertAndSend(String roomId, TrucoRoomEvent trucoEvent) {
-        rabbitTemplate.convertAndSend(TRUCO_ROOM_EVENT, ROOM_ID_ROUTING_KEY, new RabbitResponse(Event.TRUCO_ROOM_EVENT, roomId, trucoEvent));
-    }
-
-    private void convertAndSend(String roomId, TrucoRoomTableEvent trucoEvent) {
-        rabbitTemplate.convertAndSend(TRUCO_ROOM_EVENT, ROOM_ID_ROUTING_KEY, new RabbitResponse(Event.TRUCO_TABLE_EVENT, roomId, trucoEvent));
-    }
 
     public TrucoRoomTable deleteTable(String roomId, String tableId) {
         return null;
@@ -191,7 +169,7 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
                 trucoRoomEvent.setMessage("User left the Room [" + room.getId() + "]");
                 trucoRoomEvent.setUser(trucoRoomUser.getUser());
                 trucoRoomEvent.setRoom(room);
-                rabbitTemplate.convertAndSend(TRUCO_ROOM_EVENT, ROOM_LOGOUT_ROUTING_KEY, new RabbitResponse(Event.ROOM_USER_JOINED, trucoRoomEvent.getClass().getCanonicalName(), trucoRoomEvent));
+                //amqpSender.convertAndSend(TRUCO_ROOM_EVENT, ROOM_LOGOUT_ROUTING_KEY, new RabbitResponse(Event.ROOM_USER_JOINED, trucoRoomEvent.getClass().getCanonicalName(), trucoRoomEvent));
                 logger.debug("User [" + trucoRoomUser.getUser().getUsername() + "] left the room [" + room.getId() + "]");
             }
         });

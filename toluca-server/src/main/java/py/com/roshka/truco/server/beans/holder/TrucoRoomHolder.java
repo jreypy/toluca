@@ -1,8 +1,8 @@
 package py.com.roshka.truco.server.beans.holder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import py.com.roshka.truco.api.*;
+import py.com.roshka.truco.server.service.AMQPSender;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -13,17 +13,15 @@ public class TrucoRoomHolder extends TrucoRoomDescriptor {
     private TrucoRoom target;
     private Map<String, TrucoTableHolder> tableDescriptorList = new LinkedHashMap<>();
 
-    private RabbitTemplate rabbitTemplate;
+    final private AMQPSender amqpSender;
     private ObjectMapper objectMapper;
 
-    public TrucoRoomHolder(TrucoRoom trucoRoom, ObjectMapper objectMapper, RabbitTemplate rabbitTemplate) {
+    public TrucoRoomHolder(TrucoRoom trucoRoom, AMQPSender amqpSender, ObjectMapper objectMapper) {
         super(trucoRoom);
         this.target = trucoRoom;
-
+        this.amqpSender = amqpSender;
         this.target.setTables(new HashSet<>());
         this.target.setUsers(new HashSet<>());
-
-        this.rabbitTemplate = rabbitTemplate;
         this.objectMapper = objectMapper;
     }
 
@@ -40,7 +38,7 @@ public class TrucoRoomHolder extends TrucoRoomDescriptor {
         trucoRoomTable.setId(tableId);
         trucoRoomTable.setOwner(user);
         trucoRoomTable.setRoomId(getId());
-        tableDescriptorList.put(tableId, new TrucoTableHolder(trucoRoomTable, objectMapper, rabbitTemplate));
+        tableDescriptorList.put(tableId, new TrucoTableHolder(trucoRoomTable, objectMapper, amqpSender));
         getTables().add(trucoRoomTable);
         return trucoRoomTable;
     }

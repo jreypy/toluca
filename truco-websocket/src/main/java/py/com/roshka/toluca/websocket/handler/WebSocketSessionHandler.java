@@ -12,6 +12,7 @@ import java.net.URI;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 public class WebSocketSessionHandler implements WebSocketSession {
@@ -19,11 +20,13 @@ public class WebSocketSessionHandler implements WebSocketSession {
     private String username;
     private WebSocketSession target;
     private boolean fired = false;
+    private String sessionId;
 
     public WebSocketSessionHandler(String userId, String username, WebSocketSession webSocketSession) {
         this.userId = userId;
         this.username = username;
         this.target = webSocketSession;
+        this.sessionId = webSocketSession.getId();
     }
 
     public void setFired(boolean fired) {
@@ -134,5 +137,19 @@ public class WebSocketSessionHandler implements WebSocketSession {
     @Override
     public void close(CloseStatus closeStatus) throws IOException {
         target.close(closeStatus);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WebSocketSessionHandler that = (WebSocketSessionHandler) o;
+        return Objects.equals(sessionId, that.sessionId);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(sessionId);
     }
 }

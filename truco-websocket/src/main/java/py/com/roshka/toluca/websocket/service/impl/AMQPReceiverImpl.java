@@ -3,18 +3,15 @@ package py.com.roshka.toluca.websocket.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.annotation.Exchange;
-import org.springframework.amqp.rabbit.annotation.Queue;
-import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 import py.com.roshka.toluca.websocket.beans.Event;
-import py.com.roshka.toluca.websocket.handler.RoomHandler;
 import py.com.roshka.toluca.websocket.service.AMQPReceiver;
-import py.com.roshka.toluca.websocket.service.TrucoRoomListener;
-import py.com.roshka.truco.api.*;
+import py.com.roshka.toluca.websocket.service.ChannelSvc;
+import py.com.roshka.truco.api.JoinRabbitResponse;
+import py.com.roshka.truco.api.RabbitResponse;
 
 @Component
 public class AMQPReceiverImpl implements AMQPReceiver {
@@ -22,11 +19,11 @@ public class AMQPReceiverImpl implements AMQPReceiver {
 
 
     ObjectMapper objectMapper;
-    RoomHandler roomHandler;
+    ChannelSvc channelSvc;
 
-    public AMQPReceiverImpl(ObjectMapper objectMapper, RoomHandler roomHandler) {
+    public AMQPReceiverImpl(ObjectMapper objectMapper, ChannelSvc channelSvc) {
         this.objectMapper = objectMapper;
-        this.roomHandler = roomHandler;
+        this.channelSvc = channelSvc;
     }
 
 
@@ -39,10 +36,10 @@ public class AMQPReceiverImpl implements AMQPReceiver {
     @RabbitListener(
             queues = "truco_room_all_client"
     )
-    void trucoRoomEvent(final @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey, final RabbitResponse rabbitResponse) {
-        logger.debug("Receiving Truco Room All Event [" + routingKey + "][" + rabbitResponse + "]");
+    void trucoRoomEvent(final @Header(AmqpHeaders.RECEIVED_EXCHANGE) String topic, final @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey, final RabbitResponse rabbitResponse) {
+        logger.debug("Receiving Truco Room All Event [" + topic + "][" + routingKey + "][" + rabbitResponse + "]");
 
-        roomHandler.sendEvent(new Event(rabbitResponse.getEventName(), rabbitResponse.getData()));
+        channelSvc.sendEvent(new Event(rabbitResponse.getEventName(), rabbitResponse.getData()));
 
 //        if (Event.TABLE_POSITION_SETTED.equalsIgnoreCase(rabbitResponse.getEventName())) {
 //            logger.debug("Table Position Setted [" + routingKey + "]");
@@ -72,9 +69,9 @@ public class AMQPReceiverImpl implements AMQPReceiver {
     @RabbitListener(
             queues = "truco_room_id_client"
     )
-    void trucoRoomIdEvent(final @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey, final RabbitResponse rabbitResponse) {
-        logger.debug("Receiving Truco Room ID Event [" + routingKey + "][" + rabbitResponse + "]");
-        roomHandler.sendRoomEvent(rabbitResponse.getRoomId(), new Event(rabbitResponse.getEventName(), rabbitResponse.getData()));
+    void trucoRoomIdEvent(final @Header(AmqpHeaders.RECEIVED_EXCHANGE) String topic, final @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey, final RabbitResponse rabbitResponse) {
+        logger.debug("Receiving Truco Room ID Event [" + topic + "][" + routingKey + "][" + rabbitResponse + "]");
+        channelSvc.sendChannelEvent(rabbitResponse.getChannel(), new Event(rabbitResponse.getEventName(), rabbitResponse.getData()));
 
 //        if (Event.TABLE_POSITION_SETTED.equalsIgnoreCase(rabbitResponse.getEventName())) {
 //            logger.debug("Table Position Setted [" + routingKey + "]");
@@ -103,10 +100,10 @@ public class AMQPReceiverImpl implements AMQPReceiver {
     @RabbitListener(
             queues = "truco_room_join_client"
     )
-    void trucoRoomJoinEvent(final @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey, final JoinRabbitResponse joinRabbitResponse) {
-        logger.debug("Receiving Truco Room Join Event [" + routingKey + "][" + joinRabbitResponse + "]");
-        roomHandler.addToRoom(joinRabbitResponse.getRoomId(), joinRabbitResponse.getTrucoUser().getUsername());
-        roomHandler.sendRoomEvent(joinRabbitResponse.getRoomId(), new Event(joinRabbitResponse.getRabbitResponse().getEventName(), joinRabbitResponse.getRabbitResponse().getData()));
+    void trucoRoomJoinEvent(final @Header(AmqpHeaders.RECEIVED_EXCHANGE) String topic, final @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey, final JoinRabbitResponse joinRabbitResponse) {
+        logger.debug("Receiving Truco Room Join Event [" + topic + "][" + routingKey + "][" + joinRabbitResponse + "]");
+        channelSvc.addToChannel(joinRabbitResponse.getChannel(), joinRabbitResponse.getTrucoUser().getUsername());
+        channelSvc.sendChannelEvent(joinRabbitResponse.getChannel(), new Event(joinRabbitResponse.getRabbitResponse().getEventName(), joinRabbitResponse.getRabbitResponse().getData()));
     }
 
     @RabbitListener(
@@ -115,6 +112,15 @@ public class AMQPReceiverImpl implements AMQPReceiver {
     void trucoTableEvent(final @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey, final RabbitResponse rabbitResponse) {
         logger.debug("Receiving Truco Game Event [" + routingKey + "][" + rabbitResponse + "]");
         // TODO Send to Table
-        roomHandler.sendRoomEvent(routingKey, new Event(rabbitResponse.getEventName(), rabbitResponse.getData()));
+        channelSvc.sendChannelEvent(rabbitResponse.getChannel(), new Event(rabbitResponse.getEventName(), rabbitResponse.getData()));
+    }
+
+
+    @RabbitListener(
+            queues = "direct_message_queue"
+    )
+    void directMessageEvent(final @Header(AmqpHeaders.RECEIVED_ROUTING_KEY) String routingKey, final RabbitResponse rabbitResponse) {
+        logger.debug("Receiving DirectMessage Event [ " + routingKey + "]");
+        channelSvc.sendDirectMessage(routingKey, new Event(rabbitResponse.getEventName(), rabbitResponse.getData()));
     }
 }

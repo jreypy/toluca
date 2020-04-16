@@ -1,26 +1,21 @@
 package py.com.roshka.truco.api;
 
-public class JoinRabbitResponse  {
-    private String roomId;
+public class JoinRabbitResponse {
+    private String channel;
     private TrucoUser trucoUser;
     private RabbitResponse rabbitResponse = null;
 
-    public JoinRabbitResponse(String roomId, TrucoUser trucoUser, RabbitResponse rabbitResponse) {
-        this.roomId = roomId;
+    public JoinRabbitResponse(String channel, TrucoUser trucoUser, RabbitResponse rabbitResponse) {
+        this.channel = channel;
         this.trucoUser = trucoUser;
         this.rabbitResponse = rabbitResponse;
     }
 
+
+
     public JoinRabbitResponse() {
     }
 
-    public String getRoomId() {
-        return roomId;
-    }
-
-    public void setRoomId(String roomId) {
-        this.roomId = roomId;
-    }
 
     public TrucoUser getTrucoUser() {
         return trucoUser;
@@ -36,5 +31,14 @@ public class JoinRabbitResponse  {
 
     public void setRabbitResponse(RabbitResponse rabbitResponse) {
         this.rabbitResponse = rabbitResponse;
+    }
+
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
 }
