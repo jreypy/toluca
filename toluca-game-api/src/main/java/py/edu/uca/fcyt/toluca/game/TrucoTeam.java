@@ -65,5 +65,15 @@ public class TrucoTeam extends Team{
 		}
 		return null;
     }
-    
+
+
+    @Override
+    public String toString() {
+        return "TrucoTeam{" +
+                "points=" + points +
+                ", numberOfPlayers=" + numberOfPlayers +
+                ", name='" + name + '\'' +
+                ", playersList=" + playersList +
+                "} " + super.toString();
+    }
 }

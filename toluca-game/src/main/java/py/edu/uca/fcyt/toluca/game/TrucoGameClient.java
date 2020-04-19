@@ -42,6 +42,8 @@ public class TrucoGameClient extends TrucoGameImpl
     }
 
     public void startGameClient() {
+
+
         numberOfPlayers = teams[0].getNumberOfPlayers() * 2;
         playersPreparados = new boolean[numberOfPlayers];
         newGame();
@@ -104,7 +106,6 @@ public class TrucoGameClient extends TrucoGameImpl
         //new Exception("Nada implementado aun :-(   ").printStackTrace(System.out);
         //TODO ACA TOCO PARA ASIGNAR EL TURNO, VERIFICAR ESTO.
         //trucoHandCli.startHand();
-
         fireTurnEvent(event.getPlayer(), TrucoEvent.JUGAR_CARTA);
     }
 

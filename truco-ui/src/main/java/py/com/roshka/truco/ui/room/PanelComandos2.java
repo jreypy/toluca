@@ -5,15 +5,18 @@ import py.edu.uca.fcyt.toluca.guinicio.PanelComandos;
 import java.awt.event.ActionEvent;
 
 public class PanelComandos2 extends PanelComandos {
-    public final static PanelComandos2 instance = new PanelComandos2();
+    RoomHandler roomHandler;
 
-    public PanelComandos2() {
+    public PanelComandos2(RoomHandler roomHandler) {
+        this.roomHandler = roomHandler;
     }
 
+
+
     protected void botonUnirseActionPerformed(ActionEvent e) {
-        Object data = TableGame2.instance.getTableModelGame().getValueAt(TableGame2.instance.getSelectedRow(), 0);
-        System.out.println(data);
-        // TODO solitar unirse
+        TableGame2 tableGame2 = roomHandler.getTableGame2();
+        String tableId = (String) (tableGame2.getTableModelGame().getValueAt(tableGame2.getSelectedRow(), 0));
+        roomClient.joinTableRequest(Integer.parseInt(tableId));
     }
 
 }

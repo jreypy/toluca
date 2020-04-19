@@ -1,6 +1,7 @@
 package py.com.roshka.truco.api;
 
 public class TrucoPrincipal {
+    private String id;
     private String username;
     private String authKey;
 
@@ -11,6 +12,7 @@ public class TrucoPrincipal {
     public TrucoPrincipal(String username, String authKey) {
         this.username = username;
         this.authKey = authKey;
+        this.id = username;
     }
 
     public TrucoPrincipal(String authKey) {
@@ -18,6 +20,11 @@ public class TrucoPrincipal {
             throw new IllegalArgumentException("Authkey is required");
         this.authKey = authKey;
         username = authKey.split("-")[0];
+    }
+
+
+    public String getId() {
+        return id;
     }
 
     public String getAuthKey() {
@@ -33,6 +40,7 @@ public class TrucoPrincipal {
     }
 
     public void setUsername(String username) {
+        this.id = username;
         this.username = username;
     }
 }

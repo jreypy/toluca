@@ -1362,6 +1362,7 @@ public class TrucoHand {
                 && estadoActual != TERCERA_RONDA)
             throw (new InvalidPlayExcepcion(
                     "TrucoHand - jugarCarta(TrucoPlay ) > No se puede jugar carta"));
+
         if (playTurn != tp.getPlayer()) {
             logger.debug("El el turno de [" + playTurn + "]");
             logger.debug("y quiere jugar [" + tp.getPlayer() + "]");
@@ -1369,6 +1370,7 @@ public class TrucoHand {
             throw (new InvalidPlayExcepcion(
                     "TrucoHand - jugarCarta(TrucoPlay ) > No es el turno de ese player"));
         }
+
         //if(!playTurn.getName().trim().equals(tp.getPlayer().getName().trim()))
 
 //        System.out.println("probando en trucohand la carta");
@@ -1380,7 +1382,7 @@ public class TrucoHand {
             // necesito
             // de choco
             throw (new InvalidPlayExcepcion(
-                    "TrucoHand - jugarCarta(TrucoPlay ) > el player [" + tp.getPlayer() + "]no puede jugar esa carta [" + tp.getCard() + "]", tp));
+                    "TrucoHand - jugarCarta(TrucoPlay ) > el player [" + tp.getPlayer() + "] no puede jugar esa carta [" + tp.getCard() + "]", tp));
 
         //if (this instanceof TrucoHandClient) {
         //if ()

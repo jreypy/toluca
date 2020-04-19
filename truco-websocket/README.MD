@@ -38,11 +38,11 @@ Create Table
 
 Join to Room Table
 --------
-    $ {"command":"join_room_table", "data" : {"roomId":"1","tableId":"1"}}
+    $ {"command":"join_room_table", "data" : {"roomId":"1","tableId":"30"}}
     
 Set Table Position
 --------
-    $ {"command":"set_table_position", "data" : {"roomId":"1","tableId":"1", "position":2}}
+    $ {"command":"set_table_position", "data" : {"roomId":"1","tableId":"30", "position":1}}
 
 Start Game
 --------

@@ -11,7 +11,7 @@ public class CommunicatorProvider {
     static CommunicatorClient instance = null;
 
 
-    static public CommunicatorClient getIntance(RoomClient client, String serverString, Integer portNumber) throws IOException {
+    static public CommunicatorClient getInstance(RoomClient client, String serverString, Integer portNumber) throws IOException {
         if (instance != null)
             return instance;
 
@@ -19,10 +19,15 @@ public class CommunicatorProvider {
             throw new IllegalArgumentException("CommunicatorProvider not configured");
 
         try {
-            return (CommunicatorClient) intanceType.getConstructor(RoomClient.class, String.class, Integer.class).newInstance(client, serverString, portNumber);
+            instance = (CommunicatorClient) intanceType.getConstructor(RoomClient.class, String.class, Integer.class).newInstance(client, serverString, portNumber);
+            return instance;
         } catch (Exception e) {
             throw new IllegalArgumentException("Error creating Communicator client [" + intanceType + "]", e);
         }
+    }
+
+    static public CommunicatorClient getInstance() {
+        return instance;
     }
 
     static public void setInstance(CommunicatorClient communicatorClient) {

@@ -143,6 +143,10 @@ public abstract class TrucoGame {
     public void firePlayEvent(TrucoPlayer pl, byte type) { //eventos de juego sin carta o canto
         TrucoEvent event = new TrucoEvent(this, numberOfHand, pl, type);
         event.setTableNumber(getTableNumber());
+        firePlayEvent(event);
+    }
+
+    protected void firePlayEvent(TrucoEvent event) {
         for (int i = 0; i < listenerlist.size(); i++) {
             //			((TrucoListener)(listenerlist.get(i))).play(event);
             // 			Se cambi� la llamada en intento desesperado por hacer funcionar esto
@@ -164,10 +168,7 @@ public abstract class TrucoGame {
         TrucoEvent event = new TrucoEvent(this, numberOfHand, pl, type, card);
         event.setTableNumber(getTableNumber());
 
-        for (int i = 0; i < listenerlist.size(); i++) {
-            logger.debug("FireEvent to [" + listenerlist.get(i).getClass().getName() + "]");
-            ((TrucoListener) (listenerlist.get(i))).play(event);
-        }
+        firePlayEvent(event);
     }
 
     /**
@@ -180,10 +181,7 @@ public abstract class TrucoGame {
     public void firePlayEvent(TrucoPlayer pl, byte type, int value) {//eventos de canto de tanto
         TrucoEvent event = new TrucoEvent(this, numberOfHand, pl, type, value);
         event.setTableNumber(getTableNumber());
-        for (int i = 0; i < listenerlist.size(); i++) {
-            ((TrucoListener) (listenerlist.get(i))).play(event);
-            //			((TrucoListener)(listenerlist.get(i))).playResponse(event);
-        }
+        firePlayEvent(event);
     }
 
     /**
@@ -198,6 +196,10 @@ public abstract class TrucoGame {
         TrucoEvent event = new TrucoEvent(this, numberOfHand, pl, type, card);
         event.setTableNumber(getTableNumber());
         System.out.println("Se va a disparar un evento de play response.  El tamaño de la lista de listeners es: " + listenerlist.size());
+        firePlayResponseEvent(event);
+    }
+
+    protected void firePlayResponseEvent(TrucoEvent event) {
         for (int i = 0; i < listenerlist.size(); i++) {
             System.out.println("FirePlayEvent para: " + listenerlist.get(i).getClass().getName());
             //		((TrucoListener)(listenerlist.get(i))).play(event);
@@ -295,7 +297,8 @@ public abstract class TrucoGame {
      */
     public void fireHandStarted() {
         logger.info(" fireHandStarted " + getNumberOfHand());
-        logger.info(" el equipo es: " + teams[0]);
+        logger.info(" el equipo[0] es: " + teams[0]);
+        logger.info(" el equipo[1] es: " + teams[1]);
         logger.info(teams[1] == null);
         logger.info(" numero de players de los equipos = " + teams[0].getNumberOfPlayers() + "y" + teams[0].getNumberOfPlayers());
 

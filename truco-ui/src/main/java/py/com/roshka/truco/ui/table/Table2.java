@@ -17,4 +17,13 @@ public class Table2 extends Table {
     public void setId(String id) {
         this.id = id;
     }
+
+    @Override
+    public void showSystemMessage(String message) {
+        if (getJTrucoTable() != null){
+            super.showSystemMessage(message);
+        }else{
+
+        }
+    }
 }

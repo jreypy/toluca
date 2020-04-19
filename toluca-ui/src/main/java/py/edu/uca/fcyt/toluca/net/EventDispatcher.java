@@ -235,6 +235,6 @@ public abstract class EventDispatcher {
 	
 	public abstract void canto(TrucoEvent event);
 	public abstract void cantarTanto(TrucoEvent event);
-	
-	
+
+
 }

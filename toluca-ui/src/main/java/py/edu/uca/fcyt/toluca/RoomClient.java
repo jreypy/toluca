@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.logging.Logger;
 
 /**
- *
  * @author Interfaz de Inicio
  */
 public class RoomClient extends Room implements ChatPanelContainer,
@@ -49,6 +48,10 @@ public class RoomClient extends Room implements ChatPanelContainer,
     ///////////////////////////////////////
     // operations
 
+    public RoomClient() {
+        super();
+    }
+
     public RoomClient(RoomUING rui) {
         super();
         //logeador.log(TolucaConstants.CLIENT_DEBUG_LOG_LEVEL, "Se crea el
@@ -69,7 +72,7 @@ public class RoomClient extends Room implements ChatPanelContainer,
             intervaloTest = 5000;
         }
         try {
-            cc = CommunicatorProvider.getIntance(this, serverString, portNumber);
+            cc = CommunicatorProvider.getInstance(this, serverString, portNumber);
             ct = new ConexionTester(cc, intervaloTest);
             setRoomUING(rui);
             addRoomListener(cc);
@@ -149,9 +152,8 @@ public class RoomClient extends Room implements ChatPanelContainer,
      * Informa a todos los <i>listeners </i> registrados que se esta intentando
      * ingresar a una tabla.
      *
-     * @param tableNumber
-     *            El numero de tabla a la que queremos unirnos
-     *            </p>
+     * @param tableNumber El numero de tabla a la que queremos unirnos
+     *                    </p>
      */
     private synchronized void fireTableJoinRequested(int tableNumber) {
         /** lock-end */
@@ -220,13 +222,11 @@ public class RoomClient extends Room implements ChatPanelContainer,
      * </p>
      * <p>
      *
-     * @param player
-     *            El jugador que esta intentando enviar el mensaje
-     *            </p>
-     *            <p>
-     * @param htmlMessage
-     *            El mensaje que se esta enviando
-     *            </p>
+     * @param player      El jugador que esta intentando enviar el mensaje
+     *                    </p>
+     *                    <p>
+     * @param htmlMessage El mensaje que se esta enviando
+     *                    </p>
      */
     private synchronized void fireChatMessageRequested(TrucoPlayer player,
                                                        String htmlMessage, String origin) {
@@ -378,7 +378,6 @@ public class RoomClient extends Room implements ChatPanelContainer,
      * Getter for property rankTable.
      *
      * @return Value of property rankTable.
-     *
      */
     public TableRanking getRankTable() {
         if (rankTable == null) {
@@ -390,9 +389,7 @@ public class RoomClient extends Room implements ChatPanelContainer,
     /**
      * Setter for property rankTable.
      *
-     * @param ranking
-     *            New value of property rankTable.
-     *
+     * @param ranking New value of property rankTable.
      */
     public void setRankTable(TableRanking ranking) {
         /*
@@ -506,8 +503,12 @@ public class RoomClient extends Room implements ChatPanelContainer,
     public void setearPlayerTable(TrucoPlayer player, Table tabela, int chair) {
         /*System.out
                 .println("Se va a sentar al player Parche de Redes el CommunicatorClient le llama a este");*/
+        setearPlayerTable(player, tabela.getTableNumber(), chair);
+    }
 
-        mainTable.addPlayer(player, tabela.getTableNumber(), chair);
+    // Added by Julio Rey Toluca 2.0
+    public void setearPlayerTable(TrucoPlayer player, int tableNumber, int chair) {
+        mainTable.addPlayer(player, tableNumber, chair);
     }
 
     public void setStandPlayer(int chair, Table tabela) {
@@ -630,8 +631,7 @@ public class RoomClient extends Room implements ChatPanelContainer,
     }
 
     /**
-     * @param uiNG
-     *            The uiNG to set.
+     * @param uiNG The uiNG to set.
      */
     public void setRoomUING(RoomUING uiNG) {
         this.roomUING = uiNG;

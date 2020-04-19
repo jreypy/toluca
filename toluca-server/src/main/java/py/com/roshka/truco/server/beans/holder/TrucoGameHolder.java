@@ -23,10 +23,13 @@ public class TrucoGameHolder extends TrucoGame implements TrucoListener {
 
     Logger logger = LoggerFactory.getLogger(TrucoGameHolder.class);
     int MAX = 6;
+
     private Map<String, TrucoPlayer> players = new LinkedHashMap<>();
+    private Map<SpanishCard, TrucoCard> cards = new LinkedHashMap<>();
+
     private TrucoUser[] positions = new TrucoUser[MAX];
     private TrucoTableHolder trucoTableHolder;
-    TrucoGame target = null;
+    TrucoGameImpl target = null;
     private TrucoGameData trucoGameData = null;
     final private AMQPSender amqpSender;
     final private ObjectMapper objectMapper;
@@ -86,6 +89,11 @@ public class TrucoGameHolder extends TrucoGame implements TrucoListener {
     }
 
 
+    private TrucoCard getCard(SpanishCard spanishCard) {
+        return cards.get(spanishCard);
+    }
+
+
     @Override
     public void startHand(TrucoPlayer tPlayer) {
         logger.debug("Start Hand [" + trucoTableHolder.getTable().getId() + "]");
@@ -99,7 +107,8 @@ public class TrucoGameHolder extends TrucoGame implements TrucoListener {
 
     @Override
     public void play(TrucoPlay tp) throws InvalidPlayExcepcion {
-        logger.debug("PLay!! [" + tp + "]");
+        logger.debug("Playing [" + tp + "]");
+        target.play(tp);
 
     }
 
@@ -107,16 +116,26 @@ public class TrucoGameHolder extends TrucoGame implements TrucoListener {
         TrucoPlay trucoPlay = TolucaHelper.getPlay(trucoGamePlay);
         trucoPlay.setPlayer(getPlayer(trucoGamePlay.getPlayer().getId()));
 
+        if (trucoGamePlay.getCard() != null) {
+            TrucoCard trucoCard = cards.get(trucoGamePlay.getCard());
+            trucoPlay.setCard(trucoCard);
+            logger.debug("Player is playing [" + trucoCard + "]");
+        }
+
+
         if (trucoPlay.getPlayer() == null) {
             throw new IllegalArgumentException("Player is required to play");
         }
+
         logger.debug("=========== Receiving Play ===========");
         logger.debug("[" + trucoPlay.getPlayer() + "] PLAYS [" + trucoPlay + "]");
+
         try {
-            target.play(trucoPlay);
+            play(trucoPlay);
         } catch (InvalidPlayExcepcion invalidPlayExcepcion) {
-            //invalidPlayExcepcion.printStackTrace();
-            logger.error("Error in TrucoPlay [" + invalidPlayExcepcion.getTrucoPlay() + "]", invalidPlayExcepcion);
+            invalidPlayExcepcion.printStackTrace();
+
+            throw new IllegalArgumentException("Invalida Play Exception [" + trucoGamePlay + "]", invalidPlayExcepcion);
         }
         logger.debug("=========== Play Finished ===========");
     }
@@ -142,6 +161,7 @@ public class TrucoGameHolder extends TrucoGame implements TrucoListener {
         logger.debug("Turn Event [" + trucoTableHolder.getTable().getId() + "]");
         TrucoGameEvent trucoGameEvent = new TrucoGameEvent();
         trucoGameEvent.setRequest(TolucaHelper.trucoGameEventType(event));
+        trucoGameEvent.setPlayer(new Player(event.getPlayer().getId(), event.getPlayer().getName()));
         convertAndSend(Event.PLAY_REQUEST, trucoGameEvent);
     }
 
@@ -149,15 +169,39 @@ public class TrucoGameHolder extends TrucoGame implements TrucoListener {
     @Override
     public void endOfHand(TrucoEvent event) {
         logger.debug("End Of Hand [" + trucoTableHolder.getTable().getId() + "]");
+        numberOfHand = target.getNumberOfHand();
+
+        TrucoGameEvent trucoGameEvent = new TrucoGameEvent();
+        trucoGameData.setHandNumber(event.getNumberOfHand());
+        trucoGameData.getTeam1().setPoints(target.getTeam(TEAM_1).getPoints());
+        trucoGameData.getTeam2().setPoints(target.getTeam(TEAM_2).getPoints());
+
+        TrucoPlayer tp = target.getTeams()[(numberOfHand + 1) % 2].getTrucoPlayerNumber((numberOfHand - 1) % target.getNumberOfPlayers() / 2);
+
+        trucoGameEvent.setPlayer(getPlayer(tp));
+
+        //Messages
+        trucoGameEvent.setMessages(new ArrayList<>());
+        Vector vector = target.getDetallesDeLaMano();
+        for (Object m : vector) {
+            trucoGameEvent.getMessages().add(new TrucoGameMessage(((PointsDetail) m).aString()));
+        }
+        convertAndSend(Event.HAND_ENDED, trucoGameEvent);
     }
 
     @Override
     public void cardsDeal(TrucoEvent event) {
-        logger.debug("Cars  [" + event + "]");
-        logger.debug("hand Started  [" + event + "]");
+        logger.debug("cardsDeal event  [" + event + "]");
+        logger.debug("send Cards to  [" + event.getPlayer() + "][" + event.getCards() + "]");
         TrucoGameEvent trucoGameEvent = new TrucoGameEvent();
-        trucoGameEvent.setPlayer(new Player(event.getPlayer().getId(), event.getPlayer().getName()));
+        trucoGameEvent.setPlayer(getPlayer(event.getPlayer()));
         trucoGameEvent.setCards(TolucaHelper.getSpanishCards(event.getCards()));
+        logger.debug("send Spanish Cards to  [" + trucoGameEvent.getPlayer() + "][" + trucoGameEvent.getCards() + "]");
+        // Same Object
+        Arrays.stream(event.getCards()).forEach(c -> {
+            cards.put(TolucaHelper.getSpanishCard(c), c);
+        });
+
         convertAndSend(Event.GIVING_CARDS, trucoGameEvent);
     }
 
@@ -183,7 +227,7 @@ public class TrucoGameHolder extends TrucoGame implements TrucoListener {
         TrucoGameTeam trucoGameTeam = new TrucoGameTeam();
         for (Object o : trucoTeam.getPlayers()) {
             TrucoPlayer player = (TrucoPlayer) o;
-            trucoGameTeam.getPlayers().add(new Player(player.getId(), player.getName()));
+            trucoGameTeam.getPlayers().add(getPlayer(player));
         }
         return trucoGameTeam;
     }
@@ -221,4 +265,10 @@ public class TrucoGameHolder extends TrucoGame implements TrucoListener {
 
 
     }
+
+    public Player getPlayer(TrucoPlayer player) {
+        return new Player(player.getId(), player.getName());
+    }
+
+
 }

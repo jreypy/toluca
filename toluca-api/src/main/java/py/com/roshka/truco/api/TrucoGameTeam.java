@@ -14,6 +14,18 @@ public class TrucoGameTeam {
         this.players = players;
     }
 
+
+    private Integer points = 0;
+
+
+    public Integer getPoints() {
+        return points;
+    }
+
+    public void setPoints(Integer points) {
+        this.points = points;
+    }
+
     @Override
     public String toString() {
         return "TrucoGameTeam{" +

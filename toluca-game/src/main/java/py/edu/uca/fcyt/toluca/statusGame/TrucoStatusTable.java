@@ -27,7 +27,6 @@ public class TrucoStatusTable {
                 logger.debug("Giving card [" + card + "] to player [" + j + "]");
                 estado[j].agregarCarta(card);
             }
-
     }
 
     /**
@@ -123,12 +122,12 @@ public class TrucoStatusTable {
 
         if (jugador >= 0 && jugador < cJugadores && estado[jugador].puedeJugarCarta(carta) == 1) {
             if (mano.jugarCarta(jugador, carta) != 5) {
-                System.out.println("mano.jugarCarta por este motivo no pude jugar....");
                 return false;
             }
             return estado[jugador].jugarCarta(carta);
-        } else
+        } else {
             return false;
+        }
     }
 
     public boolean jugarCartaOffLine(int jugador, TrucoCard carta) {

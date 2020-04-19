@@ -21,10 +21,8 @@ public class TableModelGame extends AbstractTableModel{
 	private void insertPrueba()
 	{
 		RowGame row1=new RowGame(1);
-		
 		row1.setJugador(0,"Dani");
 		row1.setJugador(1,"Cricco");
-		
 		insertRow(row1);
 	}
 	public int getRowCount() {

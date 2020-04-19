@@ -11,16 +11,12 @@ import py.edu.uca.fcyt.net.CommunicatorClient;
 import py.edu.uca.fcyt.toluca.RoomClient;
 import py.edu.uca.fcyt.toluca.event.RoomEvent;
 import py.edu.uca.fcyt.toluca.event.TableEvent;
-import py.edu.uca.fcyt.toluca.event.TrucoEvent;
 import py.edu.uca.fcyt.toluca.event.TrucoListener;
-import py.edu.uca.fcyt.toluca.game.TrucoPlayer;
 import py.edu.uca.fcyt.toluca.net.EventDispatcherClient;
 import py.edu.uca.fcyt.toluca.table.TableServer;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import static py.edu.uca.fcyt.toluca.event.TableEvent.EVENT_playerSit;
 
 public class TrucoClientDispatcher extends CommunicatorClient {
     Logger logger = Logger.getLogger(TrucoClientDispatcher.class);
@@ -60,13 +56,12 @@ public class TrucoClientDispatcher extends CommunicatorClient {
         } else if (Event.TRUCO_TABLE_EVENT.equalsIgnoreCase(type)) {
             TrucoRoomTableEvent trucoRoomTableEvent = objectMapper.convertValue(event.get("data"), TrucoRoomTableEvent.class);
             tableEventDispatcher.dispatchRoomTableEvent(trucoRoomTableEvent);
-        }else if (Event.TRUCO_GAME_EVENT.equalsIgnoreCase(type)) {
+        } else if (Event.TRUCO_GAME_EVENT.equalsIgnoreCase(type)) {
             TrucoGameEvent trucoGameEvent = objectMapper.convertValue(event.get("data"), TrucoGameEvent.class);
             gameEventDispatcher.dispatchGameEvent(trucoGameEvent);
-        }else{
-            throw new IllegalStateException("Event Type is invalid ["+type+"]");
+        } else {
+            throw new IllegalStateException("Event Type is invalid [" + type + "]");
         }
-
 
 
 //        if (Event.TRUCO_GAME_EVENT.equalsIgnoreCase(type)) {

@@ -7,6 +7,7 @@ import py.edu.uca.fcyt.toluca.RoomServer;
 import py.edu.uca.fcyt.toluca.event.RoomEvent;
 import py.edu.uca.fcyt.toluca.event.TableEvent;
 import py.edu.uca.fcyt.toluca.event.TrucoEvent;
+import py.edu.uca.fcyt.toluca.game.InvalidPlayExcepcion;
 import py.edu.uca.fcyt.toluca.game.TrucoGame;
 import py.edu.uca.fcyt.toluca.game.TrucoPlay;
 import py.edu.uca.fcyt.toluca.game.TrucoPlayer;
@@ -385,7 +386,11 @@ public class EventDispatcherServer extends EventDispatcher {
         TrucoPlayer playerServidor = room.getPlayer(playerCliente.getName());
         event.setPlayer(playerServidor);//es indispensable la traduccion de
         // referencias
-        trucoGame.play(event);
+        try {
+            trucoGame.play(event);
+        } catch (InvalidPlayExcepcion invalidPlayExcepcion) {
+            invalidPlayExcepcion.printStackTrace();
+        }
 
     }
 

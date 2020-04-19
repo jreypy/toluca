@@ -39,7 +39,7 @@ public class DummyBot extends TolucaBot {
             TablePositionRequest tablePositionRequest = new TablePositionRequest();
             tablePositionRequest.setRoomId(joinRoomTable.getRoomId());
             tablePositionRequest.setTableId(joinRoomTable.getTableId());
-            tablePositionRequest.setChair(1);
+            tablePositionRequest.setPosition(1);
             executeCommand(Commands.SET_TABLE_POSITION, tablePositionRequest);
             // Sit
         }

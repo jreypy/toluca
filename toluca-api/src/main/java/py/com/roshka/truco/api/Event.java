@@ -8,7 +8,9 @@ public class Event {
 
 
     public static String LOGOUT = "LOGOUT";
+    public static String ROOMS_FOUND = "ROOMS_FOUND";
     public static String ROOM_FOUND = "ROOM_FOUND";
+
     public static String ROOM_CREATED = "ROOM_CREATED";
     public static String TABLE_POSITION_SETTED = "TABLE_POSITION_SETTED";
 
@@ -25,6 +27,8 @@ public class Event {
     // Truco Game
     public static String GAME_STARTED = "GAME_STARTED";
     public static String HAND_STARTED = "HAND_STARTED";
+    public static String HAND_ENDED = "HAND_ENDED";
+
     public static String GIVING_CARDS = "GIVING_CARDS";
 
     public static String PLAY_CARD = "PLAY_CARD";

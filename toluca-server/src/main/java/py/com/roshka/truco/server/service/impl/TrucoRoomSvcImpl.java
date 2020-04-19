@@ -43,7 +43,7 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
 
     @Override
     public TrucoRoomEvent findAllRooms() {
-        TrucoRoomEvent trucoRoomEvent = TrucoRoomEvent.builder(Event.ROOM_FOUND).user(trucoUserService.getTrucoUser()).rooms(rooms.values()).build();
+        TrucoRoomEvent trucoRoomEvent = TrucoRoomEvent.builder(Event.ROOMS_FOUND).user(trucoUserService.getTrucoUser()).rooms(rooms.values()).build();
         return trucoRoomEvent;
     }
 

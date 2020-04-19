@@ -1,15 +1,11 @@
 package py.com.roshka.truco.ui.room;
 
-import py.edu.uca.fcyt.toluca.guinicio.RowGame;
+import py.com.roshka.truco.api.TrucoRoomTable;
+import py.com.roshka.truco.api.TrucoRoomTableDescriptor;
 import py.edu.uca.fcyt.toluca.guinicio.TableGame;
 import py.edu.uca.fcyt.toluca.guinicio.TableModelGame;
-import py.edu.uca.fcyt.toluca.table.Table;
-
-import javax.swing.table.TableModel;
 
 public class TableGame2 extends TableGame {
-
-    public final static TableGame2 instance = new TableGame2();
 
 
     TableModelGame tableModel;
@@ -26,4 +22,6 @@ public class TableGame2 extends TableGame {
         //System.out.println(getClass().getName()+" tableNumber"+table.getTableNumber());
         getTableModelGame().insertRow(new RowGame2(id, Integer.parseInt(id)));
     }
+
+
 }

@@ -45,9 +45,11 @@ public class EventDispatcherClient extends EventDispatcher {
      *
      * @see py.edu.uca.fcyt.toluca.net.EventDispatcher#loginRequested(py.edu.uca.fcyt.toluca.event.RoomEvent)
      */
-    private TrucoPlayer trucoPlayer;
+    protected TrucoPlayer trucoPlayer;
 
     private CommunicatorClient commClient;
+
+
 
     public void loginRequested(RoomEvent event) {
 

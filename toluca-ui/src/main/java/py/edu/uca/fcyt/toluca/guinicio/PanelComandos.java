@@ -26,7 +26,7 @@ import py.edu.uca.fcyt.toluca.TolucaConstants;
  */
 public class PanelComandos extends JPanel {
 
-    private RoomClient roomClient = null;
+    protected RoomClient roomClient = null;
 
     private TableGame tableGame = null;
 

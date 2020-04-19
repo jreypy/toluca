@@ -1,5 +1,6 @@
 package py.com.roshka.truco.api;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TrucoGameEvent extends TrucoRoomTableEvent {
@@ -8,6 +9,7 @@ public class TrucoGameEvent extends TrucoRoomTableEvent {
     private SpanishCard card;
     private String request;
     private TrucoGameData game;
+    private List<TrucoGameMessage> messages = new ArrayList<>();
 
     public Player getPlayer() {
         return player;
@@ -49,6 +51,13 @@ public class TrucoGameEvent extends TrucoRoomTableEvent {
         this.game = game;
     }
 
+    public List<TrucoGameMessage> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<TrucoGameMessage> messages) {
+        this.messages = messages;
+    }
 
     @Override
     public String toString() {
@@ -58,6 +67,7 @@ public class TrucoGameEvent extends TrucoRoomTableEvent {
                 ", card=" + card +
                 ", request='" + request + '\'' +
                 ", game=" + game +
+                ", messages=" + messages +
                 "} " + super.toString();
     }
 }

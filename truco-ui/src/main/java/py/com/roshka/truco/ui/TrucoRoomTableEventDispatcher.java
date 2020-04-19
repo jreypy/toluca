@@ -6,6 +6,8 @@ import py.com.roshka.truco.api.TrucoRoomEvent;
 import py.com.roshka.truco.api.TrucoRoomTableEvent;
 import py.com.roshka.truco.api.TrucoUser;
 import py.com.roshka.truco.api.helper.TolucaHelper;
+import py.com.roshka.truco.ui.event.TableEvent2;
+import py.com.roshka.truco.ui.net.EventDispatcherClient2;
 import py.edu.uca.fcyt.toluca.event.RoomEvent;
 import py.edu.uca.fcyt.toluca.event.TableEvent;
 import py.edu.uca.fcyt.toluca.game.TrucoPlayer;
@@ -36,10 +38,12 @@ public class TrucoRoomTableEventDispatcher {
     }
 
     public void dispatchRoomTableEvent(TrucoRoomTableEvent trucoRoomTableEvent) {
-        if (Event.ROOM_TABLE_USER_JOINED.equalsIgnoreCase(trucoRoomTableEvent.getEventName())) {
-            dispatchRoomTableEvent(RoomEvent.TYPE_TABLE_JOINED, trucoRoomTableEvent);
-        } else if (Event.TABLE_POSITION_SETTED.equalsIgnoreCase(trucoRoomTableEvent.getEventName())) {
-            dispatchPlayerSitEvent(TableEvent.EVENT_playerSit, trucoRoomTableEvent);
+        TableEvent2 tableEvent2 = new TableEvent2(trucoRoomTableEvent);
+        if (Event.TABLE_POSITION_SETTED.equalsIgnoreCase(trucoRoomTableEvent.getEventName())) {
+            target.playerSit(tableEvent2);
+        } else {
+//            target.dispatchEvent(new RoomEvent2(trucoRoomEvent));
+            logger.info("Event [" + trucoRoomTableEvent.getEventName() + "] not implemented");
         }
     }
 
@@ -51,8 +55,6 @@ public class TrucoRoomTableEventDispatcher {
     public void dispatchPlayerSitEvent(Integer eventType, TrucoRoomTableEvent eventData) {
         TableEvent tableEvent = getTableEvent(eventType, eventData);
         tableEvent.setValue(eventData.getPosition());
-        target.dispatchEvent(tableEvent);
-
     }
 
     private TableEvent getTableEvent(Integer eventType, TrucoRoomTableEvent eventData) {

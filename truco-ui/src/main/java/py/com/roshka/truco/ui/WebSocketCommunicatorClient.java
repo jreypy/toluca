@@ -16,7 +16,10 @@ import py.com.roshka.truco.client.communication.TrucoClient;
 import py.com.roshka.truco.client.communication.TrucoClientHandler;
 import py.com.roshka.truco.client.communication.exception.TrucoClientException;
 import py.com.roshka.truco.client.communication.impl.TrucoClientImpl;
+import py.com.roshka.truco.ui.net.EventDispatcherClient2;
+import py.com.roshka.truco.ui.room.RoomHandler;
 import py.edu.uca.fcyt.net.CommunicatorClient;
+import py.edu.uca.fcyt.toluca.Room;
 import py.edu.uca.fcyt.toluca.RoomClient;
 import py.edu.uca.fcyt.toluca.event.RoomEvent;
 import py.edu.uca.fcyt.toluca.event.TableEvent;
@@ -42,18 +45,16 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
     {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
+
     TrucoClientDispatcher trucoClientDispatcher = null;
     TrucoListener trucoListener = new WebSocketTrucoListener(this);
 
     public WebSocketCommunicatorClient(RoomClient client, String serverString, Integer portNumber) throws IOException {
         super();
-        eventDispatcher.setRoom(client);
+        eventDispatcher.setRoom((Room) client);
         roomClient = client;
-        EventDispatcherClient eventDispatcherClient = new EventDispatcherClient();
-        eventDispatcherClient.setCommClient(this);
-
-//        EventDispatcherClient eventDispatcherClient = new EventDispatcherClient();
-        trucoClientDispatcher = new TrucoClientDispatcher(this, objectMapper, eventDispatcherClient, roomClient, trucoListener);
+        EventDispatcherClient target = new EventDispatcherClient2(this);
+        trucoClientDispatcher = new TrucoClientDispatcher(this, objectMapper, target, roomClient, trucoListener);
     }
 
 
@@ -98,7 +99,6 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
         logger.debug("Request Authentication [" + ev.getUser() + "]");
 //        String host = "ec2-184-73-89-227.compute-1.amazonaws.com";
         String host = "localhost";
-
         trucoClient = new TrucoClientImpl("http://" + host + ":8091", "ws://" + host + ":8050");
         logger.debug("loginRequested [" + ev + "]");
         try {
@@ -136,41 +136,12 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
 
     @Override
     public void playerSitRequest(TableEvent ev) {
-        /**
-         * TableEvent event = new TableEvent();
-         * 		event.setEvent(TableEvent.EVENT_playerSitRequest);
-         * 		event.setValue(chair);
-         * 		event.setTableBeanRepresentation(table.getTableBeanRepresentation());
-         * 		event.setPlayer(new TrucoPlayer[] { table.getPlayer() });
-         */
 
-        logger.debug("Set table position [" + ev + "]");
-        try {
-            TablePositionRequest tablePositionRequest = new TablePositionRequest();
-            tablePositionRequest.setRoomId(TrucoFrame.MAIN_ROOM_ID);
-            tablePositionRequest.setTableId(Integer.toString(ev.getTableBeanRepresentation().getId()));
-            tablePositionRequest.setPosition(ev.getValue());
-            executeCommand(Commands.SET_TABLE_POSITION, tablePositionRequest);
-
-        } catch (TrucoClientException e) {
-            logger.error(e.getMessage(), e);
-        }
     }
 
     @Override
     public void gameStartRequest(TableEvent ev) {
-        logger.debug("GameStartedRequest [" + ev + "]");
-        logger.debug("Call GameStarted Command");
-        logger.debug("Set table position [" + ev + "]");
-        try {
-            StartGameRequest requestCommand = new StartGameRequest();
-            requestCommand.setRoomId(TrucoFrame.MAIN_ROOM_ID);
-            requestCommand.setTableId(Integer.toString(ev.getTableBeanRepresentation().getId()));
-            executeCommand(Commands.START_GAME, requestCommand);
 
-        } catch (TrucoClientException e) {
-            logger.error(e.getMessage(), e);
-        }
     }
 
     @Override
@@ -182,7 +153,7 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
     public void afterLogin(TrucoPrincipal trucoPrincipal) throws TrucoClientException {
         logger.debug("After Login [" + trucoPrincipal + "]");
         trucoClient.connect();
-        TrucoGameClient2.principal = trucoPrincipal;
+        RoomHandler.principal = trucoPrincipal;
         /// addTable
 //        {
 //            RoomEvent table = new RoomEvent();
@@ -219,7 +190,7 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
         }
     }
 
-    void executeCommand(String commandName, Object data) throws TrucoClientException {
+    public void executeCommand(String commandName, Object data) throws TrucoClientException {
         trucoClient.send(commandName, data);
     }
 
@@ -227,18 +198,16 @@ public class WebSocketCommunicatorClient extends CommunicatorClient implements T
         return trucoClient;
     }
 
-    @Override
-    public void play(TrucoEvent event) {
-        if (event.getPlayer().getName().equals(getTrucoPlayer().getName())) {
-            TrucoPlay trucoPlay = event.toTrucoPlay();
-            TrucoGamePlay trucoGamePlay = TolucaHelper.getPlay(trucoPlay);
-            try {
-                trucoGamePlay.setRoomId(TrucoFrame.MAIN_ROOM_ID);
-                trucoGamePlay.setTableId(Integer.toString(event.getTableNumber()));
-                executeCommand(Commands.PLAY, trucoGamePlay);
-            } catch (TrucoClientException e) {
-                logger.error(e.getMessage(), e);
-            }
+
+    public void play(String roomId, String tableId, TrucoPlay trucoPlay) {
+
+        TrucoGamePlay trucoGamePlay = TolucaHelper.getPlay(trucoPlay);
+        try {
+            trucoGamePlay.setRoomId(roomId);
+            trucoGamePlay.setTableId(tableId);
+            executeCommand(Commands.PLAY, trucoGamePlay);
+        } catch (TrucoClientException e) {
+            logger.error(e.getMessage(), e);
         }
     }
 

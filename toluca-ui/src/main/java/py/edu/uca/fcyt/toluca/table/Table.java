@@ -26,12 +26,7 @@ import py.edu.uca.fcyt.toluca.event.TableEvent;
 import py.edu.uca.fcyt.toluca.event.TableListener;
 import py.edu.uca.fcyt.toluca.event.TrucoEvent;
 import py.edu.uca.fcyt.toluca.event.TrucoListener;
-import py.edu.uca.fcyt.toluca.game.TrucoCard;
-import py.edu.uca.fcyt.toluca.game.TrucoGame;
-import py.edu.uca.fcyt.toluca.game.TrucoGameClient;
-import py.edu.uca.fcyt.toluca.game.TrucoPlay;
-import py.edu.uca.fcyt.toluca.game.TrucoPlayer;
-import py.edu.uca.fcyt.toluca.game.TrucoTeam;
+import py.edu.uca.fcyt.toluca.game.*;
 import py.edu.uca.fcyt.toluca.table.animation.Animator;
 
 /**
@@ -474,16 +469,21 @@ public class Table implements PTableListener, ChatPanelContainer,
                     // si no se jug...
                     if (card != null) {
                         setCursor(Cursor.WAIT_CURSOR);
-                        tGame
-                                .play(new TrucoPlay(playerLocal,
-                                        (byte) TrucoPlay.JUGAR_CARTA,
-                                        (TrucoCard) card));
+                        try {
+                            tGame
+                                    .play(new TrucoPlay(playerLocal,
+                                            (byte) TrucoPlay.JUGAR_CARTA,
+                                            (TrucoCard) card));
+                        } catch (InvalidPlayExcepcion invalidPlayExcepcion) {
+                            invalidPlayExcepcion.printStackTrace();
+                        }
                     }
                 } else {
                     try {
                         new PopupTrucoPlays(this, aPlays, envidoPoints).show(
                                 pTable, e.getX(), e.getY());
                     } catch (NullPointerException ex) {
+                        ex.printStackTrace();
                     }
                 }
             }
@@ -558,10 +558,18 @@ public class Table implements PTableListener, ChatPanelContainer,
         switch (say) {
         case TrucoPlay.CANTO_ENVIDO:
             intPts = envidoPoints;
-            tGame.play(new TrucoPlay(playerLocal, (byte) say, intPts));
+            try {
+                tGame.play(new TrucoPlay(playerLocal, (byte) say, intPts));
+            } catch (InvalidPlayExcepcion invalidPlayExcepcion) {
+                invalidPlayExcepcion.printStackTrace();
+            }
             break;
         default:
-            tGame.play(new TrucoPlay(playerLocal, say));
+            try {
+                tGame.play(new TrucoPlay(playerLocal, say));
+            } catch (InvalidPlayExcepcion invalidPlayExcepcion) {
+                invalidPlayExcepcion.printStackTrace();
+            }
             break;
         }
     }

@@ -446,7 +446,7 @@ public class RoomUING extends JApplet {
         //        DOMConfigurator.configure(System.getProperty("user.dir")
         //                + System.getProperty("file.separator") + "log.xml");
         loadAppletParameters();
-        setRoomClient(new RoomClient(this));
+        roomClient = getRoomClient();
         this.setSize(750, 470);
         //this.setContentPane(getRoomPanel());
         this.setContentPane(getCcontenPane());
@@ -457,6 +457,7 @@ public class RoomUING extends JApplet {
             }
         });
     }
+
 
     /**
      * @return
@@ -487,11 +488,6 @@ public class RoomUING extends JApplet {
      */
     private void setRoomClient(RoomClient client) {
         this.roomClient = client;
-        getChatPanel().setCpc(roomClient);
-        roomClient.setChatPanel(getChatPanel());
-        roomClient.setMainTable(getTableGame());
-        roomClient.setRankTable(getTableRanking());
-        getPanelComandos().setRoomClient(roomClient);
     }
 
     /**
@@ -608,6 +604,15 @@ public class RoomUING extends JApplet {
      * @return Returns the roomClient.
      */
     public RoomClient getRoomClient() {
+        if (roomClient == null) {
+            roomClient = new RoomClient(this);
+            getChatPanel().setCpc(roomClient);
+            roomClient.setChatPanel(getChatPanel());
+            roomClient.setMainTable(getTableGame());
+            roomClient.setRankTable(getTableRanking());
+            getPanelComandos().setRoomClient(roomClient);
+            return roomClient;
+        }
         return roomClient;
     }
 

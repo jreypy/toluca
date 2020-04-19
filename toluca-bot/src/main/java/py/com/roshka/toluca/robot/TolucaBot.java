@@ -12,7 +12,7 @@ import java.util.Map;
 
 public abstract class TolucaBot implements Runnable {
     public static String MAIN_ROOM_ID = "1";
-    public static TrucoRoom MAIN_ROOM = new TrucoRoom(MAIN_ROOM_ID);
+    public static TrucoRoom MAIN_ROOM = new TrucoRoom();
 
     TrucoClient trucoClient = null;
     ObjectMapper objectMapper = new ObjectMapper();
