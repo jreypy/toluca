@@ -103,7 +103,8 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
         logger.debug("User [" + user.getUsername() + "]  wants to sit at [" + roomId + "][" + index + "]");
         TrucoRoomHolder trucoRoomHolder = getTrucoRoomHolder(roomId);
 
-        trucoRoomHolder.getTrucoTableHolder(tableId).sitDownPlayer(user, index);
+        TrucoTableHolder trucoTableHolder = trucoRoomHolder.getTrucoTableHolder(tableId);
+        trucoTableHolder.sitDownPlayer(user, index);
         TrucoRoomTableEvent trucoRoomTableEvent = new TrucoRoomTableEvent();
         trucoRoomTableEvent.setEventName(Event.TABLE_POSITION_SETTED);
         trucoRoomTableEvent.setMessage("User sat down to the Table [" + roomId + "][" + index + "]");
@@ -111,6 +112,9 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
         trucoRoomTableEvent.setRoomId(roomId);
         trucoRoomTableEvent.setTableId(tableId);
         trucoRoomTableEvent.setPosition(index);
+        TrucoRoomTableDescriptor tableDescriptor = trucoTableHolder.descriptor();
+        tableDescriptor.setPositions(trucoTableHolder.getPositions());
+        trucoRoomTableEvent.setTable(tableDescriptor);
         amqpSender.convertAndSend(AMQPSenderImpl.CHANNEL_ROOM_ID + roomId, trucoRoomTableEvent);
         logger.debug("User [" + user.getUsername() + "] joined to the room [" + roomId + "]");
         return trucoRoomTableEvent;

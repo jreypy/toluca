@@ -5,6 +5,7 @@ public class TrucoRoomTableEvent extends TrucoEvent {
     private TrucoUser user;
     private String tableId;
     private Integer position;
+    private TrucoRoomTableDescriptor table;
 
     public String getRoomId() {
         return roomId;
@@ -38,6 +39,14 @@ public class TrucoRoomTableEvent extends TrucoEvent {
         this.user = user;
     }
 
+    public TrucoRoomTableDescriptor getTable() {
+        return table;
+    }
+
+    public void setTable(TrucoRoomTableDescriptor table) {
+        this.table = table;
+    }
+
     @Override
     public String toString() {
         return "TrucoRoomTableEvent{" +
@@ -45,6 +54,7 @@ public class TrucoRoomTableEvent extends TrucoEvent {
                 ", user=" + user +
                 ", tableId='" + tableId + '\'' +
                 ", position=" + position +
+                ", table=" + table +
                 "} " + super.toString();
     }
 }

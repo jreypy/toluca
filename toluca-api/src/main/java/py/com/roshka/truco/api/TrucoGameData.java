@@ -8,6 +8,24 @@ public class TrucoGameData {
     private TrucoGameTeam team1;
     private TrucoGameTeam team2;
     private int handNumber;
+    private TrucoUser[] positions;
+    private int size;
+
+    public TrucoUser[] getPositions() {
+        return positions;
+    }
+
+    public void setPositions(TrucoUser[] positions) {
+        this.positions = positions;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
 
     public String getId() {
         return id;

@@ -215,7 +215,7 @@ public class TolucaHelper {
         if (TrucoCard.ESPADA == type)
             return SpanishCard.ESPADA;
         if (TrucoCard.BASTO == type)
-            return SpanishCard.ESPADA;
+            return SpanishCard.BASTO;
 
         return null;
     }

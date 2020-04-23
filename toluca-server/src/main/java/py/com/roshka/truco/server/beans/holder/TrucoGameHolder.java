@@ -1,6 +1,7 @@
 package py.com.roshka.truco.server.beans.holder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.bouncycastle.jcajce.provider.symmetric.TEA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -46,9 +47,27 @@ public class TrucoGameHolder extends TrucoGame implements TrucoListener {
 
     @Override
     public void startGame() {
+        TrucoTeam[] teams = teams();
+
+        TrucoTeam trucoGameTeam1 = teams[TEAM_1];
+        TrucoTeam trucoGameTeam2 = teams[TEAM_2];
+
+        if (trucoGameTeam1 == null || trucoGameTeam1.getPlayers().isEmpty()) {
+            throw new IllegalArgumentException("Team 1 is empty");
+        }
+
+        if (trucoGameTeam2 == null || trucoGameTeam2.getPlayers().isEmpty()) {
+            throw new IllegalArgumentException("Team 2 is empty");
+        }
+
+        if (trucoGameTeam1.getPlayers().size() != trucoGameTeam2.getPlayers().size()) {
+            throw new IllegalArgumentException("Team 1 and Team 2 dont have the same quantity of players");
+        }
+
         logger.debug("Starting Game [" + trucoTableHolder.getTable().getId() + "]");
+
         if (target == null) {
-            TrucoTeam[] teams = teams();
+
             target = new TrucoGameImpl(teams[0], teams[1], trucoTableHolder.getTable().getPoints());
             target.addTrucoListener(this);
             target.setTableNumber(Integer.parseInt(trucoTableHolder.getTable().getId()));
@@ -57,7 +76,18 @@ public class TrucoGameHolder extends TrucoGame implements TrucoListener {
             trucoGameData.setTeam1(getTrucoGameTeam(TEAM_1));
             trucoGameData.setTeam2(getTrucoGameTeam(TEAM_2));
             trucoGameData.setPoints(trucoTableHolder.getTable().getPoints());
+
+            List<TrucoUser> users = new ArrayList<>();
+
+            for (TrucoUser user : positions) {
+                if (user != null) {
+                    users.add(user);
+                }
+            }
+            trucoGameData.setPositions(users.toArray(new TrucoUser[users.size()]));
+            trucoGameData.setSize(trucoGameTeam1.getPlayers().size() + trucoGameTeam2.getPlayers().size());
         }
+
         target.startGame();
     }
 

@@ -3,7 +3,7 @@ API
 =
 Connect to Websocket
 -----
-    $ wscat -c ws://localhost:8050/ws -H 'Authentication: julio-1234'
+    $ wscat -c ws://localhost:8050/ws?manoamiga
 
 
 Commands
@@ -38,16 +38,22 @@ Create Table
 
 Join to Room Table
 --------
-    $ {"command":"join_room_table", "data" : {"roomId":"1","tableId":"30"}}
+    $ {"command":"join_room_table", "data" : {"roomId":"1","tableId":"1"}}
     
 Set Table Position
 --------
-    $ {"command":"set_table_position", "data" : {"roomId":"1","tableId":"30", "position":1}}
+    $ {"command":"set_table_position", "data" : {"roomId":"1","tableId":"1", "position":1}}
 
 Start Game
 --------
     
     $ {"command":"start_game", "data" : {"roomId":"1","tableId":"4"}}
+    
+Play
+--------
+    
+    $ {"command":"start_game", "data" : {"roomId":"1","tableId":"4"}}
+        
 
     
 Events
