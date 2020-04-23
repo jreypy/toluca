@@ -19,6 +19,11 @@ public class TrucoGameController {
         return trucoRoomTableSvc.startGame(roomId, tableId);
     }
 
+    @PostMapping("/start-hand")
+    public TrucoGameEvent startHand(@PathVariable("roomId") String roomId, @PathVariable("tableId") String tableId) {
+        return trucoRoomTableSvc.startHand(roomId, tableId);
+    }
+
     @PostMapping("/play")
     public TrucoGameEvent play(@PathVariable("roomId") String roomId, @PathVariable("tableId") String tableId, @RequestBody TrucoGamePlay trucoGamePlay) {
         return trucoRoomTableSvc.play(roomId, tableId, trucoGamePlay);

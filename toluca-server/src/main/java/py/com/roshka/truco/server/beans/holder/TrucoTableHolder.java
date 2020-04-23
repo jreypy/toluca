@@ -62,6 +62,8 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
         trucoGameHolder.play(trucoGamePlay);
     }
 
+
+
     public void joinUser(TrucoUser user) {
         getUsers().add(user);
     }

@@ -2,6 +2,7 @@ package py.com.roshka.truco.api;
 
 public class TrucoGamePlay {
     static public final String PLAY_CARD = "PLAY_CARD";
+    static public final String PLAYER_READY = "PLAYER_READY";
 
     private String tableId;
     private String roomId;

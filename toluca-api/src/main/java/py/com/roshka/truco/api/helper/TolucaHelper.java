@@ -159,7 +159,12 @@ public class TolucaHelper {
             trucoGameEvent.setEventName(TrucoGamePlay.PLAY_CARD);
             trucoGameEvent.setPlayer(getPlayer(event.getPlayer()));
             trucoGameEvent.setCard(getSpanishCard(event.getCard()));
-        } else {
+        }
+        else if (event.getType() == TrucoEvent.PLAYER_CONFIRMADO){
+            trucoGameEvent.setEventName(TrucoGamePlay.PLAYER_READY);
+            trucoGameEvent.setPlayer(getPlayer(event.getPlayer()));
+        }
+        else {
             throw new IllegalArgumentException("Event [" + event + "] not found");
         }
 

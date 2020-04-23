@@ -8,10 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import py.com.roshka.toluca.websocket.service.RoomService;
 import py.com.roshka.truco.api.*;
-import py.com.roshka.truco.api.request.JoinRoomTableRequest;
-import py.com.roshka.truco.api.request.RoomRequest;
-import py.com.roshka.truco.api.request.StartGameRequest;
-import py.com.roshka.truco.api.request.TablePositionRequest;
+import py.com.roshka.truco.api.request.*;
 
 import java.util.Map;
 
@@ -63,6 +60,11 @@ public class WSRoomServiceImpl implements RoomService {
     @Override
     public Map startGame(StartGameRequest startGameRequest) {
         return restTemplate.postForObject(trucoServerHost + "/api/room/" + startGameRequest.getRoomId() + "/table/" + startGameRequest.getTableId() + "/start-game", null, Map.class);
+    }
+
+    @Override
+    public Map startHand(StartHandRequest startHandquest) {
+        return restTemplate.postForObject(trucoServerHost + "/api/room/" + startHandquest.getRoomId() + "/table/" + startHandquest.getTableId() + "/start-hand", null, Map.class);
     }
 
     @Override

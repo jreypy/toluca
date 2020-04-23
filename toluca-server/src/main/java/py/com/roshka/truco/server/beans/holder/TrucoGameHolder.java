@@ -16,7 +16,7 @@ import py.edu.uca.fcyt.toluca.game.*;
 import java.util.*;
 
 
-public class TrucoGameHolder extends TrucoGame implements TrucoListener {
+public class TrucoGameHolder implements TrucoListener {
 
 
     static final int TEAM_1 = 0;
@@ -45,7 +45,6 @@ public class TrucoGameHolder extends TrucoGame implements TrucoListener {
         return positions;
     }
 
-    @Override
     public void startGame() {
         TrucoTeam[] teams = teams();
 
@@ -124,23 +123,12 @@ public class TrucoGameHolder extends TrucoGame implements TrucoListener {
     }
 
 
-    @Override
-    public void startHand(TrucoPlayer tPlayer) {
-        logger.debug("Start Hand [" + trucoTableHolder.getTable().getId() + "]");
+    public void startHand(TrucoUser trucoUser) {
+        logger.debug("Start Hand [" + trucoUser.getId() + "][" + trucoTableHolder.getTable().getId() + "]");
+        //TrucoPlayer tPlayer
+        target.startHand(getPlayer(trucoUser.getId()));
     }
 
-    @Override
-    public boolean esPosibleJugar(TrucoPlay tp) {
-        logger.debug("Start Hand [" + trucoTableHolder.getTable().getId() + "]");
-        return false;
-    }
-
-    @Override
-    public void play(TrucoPlay tp) throws InvalidPlayExcepcion {
-        logger.debug("Playing [" + tp + "]");
-        target.play(tp);
-
-    }
 
     public void play(TrucoGamePlay trucoGamePlay) {
         TrucoPlay trucoPlay = TolucaHelper.getPlay(trucoGamePlay);
@@ -161,7 +149,7 @@ public class TrucoGameHolder extends TrucoGame implements TrucoListener {
         logger.debug("[" + trucoPlay.getPlayer() + "] PLAYS [" + trucoPlay + "]");
 
         try {
-            play(trucoPlay);
+            target.play(trucoPlay);
         } catch (InvalidPlayExcepcion invalidPlayExcepcion) {
             invalidPlayExcepcion.printStackTrace();
 
@@ -170,10 +158,6 @@ public class TrucoGameHolder extends TrucoGame implements TrucoListener {
         logger.debug("=========== Play Finished ===========");
     }
 
-    @Override
-    public Vector getDetallesDeLaMano() {
-        return null;
-    }
 
     @Override
     public void play(TrucoEvent event) {
@@ -199,23 +183,23 @@ public class TrucoGameHolder extends TrucoGame implements TrucoListener {
     @Override
     public void endOfHand(TrucoEvent event) {
         logger.debug("End Of Hand [" + trucoTableHolder.getTable().getId() + "]");
-        numberOfHand = target.getNumberOfHand();
+        trucoGameData.setHandNumber(target.getNumberOfHand());
 
         TrucoGameEvent trucoGameEvent = new TrucoGameEvent();
         trucoGameData.setHandNumber(event.getNumberOfHand());
         trucoGameData.getTeam1().setPoints(target.getTeam(TEAM_1).getPoints());
         trucoGameData.getTeam2().setPoints(target.getTeam(TEAM_2).getPoints());
 
-        TrucoPlayer tp = target.getTeams()[(numberOfHand + 1) % 2].getTrucoPlayerNumber((numberOfHand - 1) % target.getNumberOfPlayers() / 2);
-
+        TrucoPlayer tp = target.getTeams()[(trucoGameData.getHandNumber() + 1) % 2].getTrucoPlayerNumber((trucoGameData.getHandNumber() - 1) % target.getNumberOfPlayers() / 2);
         trucoGameEvent.setPlayer(getPlayer(tp));
-
         //Messages
         trucoGameEvent.setMessages(new ArrayList<>());
         Vector vector = target.getDetallesDeLaMano();
+
         for (Object m : vector) {
             trucoGameEvent.getMessages().add(new TrucoGameMessage(((PointsDetail) m).aString()));
         }
+
         convertAndSend(Event.HAND_ENDED, trucoGameEvent);
     }
 

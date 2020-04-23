@@ -1,10 +1,7 @@
 package py.com.roshka.toluca.websocket.service;
 
 import py.com.roshka.truco.api.*;
-import py.com.roshka.truco.api.request.JoinRoomTableRequest;
-import py.com.roshka.truco.api.request.RoomRequest;
-import py.com.roshka.truco.api.request.StartGameRequest;
-import py.com.roshka.truco.api.request.TablePositionRequest;
+import py.com.roshka.truco.api.request.*;
 
 import java.util.Map;
 
@@ -25,6 +22,8 @@ public interface RoomService {
     Map joinRoomTable(JoinRoomTableRequest trucoRoomTable);
 
     Map startGame(StartGameRequest startGameRequest);
+
+    Map startHand(StartHandRequest startHandquest);
 
     Map play(TrucoGamePlay trucoGamePlay);
 }

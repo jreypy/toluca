@@ -29,17 +29,30 @@ public class TrucoRoomTableSvcImpl implements TrucoRoomTableSvc {
 
     @Override
     public TrucoGameEvent startGame(String roomId, String tableId) {
-        TrucoRoomHolder trucoRoomHolder = ((TrucoRoomSvcImpl) trucoRoomSvc).getTrucoRoomHolder(roomId);
+        TrucoRoomHolder trucoRoomHolder = trucoRoomSvc.getTrucoRoomHolder(roomId);
         trucoRoomHolder.getTrucoTableHolder(tableId).getTrucoGameHolder().startGame();
 
         TrucoGameEvent trucoGameEvent = new TrucoGameEvent();
-        trucoGameEvent.setEventName(Event.TRUCO_GAME_REQUEST);
+        trucoGameEvent.setEventName(Event.GAME_STARTED);
         trucoGameEvent.setMessage("Starting Truco Game [" + tableId + "]");
 
         //rabbitTemplate.convertAndSend(TRUCO_ROOM_EVENT, roomId, new RabbitResponse(Event.TRUCO_GAME_REQUEST, trucoGameEvent.getClass().getCanonicalName(), objectMapper.convertValue(trucoGameEvent, HashMap.class)));
 
         return trucoGameEvent;
     }
+
+    @Override
+    public TrucoGameEvent startHand(String roomId, String tableId) {
+        TrucoRoomHolder trucoRoomHolder = trucoRoomSvc.getTrucoRoomHolder(roomId);
+        trucoRoomHolder.getTrucoTableHolder(tableId).getTrucoGameHolder().startHand(trucoUserService.getTrucoUser());
+
+        TrucoGameEvent trucoGameEvent = new TrucoGameEvent();
+        trucoGameEvent.setEventName(Event.HAND_STARTED);
+        trucoGameEvent.setMessage("Starting Truco Game [" + tableId + "]");
+
+        return trucoGameEvent;
+    }
+
 
     @Override
     public TrucoGameEvent play(String roomId, String tableId, TrucoGamePlay trucoGamePlay) {

@@ -7,6 +7,8 @@ public interface TrucoRoomTableSvc {
 
     TrucoGameEvent startGame(String roomId, String tableId);
 
+    TrucoGameEvent startHand(String roomId, String tableId);
+
     TrucoGameEvent play(String roomId, String tableId, TrucoGamePlay trucoGamePlay);
 
 
