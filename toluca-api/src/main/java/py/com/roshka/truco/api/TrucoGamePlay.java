@@ -1,8 +1,38 @@
 package py.com.roshka.truco.api;
 
 public class TrucoGamePlay {
+
     static public final String PLAY_CARD = "PLAY_CARD";
+    static public final String PLAY_ME_VOY_AL_MAZO = "PLAY_ME_VOY_AL_MAZO";
+    static public final String CLOSE_CARDS = "CLOSE_CARDS";
+
+
+
     static public final String PLAYER_READY = "PLAYER_READY";
+
+    static public final String SAY_TRUCO = "SAY_TRUCO";
+    static public final String SAY_RETRUCO = "SAY_RETRUCO";
+    static public final String SAY_VALECUATRO = "SAY_VALECUATRO";
+
+    static public final String SAY_QUIERO = "SAY_QUIERO";
+    static public final String SAY_NO_QUIERO = "SAY_NO_QUIERO";
+
+    static public final String SAY_ENVIDO = "SAY_ENVIDO";
+    static public final String SAY_REAL_ENVIDO = "SAY_REAL_ENVIDO";
+    static public final String SAY_FALTA_ENVIDO = "SAY_FALTA_ENVIDO";
+
+    static public final String SAY_PASO_ENVIDO = "SAY_PASO_ENVIDO";
+    static public final String SAY_ENVIDO_VALUE = "SAY_ENVIDO_VALUE";
+
+
+    static public final String SAY_FLOR = "SAY_FLOR";
+    static public final String SAY_PASO_FLOR = "SAY_PASO_FLOR";
+
+
+
+
+
+
 
     private String tableId;
     private String roomId;

@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import py.com.roshka.truco.api.*;
+import py.com.roshka.truco.api.game.TrucoGameRequest;
 import py.com.roshka.truco.api.helper.TolucaHelper;
 import py.com.roshka.truco.server.service.AMQPSender;
 import py.com.roshka.truco.server.service.impl.AMQPSenderImpl;
@@ -174,9 +175,15 @@ public class TrucoGameHolder implements TrucoListener {
     public void turn(TrucoEvent event) {
         logger.debug("Turn Event [" + trucoTableHolder.getTable().getId() + "]");
         TrucoGameEvent trucoGameEvent = new TrucoGameEvent();
-        trucoGameEvent.setRequest(TolucaHelper.trucoGameEventType(event));
+
+        ///Get cards
+        trucoGameEvent.setOptions(OptionsHelper.getOptions(target, event));
+        // Options
+
+
         trucoGameEvent.setPlayer(new Player(event.getPlayer().getId(), event.getPlayer().getName()));
         convertAndSend(Event.PLAY_REQUEST, trucoGameEvent);
+        //Add can play
     }
 
 
@@ -285,4 +292,161 @@ public class TrucoGameHolder implements TrucoListener {
     }
 
 
+    static class OptionsHelper {
+        public OptionsHelper() {
+
+        }
+
+        static public List<TrucoGameRequest> getOptions(TrucoGame trucoGame, TrucoEvent trucoEvent) {
+            List<TrucoGameRequest> options = new ArrayList<>();
+
+            TrucoCard trucoCard = trucoGame.getCardNoPlayed(trucoEvent.getTrucoPlayer());
+
+            for (TrucoGameRequestPair pair : getTrucoPlay(trucoEvent, trucoCard, trucoGame.getValorEnvido(trucoEvent.getTrucoPlayer()))) {
+                if (trucoGame.esPosibleJugar(pair.getTrucoPlay())) {
+                    options.add(pair.getTrucoGameRequest());
+                }
+            }
+            return options;
+        }
+
+
+        static List<TrucoGameRequestPair> getTrucoPlay(TrucoEvent trucoEvent, TrucoCard trucoCard, int envido) {
+            List<TrucoGameRequestPair> playList = new ArrayList<>();
+            // envido
+            {
+                TrucoPlay trucoPlay = getTrucoPlay(trucoEvent.getTrucoPlayer());
+                trucoPlay.setType(TrucoPlay.ENVIDO);
+                playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.SAY_ENVIDO, "Envido")));
+            }
+            {
+                TrucoPlay trucoPlay = getTrucoPlay(trucoEvent.getTrucoPlayer());
+                trucoPlay.setType(TrucoPlay.REAL_ENVIDO);
+                playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.SAY_REAL_ENVIDO, "Real Envido")));
+            }
+            {
+                TrucoPlay trucoPlay = getTrucoPlay(trucoEvent.getTrucoPlayer());
+                trucoPlay.setType(TrucoPlay.FALTA_ENVIDO);
+                playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.SAY_FALTA_ENVIDO, "Falta Envido")));
+            }
+            {
+                TrucoPlay trucoPlay = getTrucoPlay(trucoEvent.getTrucoPlayer());
+                trucoPlay.setType(TrucoPlay.TRUCO);
+                playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.SAY_TRUCO, "Truco")));
+            }
+            {
+                TrucoPlay trucoPlay = getTrucoPlay(trucoEvent.getTrucoPlayer());
+                trucoPlay.setType(TrucoPlay.RETRUCO);
+                playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.SAY_RETRUCO, "Quiero Retruco")));
+            }
+            {
+                TrucoPlay trucoPlay = getTrucoPlay(trucoEvent.getTrucoPlayer());
+                trucoPlay.setType(TrucoPlay.VALE_CUATRO);
+                playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.SAY_VALECUATRO, "Quiero ValeCuatro")));
+            }
+            {
+                TrucoPlay trucoPlay = getTrucoPlay(trucoEvent.getTrucoPlayer());
+                trucoPlay.setType(TrucoPlay.QUIERO);
+                playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.SAY_QUIERO, "Quiero")));
+            }
+            {
+                TrucoPlay trucoPlay = getTrucoPlay(trucoEvent.getTrucoPlayer());
+                trucoPlay.setType(TrucoPlay.NO_QUIERO);
+                playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.SAY_NO_QUIERO, "No Quiero")));
+            }
+            {
+                TrucoPlay trucoPlay = getTrucoPlay(trucoEvent.getTrucoPlayer());
+                trucoPlay.setType(TrucoPlay.ME_VOY_AL_MAZO);
+                playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.PLAY_ME_VOY_AL_MAZO, "Me voy al Mazo")));
+            }
+            {
+                TrucoPlay trucoPlay = getTrucoPlay(trucoEvent.getTrucoPlayer());
+                trucoPlay.setType(TrucoPlay.JUGAR_CARTA);
+                trucoPlay.setCard(trucoCard);
+                playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.PLAY_CARD, null)));
+            }
+
+            {
+                TrucoPlay trucoPlay = getTrucoPlay(trucoEvent.getTrucoPlayer());
+                trucoPlay.setType(TrucoPlay.PASO_ENVIDO);
+                playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.SAY_PASO_ENVIDO, "Paso")));
+            }
+
+            {
+                TrucoPlay trucoPlay = getTrucoPlay(trucoEvent.getTrucoPlayer());
+                trucoPlay.setType(TrucoPlay.PASO_FLOR);
+                playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.SAY_PASO_FLOR, "Paso")));
+            }
+
+            {
+                TrucoPlay trucoPlay = getTrucoPlay(trucoEvent.getTrucoPlayer());
+                trucoPlay.setType(TrucoPlay.CERRARSE);
+                playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.CLOSE_CARDS, "Me Cierro")));
+            }
+
+            {
+                TrucoPlay trucoPlay = getTrucoPlay(trucoEvent.getTrucoPlayer());
+                trucoPlay.setType(TrucoPlay.CANTO_ENVIDO);
+                trucoPlay.setValue(envido);
+                playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.SAY_ENVIDO_VALUE, Integer.toString(envido), envido)));
+            }
+
+            {
+                TrucoPlay trucoPlay = getTrucoPlay(trucoEvent.getTrucoPlayer());
+                trucoPlay.setType(TrucoPlay.FLOR);
+                playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.SAY_FLOR, "Flor")));
+            }
+
+            return playList;
+        }
+
+
+        static TrucoPlay getTrucoPlay(TrucoPlayer trucoPlayer) {
+            TrucoPlay trucoPlay = new TrucoPlay();
+            trucoPlay.setPlayer(trucoPlayer);
+            return trucoPlay;
+        }
+
+        static TrucoGameRequest getTrucoGameRequest(String type, String text) {
+            TrucoGameRequest trucoGameRequest = new TrucoGameRequest();
+            trucoGameRequest.setType(type);
+            trucoGameRequest.setText(text);
+            trucoGameRequest.setEnvido(null);
+            return trucoGameRequest;
+        }
+
+        static TrucoGameRequest getTrucoGameRequest(String type, String text, Integer envido) {
+            TrucoGameRequest trucoGameRequest = getTrucoGameRequest(type, text);
+            trucoGameRequest.setEnvido(envido);
+            return trucoGameRequest;
+        }
+
+
+    }
+
+    static class TrucoGameRequestPair {
+        TrucoPlay trucoPlay;
+        TrucoGameRequest trucoGameRequest;
+
+        public TrucoGameRequestPair(TrucoPlay trucoPlay, TrucoGameRequest trucoGameRequest) {
+            this.trucoPlay = trucoPlay;
+            this.trucoGameRequest = trucoGameRequest;
+        }
+
+        public TrucoPlay getTrucoPlay() {
+            return trucoPlay;
+        }
+
+        public void setTrucoPlay(TrucoPlay trucoPlay) {
+            this.trucoPlay = trucoPlay;
+        }
+
+        public TrucoGameRequest getTrucoGameRequest() {
+            return trucoGameRequest;
+        }
+
+        public void setTrucoGameRequest(TrucoGameRequest trucoGameRequest) {
+            this.trucoGameRequest = trucoGameRequest;
+        }
+    }
 }

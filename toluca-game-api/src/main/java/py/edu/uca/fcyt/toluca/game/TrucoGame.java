@@ -312,6 +312,15 @@ public abstract class TrucoGame {
     }
 
 
+    public int getValorEnvido(TrucoPlayer trucoPlayer) {
+        throw new RuntimeException("Method not implemented yet");
+    }
+
+
+    public TrucoCard getCardNoPlayed(TrucoPlayer trucoPlayer) {
+        throw new RuntimeException("Method not implemented yet");
+    }
+
 }
 
 

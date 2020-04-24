@@ -334,7 +334,7 @@ public class TrucoGameImpl extends TrucoGame {
         }
     }
 
-    protected void newHand()  { //nueva mano
+    protected void newHand() { //nueva mano
         logger.info("NewHand");
         if (teams[0].getNumberOfPlayers() != teams[1].getNumberOfPlayers())
             throw new TrucoGameRuntimeException("TrucoGame.newHand - la cantidad de players de los Teams son distintos");
@@ -452,5 +452,17 @@ public class TrucoGameImpl extends TrucoGame {
     public void setGamePoints(int gamePoints) {
         this.gamePoints = gamePoints;
         setBuenaPoints(gamePoints / 2);
+    }
+
+
+    @Override
+    public int getValorEnvido(TrucoPlayer trucoPlayer) {
+        return trucoHand.getValueOfEnvido(trucoPlayer);
+    }
+
+    @Override
+    public TrucoCard getCardNoPlayed(TrucoPlayer trucoPlayer) {
+        int playerIndex = trucoHand.getNumberOfPlayer(trucoPlayer);
+        return trucoHand.getCardNoPlayed(playerIndex);
     }
 }

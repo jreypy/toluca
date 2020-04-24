@@ -99,18 +99,18 @@ public class TolucaHelper {
             return TrucoEvent.INICIO_DE_JUEGO;
 
         if (Event.PLAY_REQUEST.equalsIgnoreCase(trucoGameEvent.getEventName())) {
-            if (Event.PLAY_REQUEST_CARD.equalsIgnoreCase(trucoGameEvent.getRequest())) {
-                return TrucoEvent.TURNO_JUGAR_CARTA;
-            }
-            if (Event.PLAY_REQUEST_ENVIDO.equalsIgnoreCase(trucoGameEvent.getRequest())) {
-                return TrucoEvent.TURNO_CANTAR_ENVIDO;
-            }
-            if (Event.PLAY_REQUEST_ENVIDO_VALUE.equalsIgnoreCase(trucoGameEvent.getRequest())) {
-                return TrucoEvent.TURNO_RESPONDER_ENVIDO;
-            }
-            if (Event.PLAY_REQUEST_TRUCO.equalsIgnoreCase(trucoGameEvent.getRequest())) {
-                return TrucoEvent.TURNO_RESPONDER_TRUCO;
-            }
+//            if (Event.PLAY_REQUEST_CARD.equalsIgnoreCase(trucoGameEvent.getRequest())) {
+//                return TrucoEvent.TURNO_JUGAR_CARTA;
+//            }
+//            if (Event.PLAY_REQUEST_ENVIDO.equalsIgnoreCase(trucoGameEvent.getRequest())) {
+//                return TrucoEvent.TURNO_CANTAR_ENVIDO;
+//            }
+//            if (Event.PLAY_REQUEST_ENVIDO_VALUE.equalsIgnoreCase(trucoGameEvent.getRequest())) {
+//                return TrucoEvent.TURNO_RESPONDER_ENVIDO;
+//            }
+//            if (Event.PLAY_REQUEST_TRUCO.equalsIgnoreCase(trucoGameEvent.getRequest())) {
+//                return TrucoEvent.TURNO_RESPONDER_TRUCO;
+//            }
         }
 
         if (Event.GAME_STARTED.equalsIgnoreCase(trucoGameEvent.getEventName())) {
@@ -155,14 +155,67 @@ public class TolucaHelper {
 
     public static TrucoGameEvent trucoEvent(TrucoEvent event) {
         TrucoGameEvent trucoGameEvent = new TrucoGameEvent();
+        trucoGameEvent.setPlayer(getPlayer(event.getPlayer()));
+
         if (event.getType() == TrucoEvent.JUGAR_CARTA) {
             trucoGameEvent.setEventName(TrucoGamePlay.PLAY_CARD);
-            trucoGameEvent.setPlayer(getPlayer(event.getPlayer()));
             trucoGameEvent.setCard(getSpanishCard(event.getCard()));
         }
         else if (event.getType() == TrucoEvent.PLAYER_CONFIRMADO){
             trucoGameEvent.setEventName(TrucoGamePlay.PLAYER_READY);
             trucoGameEvent.setPlayer(getPlayer(event.getPlayer()));
+        }
+        else if (event.getType() == TrucoEvent.TRUCO){
+            trucoGameEvent.setEventName(TrucoGamePlay.SAY_TRUCO);
+            trucoGameEvent.setText("Truco");
+        }
+        else if (event.getType() == TrucoEvent.RETRUCO){
+            trucoGameEvent.setEventName(TrucoGamePlay.SAY_RETRUCO);
+            trucoGameEvent.setText("Quiero ReTruco");
+        }
+        else if (event.getType() == TrucoEvent.VALE_CUATRO){
+            trucoGameEvent.setEventName(TrucoGamePlay.SAY_VALECUATRO);
+            trucoGameEvent.setText("Quiero Vale Cuatro");
+        }
+        else if (event.getType() == TrucoEvent.QUIERO){
+            trucoGameEvent.setEventName(TrucoGamePlay.SAY_QUIERO);
+            trucoGameEvent.setText("Quiero");
+        }
+        else if (event.getType() == TrucoEvent.NO_QUIERO){
+            trucoGameEvent.setEventName(TrucoGamePlay.SAY_NO_QUIERO);
+            trucoGameEvent.setText("No Quiero");
+        }
+        else if (event.getType() == TrucoEvent.ENVIDO){
+            trucoGameEvent.setEventName(TrucoGamePlay.SAY_ENVIDO);
+            trucoGameEvent.setText("Envido");
+        }
+        else if (event.getType() == TrucoEvent.REAL_ENVIDO){
+            trucoGameEvent.setEventName(TrucoGamePlay.SAY_REAL_ENVIDO);
+            trucoGameEvent.setText("Real Envido");
+        }
+        else if (event.getType() == TrucoEvent.FALTA_ENVIDO){
+            trucoGameEvent.setEventName(TrucoGamePlay.SAY_FALTA_ENVIDO);
+            trucoGameEvent.setText("Falta Envido");
+        }
+        else if (event.getType() == TrucoEvent.CANTO_ENVIDO){
+            trucoGameEvent.setEventName(TrucoGamePlay.SAY_ENVIDO_VALUE);
+            trucoGameEvent.setText(Integer.toString(event.getValue()));
+        }
+        else if (event.getType() == TrucoEvent.PASO_ENVIDO){
+            trucoGameEvent.setEventName(TrucoGamePlay.SAY_PASO_ENVIDO);
+            trucoGameEvent.setText("Paso");
+        }
+        else if (event.getType() == TrucoEvent.PASO_FLOR){
+            trucoGameEvent.setEventName(TrucoGamePlay.SAY_PASO_FLOR);
+            trucoGameEvent.setText("Paso");
+        }
+        else if (event.getType() == TrucoEvent.FLOR){
+            trucoGameEvent.setEventName(TrucoGamePlay.SAY_FLOR);
+            trucoGameEvent.setText("Flor");
+        }
+        else if (event.getType() == TrucoEvent.ME_VOY_AL_MAZO){
+            trucoGameEvent.setEventName(TrucoGamePlay.PLAY_ME_VOY_AL_MAZO);
+            trucoGameEvent.setText("Me voy al maso");
         }
         else {
             throw new IllegalArgumentException("Event [" + event + "] not found");
@@ -185,10 +238,55 @@ public class TolucaHelper {
     public static TrucoPlay getPlay(TrucoGamePlay trucoGamePlay) {
         TrucoPlay trucoPlay = new TrucoPlay();
         trucoPlay.setPlayer(getPlayer(trucoGamePlay.getPlayer()));
+
         if (TrucoGamePlay.PLAY_CARD.equalsIgnoreCase(trucoGamePlay.getType())) {
             trucoPlay.setType(TrucoPlay.JUGAR_CARTA);
             trucoPlay.setCard(getCard(trucoGamePlay.getCard()));
         }
+        if (TrucoGamePlay.SAY_ENVIDO.equalsIgnoreCase(trucoGamePlay.getType())){
+            trucoPlay.setType(TrucoPlay.ENVIDO);
+        }
+        if (TrucoGamePlay.SAY_REAL_ENVIDO.equalsIgnoreCase(trucoGamePlay.getType())){
+            trucoPlay.setType(TrucoPlay.REAL_ENVIDO);
+        }
+        if (TrucoGamePlay.SAY_FALTA_ENVIDO.equalsIgnoreCase(trucoGamePlay.getType())){
+            trucoPlay.setType(TrucoPlay.FALTA_ENVIDO);
+        }
+        if (TrucoGamePlay.SAY_TRUCO.equalsIgnoreCase(trucoGamePlay.getType())){
+            trucoPlay.setType(TrucoPlay.TRUCO);
+        }
+        if (TrucoGamePlay.SAY_RETRUCO.equalsIgnoreCase(trucoGamePlay.getType())){
+            trucoPlay.setType(TrucoPlay.RETRUCO);
+        }
+        if (TrucoGamePlay.SAY_VALECUATRO.equalsIgnoreCase(trucoGamePlay.getType())){
+            trucoPlay.setType(TrucoPlay.VALE_CUATRO);
+        }
+        if (TrucoGamePlay.SAY_QUIERO.equalsIgnoreCase(trucoGamePlay.getType())){
+            trucoPlay.setType(TrucoPlay.QUIERO);
+        }
+        if (TrucoGamePlay.SAY_NO_QUIERO.equalsIgnoreCase(trucoGamePlay.getType())){
+            trucoPlay.setType(TrucoPlay.NO_QUIERO);
+        }
+        if (TrucoGamePlay.PLAY_ME_VOY_AL_MAZO.equalsIgnoreCase(trucoGamePlay.getType())){
+            trucoPlay.setType(TrucoPlay.ME_VOY_AL_MAZO);
+        }
+        if (TrucoGamePlay.SAY_PASO_ENVIDO.equalsIgnoreCase(trucoGamePlay.getType())){
+            trucoPlay.setType(TrucoPlay.PASO_ENVIDO);
+        }
+        if (TrucoGamePlay.SAY_PASO_FLOR.equalsIgnoreCase(trucoGamePlay.getType())){
+            trucoPlay.setType(TrucoPlay.PASO_FLOR);
+        }
+        if (TrucoGamePlay.CLOSE_CARDS.equalsIgnoreCase(trucoGamePlay.getType())){
+            trucoPlay.setType(TrucoPlay.CERRARSE);
+        }
+        if (TrucoGamePlay.SAY_ENVIDO_VALUE.equalsIgnoreCase(trucoGamePlay.getType())){
+            trucoPlay.setType(TrucoPlay.CANTO_ENVIDO);
+            trucoPlay.setValue(trucoGamePlay.getEnvido());
+        }
+        if (TrucoGamePlay.SAY_FLOR.equalsIgnoreCase(trucoGamePlay.getType())){
+            trucoPlay.setType(TrucoPlay.FLOR);
+        }
+
         return trucoPlay;
     }
 
