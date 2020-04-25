@@ -179,6 +179,16 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
                 trucoRoomEvent.setUser(trucoRoomUser.getUser());
                 trucoRoomEvent.setRoom(room);
                 //amqpSender.convertAndSend(TRUCO_ROOM_EVENT, ROOM_LOGOUT_ROUTING_KEY, new RabbitResponse(Event.ROOM_USER_JOINED, trucoRoomEvent.getClass().getCanonicalName(), trucoRoomEvent));
+
+
+                TrucoRoomEvent trucoRoomTableEvent = new TrucoRoomEvent();
+                trucoRoomTableEvent.setEventName(Event.ROOM_USER_LEFT);
+                trucoRoomTableEvent.setMessage("User left the room [" + room + "]");
+                trucoRoomTableEvent.setUser(trucoRoomUser.getUser());
+                trucoRoomTableEvent.setRoom(room.descriptor());
+
+                amqpSender.convertAndSend(AMQPSenderImpl.CHANNEL_ROOM_ID + room.getId(), trucoRoomTableEvent);
+
                 logger.debug("User [" + trucoRoomUser.getUser().getUsername() + "] left the room [" + room.getId() + "]");
             }
         });
