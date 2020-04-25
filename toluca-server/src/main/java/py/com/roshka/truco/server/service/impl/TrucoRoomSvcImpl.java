@@ -10,6 +10,7 @@ import py.com.roshka.truco.server.service.TrucoRoomSvc;
 import py.com.roshka.truco.server.service.TrucoUserService;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -158,8 +159,12 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
         TrucoUser user = trucoUserService.getTrucoUser();
         logger.debug("User [" + user.getUsername() + "] is leaving the table [" + roomId + "].[" + tableId + "]");
         TrucoRoomHolder trucoRoomHolder = getTrucoRoomHolder(roomId);
-        TrucoTableHolder trucoTableHolder = trucoRoomHolder.getTrucoTableHolder(tableId);
+        logger.debug("User [" + user.getUsername() + "] joined to the room [" + roomId + "]");
+        return leaveTable(trucoRoomHolder, user, tableId);
+    }
 
+    private TrucoRoomEvent leaveTable(TrucoRoomHolder trucoRoomHolder, TrucoUser user, String tableId) {
+        TrucoTableHolder trucoTableHolder = trucoRoomHolder.getTrucoTableHolder(tableId);
         TrucoRoomEvent trucoRoomEvent = TrucoRoomEvent.builder(Event.USER_LEFT_TABLE).user(user).room(trucoRoomHolder.descriptor()).table(trucoTableHolder.descriptor()).build();
         trucoRoomEvent.getTable().setPositions(trucoTableHolder.getPositions());
 
@@ -167,16 +172,14 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
             // Destroy Table
             trucoRoomHolder.removeTable(tableId, user);
             TrucoRoomEvent destroyTableEvent = TrucoRoomEvent.builder(Event.ROOM_TABLE_DESTROYED).user(user).room(trucoRoomHolder.descriptor()).table(trucoTableHolder.descriptor()).build();
-            amqpSender.convertAndSend(AMQPSenderImpl.CHANNEL_ROOM_ID + roomId, destroyTableEvent);
+            amqpSender.convertAndSend(AMQPSenderImpl.CHANNEL_ROOM_ID + trucoRoomHolder.getId(), destroyTableEvent);
         } else {
-            amqpSender.convertAndSend(AMQPSenderImpl.CHANNEL_ROOM_ID + roomId, trucoRoomEvent);
+            amqpSender.convertAndSend(AMQPSenderImpl.CHANNEL_ROOM_ID + trucoRoomHolder.getId(), trucoRoomEvent);
         }
 
-        logger.debug("User [" + user.getUsername() + "] joined to the room [" + roomId + "]");
-
         return trucoRoomEvent;
-    }
 
+    }
 
     public TrucoRoomTable deleteTable(String roomId, String tableId) {
         return null;
@@ -195,6 +198,8 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
         TrucoRoomUser trucoRoomUser = new TrucoRoomUser(new TrucoUser(username, username), false);
         rooms.values().stream().parallel().forEach(room -> {
             if (room.getUsers().contains(trucoRoomUser)) {
+                TrucoRoomHolder trucoRoomHolder = getTrucoRoomHolder(room.getId());
+
                 // notify
                 room.getUsers().remove(trucoRoomUser);
                 TrucoRoomEvent trucoRoomEvent = new TrucoRoomEvent();
@@ -210,9 +215,21 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
                 trucoRoomTableEvent.setMessage("User left the room [" + room + "]");
                 trucoRoomTableEvent.setUser(trucoRoomUser.getUser());
                 trucoRoomTableEvent.setRoom(room.descriptor());
+                Iterator<TrucoRoomTableDescriptor> tables = new HashSet<>(room.getTables()).iterator();
+
+                while (tables.hasNext()) {
+                    TrucoRoomTableDescriptor table = tables.next();
+                    TrucoTableHolder trucoTableHolder = trucoRoomHolder.getTrucoTableHolder(table.getId());
+                    if (trucoTableHolder.getUsers().contains(trucoRoomUser.getUser())) {
+                        try {
+                            leaveTable(trucoRoomHolder, trucoRoomUser.getUser(),  table.getId());
+                        } catch (Exception e) {
+                            logger.warn(e.getMessage(), e);
+                        }
+                    }
+                }
 
                 amqpSender.convertAndSend(AMQPSenderImpl.CHANNEL_ROOM_ID + room.getId(), trucoRoomTableEvent);
-
                 logger.debug("User [" + trucoRoomUser.getUser().getUsername() + "] left the room [" + room.getId() + "]");
             }
         });

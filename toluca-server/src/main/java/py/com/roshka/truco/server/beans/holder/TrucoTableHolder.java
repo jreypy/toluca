@@ -38,9 +38,13 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
         this.target = table;
     }
 
+
     public TrucoUser sitDownPlayer(TrucoUser trucoUser, Integer index) {
-        if (index < 0 || index >= 6)
+
+        if (index != null && (index < 0 || index >= 6)) {
             throw new IllegalArgumentException("Position is invalid [" + index + "] [0-6]");
+        }
+
         TrucoUser[] positions = trucoGameHolder.getPositions();
 
         for (int i = 0; i < positions.length; i++) {
@@ -52,10 +56,11 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
             }
 
         }
-        trucoGameHolder.getPositions()[index] = trucoUser;
-        getUsers().add(trucoUser);
-        target.setPositions(trucoGameHolder.getPositions());
-
+        if (index != null) {
+            trucoGameHolder.getPositions()[index] = trucoUser;
+            getUsers().add(trucoUser);
+            target.setPositions(trucoGameHolder.getPositions());
+        }
         return trucoUser;
     }
 
@@ -69,6 +74,7 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
     }
 
     public boolean leaveUser(TrucoUser user) {
+        sitDownPlayer(user, null);
         if (target.getOwner().equals(user)) {
             if (TrucoRoomTable.IN_PROGRESS.equalsIgnoreCase(getStatus())) {
                 throw new IllegalArgumentException("Game is in Progress");
@@ -76,6 +82,7 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
             getUsers().remove(user);
             return true;
         }
+
         getUsers().remove(user);
         return false;
     }
