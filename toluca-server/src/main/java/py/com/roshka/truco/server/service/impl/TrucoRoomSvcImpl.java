@@ -43,7 +43,7 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
     }
 
 
-    @Scheduled(cron = "0 0/10 * * * *")
+    @Scheduled(cron = "0 0/5 * * * *")
     protected void cleanTables() {
         TrucoUser trucoUser = new TrucoUser("null", "** Admin **");
         logger.info("Clean Tables!!");

@@ -1,17 +1,19 @@
 package py.com.roshka.truco.server.beans.holder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import py.com.roshka.truco.api.TrucoGamePlay;
-import py.com.roshka.truco.api.TrucoRoomTable;
-import py.com.roshka.truco.api.TrucoRoomTableDescriptor;
-import py.com.roshka.truco.api.TrucoUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import py.com.roshka.truco.api.*;
 import py.com.roshka.truco.server.service.AMQPSender;
+import py.com.roshka.truco.server.service.impl.AMQPSenderImpl;
 
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 public class TrucoTableHolder extends TrucoRoomTableDescriptor {
+    Logger logger = LoggerFactory.getLogger(TrucoTableHolder.class);
+
     private TrucoRoomTable target;
 
     private TrucoGameHolder trucoGameHolder = null;
@@ -119,6 +121,26 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
         return target.getRoomId();
     }
 
+
+    @Override
+    public void setStatus(String status) {
+        target.setStatus(status);
+        try{
+            TrucoRoomTableEvent trucoRoomTableEvent = new TrucoRoomTableEvent();
+            trucoRoomTableEvent.setEventName(Event.ROOM_TABLE_STATUS_UPDATED);
+            trucoRoomTableEvent.setMessage("Room Table Status [" + target.getId() + "] updated [" + target.getStatus() + "]");
+            trucoRoomTableEvent.setTableId(target.getId());
+            TrucoRoomTableDescriptor tableDescriptor = descriptor();
+            tableDescriptor.setPositions(getPositions());
+            trucoRoomTableEvent.setTable(tableDescriptor);
+            amqpSender.convertAndSend(AMQPSenderImpl.CHANNEL_ROOM_ID + target.getRoomId(), trucoRoomTableEvent);
+        }catch (Exception e){
+            logger.error(e.getMessage(), e);
+        }
+
+
+    }
+
     @Override
     public String getStatus() {
         return target.getStatus();
@@ -133,8 +155,7 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
         updated = System.currentTimeMillis();
         try {
             trucoGameHolder.startGame();
-            target.setStatus(TrucoRoomTable.IN_PROGRESS);
-
+            setStatus(TrucoRoomTable.IN_PROGRESS);
         } catch (Exception e) {
             // TODO Cannot be started
         }

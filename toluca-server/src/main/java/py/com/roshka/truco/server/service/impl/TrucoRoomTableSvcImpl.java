@@ -33,20 +33,6 @@ public class TrucoRoomTableSvcImpl implements TrucoRoomTableSvc {
         TrucoTableHolder trucoTableHolder = trucoRoomHolder.getTrucoTableHolder(tableId);
         trucoTableHolder.startGame();
 
-        if (TrucoRoomTable.IN_PROGRESS.equalsIgnoreCase(trucoTableHolder.getStatus())){
-            // Send Event
-            TrucoRoomTableEvent trucoRoomTableEvent = new TrucoRoomTableEvent();
-            trucoRoomTableEvent.setEventName(Event.ROOM_TABLE_STATUS_UPDATED);
-            trucoRoomTableEvent.setMessage("Room Table Status [" + tableId + "] updated [" + trucoTableHolder.getStatus() + "]");
-            trucoRoomTableEvent.setTableId(tableId);
-
-            TrucoRoomTableDescriptor tableDescriptor = trucoTableHolder.descriptor();
-            tableDescriptor.setPositions(trucoTableHolder.getPositions());
-            trucoRoomTableEvent.setTable(tableDescriptor);
-
-            amqpSender.convertAndSend(AMQPSenderImpl.CHANNEL_ROOM_ID + roomId, trucoRoomTableEvent);
-        }
-
         TrucoGameEvent trucoGameEvent = new TrucoGameEvent();
         trucoGameEvent.setEventName(Event.GAME_STARTED);
         trucoGameEvent.setMessage("Starting Truco Game [" + tableId + "]");

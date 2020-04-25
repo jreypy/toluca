@@ -32,6 +32,8 @@ public class Event {
     public static String GAME_STARTED = "GAME_STARTED";
     public static String HAND_STARTED = "HAND_STARTED";
     public static String HAND_ENDED = "HAND_ENDED";
+    public static String GAME_ENDED = "GAME_ENDED";
+
 
     public static String GIVING_CARDS = "GIVING_CARDS";
 

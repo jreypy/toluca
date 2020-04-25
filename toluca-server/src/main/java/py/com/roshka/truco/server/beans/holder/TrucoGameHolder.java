@@ -255,7 +255,25 @@ public class TrucoGameHolder implements TrucoListener {
 
     @Override
     public void endOfGame(TrucoEvent event) {
-        logger.debug("endOfGame  [" + event + "]");
+        logger.debug("End Of Game [" + trucoTableHolder.getTable().getId() + "]");
+        trucoGameData.setHandNumber(target.getNumberOfHand());
+
+        TrucoGameEvent trucoGameEvent = new TrucoGameEvent();
+        trucoGameData.setHandNumber(event.getNumberOfHand());
+        trucoGameData.getTeam1().setPoints(target.getTeam(TEAM_1).getPoints());
+        trucoGameData.getTeam2().setPoints(target.getTeam(TEAM_2).getPoints());
+
+        TrucoPlayer tp = target.getTeams()[(trucoGameData.getHandNumber() + 1) % 2].getTrucoPlayerNumber((trucoGameData.getHandNumber() - 1) % target.getNumberOfPlayers() / 2);
+        trucoGameEvent.setPlayer(getPlayer(tp));
+        //Messages
+        trucoGameEvent.setMessages(new ArrayList<>());
+        Vector vector = target.getDetallesDeLaMano();
+
+        for (Object m : vector) {
+            trucoGameEvent.getMessages().add(new TrucoGameMessage(((PointsDetail) m).aString()));
+        }
+        convertAndSend(Event.GAME_ENDED, trucoGameEvent);
+        trucoTableHolder.setStatus(TrucoRoomTable.FINISHED);
     }
 
     @Override
