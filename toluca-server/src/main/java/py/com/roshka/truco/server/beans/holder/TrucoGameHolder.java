@@ -234,14 +234,15 @@ public class TrucoGameHolder implements TrucoListener {
         trucoGameEvent.setPlayer(new Player(event.getPlayer().getId(), event.getPlayer().getName()));
         trucoGameData.setHandNumber(event.getNumberOfHand());
         events = new ArrayList<>();
+        events.add(startGameEvent);
         convertAndSend(Event.HAND_STARTED, trucoGameEvent);
     }
 
     @Override
     public void gameStarted(TrucoEvent event) {
         logger.debug("gameStarted  [" + event + "]");
-        TrucoGameEvent trucoGameEvent = new TrucoGameEvent();
-        convertAndSend(Event.GAME_STARTED, trucoGameEvent);
+        startGameEvent = new TrucoGameEvent();
+        convertAndSend(Event.GAME_STARTED, startGameEvent);
     }
 
     TrucoGameTeam getTrucoGameTeam(int index) {
@@ -282,6 +283,7 @@ public class TrucoGameHolder implements TrucoListener {
         return null;
     }
 
+    TrucoGameEvent startGameEvent = null;
     List<TrucoGameEvent> events = new ArrayList<>();
 
     public void convertAndSend(String eventName, TrucoGameEvent trucoGameEvent) {
