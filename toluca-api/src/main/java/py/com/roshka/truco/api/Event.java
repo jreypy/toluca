@@ -18,8 +18,9 @@ public class Event {
     public static String ROOM_USER_LEFT = "USER_LEFT_ROOM";
 
     public static String COMMAND_RESPONSE = "COMMAND_RESPONSE";
-
+    // Truco Table
     public static String ROOM_TABLE_CREATED = "ROOM_TABLE_CREATED";
+    public static String ROOM_TABLE_STATUS_UPDATED = "ROOM_TABLE_STATUS_UPDATED";
     public static String ROOM_TABLE_USER_JOINED = "ROOM_TABLE_USER_JOINED";
 
     public static String TRUCO_GAME_REQUEST = "TRUCO_GAME_REQUEST";

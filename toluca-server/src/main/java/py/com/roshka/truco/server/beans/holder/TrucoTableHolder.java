@@ -63,7 +63,6 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
     }
 
 
-
     public void joinUser(TrucoUser user) {
         getUsers().add(user);
     }
@@ -97,9 +96,22 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
         return target.getRoomId();
     }
 
+    @Override
+    public String getStatus() {
+        return target.getStatus();
+    }
 
     @Override
     public TrucoUser[] getPositions() {
         return target.getPositions();
+    }
+
+    public void startGame() {
+        try {
+            trucoGameHolder.startGame();
+            target.setStatus(TrucoRoomTable.IN_PROGRESS);
+        } catch (Exception e) {
+            // TODO Cannot be started
+        }
     }
 }

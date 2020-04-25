@@ -8,7 +8,7 @@ public class TrucoRoomTableDescriptor {
     static public final int TABLE_SIZE = 6;
 
     final static public String NEW = "NEW";
-    final static public String PROGRESS = "PROGRESS";
+    final static public String IN_PROGRESS = "IN_PROGRESS";
     final static public String FINISHED = "FINISHED";
 
     private String id;

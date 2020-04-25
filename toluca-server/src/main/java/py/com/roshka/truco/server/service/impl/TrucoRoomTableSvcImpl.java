@@ -3,11 +3,10 @@ package py.com.roshka.truco.server.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
-import py.com.roshka.truco.api.Event;
-import py.com.roshka.truco.api.Player;
-import py.com.roshka.truco.api.TrucoGameEvent;
-import py.com.roshka.truco.api.TrucoGamePlay;
+import py.com.roshka.truco.api.*;
 import py.com.roshka.truco.server.beans.holder.TrucoRoomHolder;
+import py.com.roshka.truco.server.beans.holder.TrucoTableHolder;
+import py.com.roshka.truco.server.service.AMQPSender;
 import py.com.roshka.truco.server.service.TrucoRoomTableSvc;
 import py.com.roshka.truco.server.service.TrucoUserService;
 
@@ -17,20 +16,36 @@ public class TrucoRoomTableSvcImpl implements TrucoRoomTableSvc {
 
     TrucoUserService trucoUserService;
     TrucoRoomSvcImpl trucoRoomSvc;
-    RabbitTemplate rabbitTemplate;
+    // RabbitTemplate rabbitTemplate;
     ObjectMapper objectMapper;
+    final AMQPSender amqpSender;
 
-    public TrucoRoomTableSvcImpl(TrucoUserService trucoUserService, TrucoRoomSvcImpl trucoRoomSvc, RabbitTemplate rabbitTemplate, ObjectMapper objectMapper) {
+    public TrucoRoomTableSvcImpl(TrucoUserService trucoUserService, TrucoRoomSvcImpl trucoRoomSvc, RabbitTemplate rabbitTemplate, ObjectMapper objectMapper, AMQPSender amqpSender) {
         this.trucoUserService = trucoUserService;
         this.trucoRoomSvc = trucoRoomSvc;
-        this.rabbitTemplate = rabbitTemplate;
         this.objectMapper = objectMapper;
+        this.amqpSender = amqpSender;
     }
 
     @Override
     public TrucoGameEvent startGame(String roomId, String tableId) {
         TrucoRoomHolder trucoRoomHolder = trucoRoomSvc.getTrucoRoomHolder(roomId);
-        trucoRoomHolder.getTrucoTableHolder(tableId).getTrucoGameHolder().startGame();
+        TrucoTableHolder trucoTableHolder = trucoRoomHolder.getTrucoTableHolder(tableId);
+        trucoTableHolder.startGame();
+
+        if (TrucoRoomTable.IN_PROGRESS.equalsIgnoreCase(trucoTableHolder.getStatus())){
+            // Send Event
+            TrucoRoomTableEvent trucoRoomTableEvent = new TrucoRoomTableEvent();
+            trucoRoomTableEvent.setEventName(Event.ROOM_TABLE_STATUS_UPDATED);
+            trucoRoomTableEvent.setMessage("Room Table Status [" + tableId + "] updated [" + trucoTableHolder.getStatus() + "]");
+            trucoRoomTableEvent.setTableId(tableId);
+
+            TrucoRoomTableDescriptor tableDescriptor = trucoTableHolder.descriptor();
+            tableDescriptor.setPositions(trucoTableHolder.getPositions());
+            trucoRoomTableEvent.setTable(tableDescriptor);
+
+            amqpSender.convertAndSend(AMQPSenderImpl.CHANNEL_ROOM_ID + roomId, trucoRoomTableEvent);
+        }
 
         TrucoGameEvent trucoGameEvent = new TrucoGameEvent();
         trucoGameEvent.setEventName(Event.GAME_STARTED);
