@@ -1,6 +1,8 @@
 package py.com.roshka.toluca.websocket.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 import py.com.roshka.toluca.websocket.beans.Command;
@@ -22,6 +24,9 @@ import java.util.Map;
 
 @Service
 public class ChannelSvcImpl implements ChannelSvc, WebSocketSessionListener {
+    Logger logger = LoggerFactory.getLogger(ChannelSvcImpl.class);
+
+
     static String MAIN_CHANNEL = "main";
 
     Map<String, ChannelHolder> channels;
@@ -67,7 +72,8 @@ public class ChannelSvcImpl implements ChannelSvc, WebSocketSessionListener {
 
     @Override
     public void sendDirectMessage(String username, Event event) {
-
+        logger.debug("Send Direct Message to [" + username + "][" + event + "]");
+        mainChannel.sendDirectMessage(username, event);
     }
 
     public ChannelHolder getChannel(String channel) {

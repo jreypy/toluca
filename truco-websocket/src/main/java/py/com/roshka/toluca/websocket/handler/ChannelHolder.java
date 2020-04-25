@@ -47,6 +47,10 @@ public class ChannelHolder implements ChannelSvc {
 
     @Override
     public void sendDirectMessage(String username, Event event) {
-        throw new IllegalStateException("Error!!! [sendDirectMessage]");
+        for (WebSocketSessionHandler handler : handlers) {
+            if (handler.getUsername().equalsIgnoreCase(username)){
+                webSocketSessionManager.sendEvent(handler, event);
+            }
+        }
     }
 }

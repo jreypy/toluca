@@ -13,6 +13,8 @@ public class TrucoGameEvent extends TrucoRoomTableEvent {
     private List<TrucoGameRequest> options;
     private TrucoGameData game;
     private List<TrucoGameMessage> messages = new ArrayList<>();
+    private List<TrucoGameEvent> events = null;
+
 
     public Player getPlayer() {
         return player;
@@ -70,6 +72,15 @@ public class TrucoGameEvent extends TrucoRoomTableEvent {
         this.messages = messages;
     }
 
+
+    public List<TrucoGameEvent> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<TrucoGameEvent> events) {
+        this.events = events;
+    }
+
     @Override
     public String toString() {
         return "TrucoGameEvent{" +
@@ -79,6 +90,7 @@ public class TrucoGameEvent extends TrucoRoomTableEvent {
                 ", request='" + options + '\'' +
                 ", game=" + game +
                 ", messages=" + messages +
+                ", events=" + events +
                 "} " + super.toString();
     }
 }

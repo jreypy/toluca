@@ -160,13 +160,19 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
         logger.debug("User [" + user.getUsername() + "] is joining to table [" + roomId + "].[" + tableId + "]");
         TrucoRoomHolder trucoRoomHolder = getTrucoRoomHolder(roomId);
         TrucoTableHolder trucoTableHolder = trucoRoomHolder.getTrucoTableHolder(tableId);
-        trucoRoomHolder.getTrucoTableHolder(tableId).joinUser(user);
+        boolean reconnect = trucoRoomHolder.getTrucoTableHolder(tableId).joinUser(user);
         TrucoRoomEvent trucoRoomEvent = TrucoRoomEvent.builder(Event.ROOM_TABLE_USER_JOINED).user(user).room(trucoRoomHolder.descriptor()).table(trucoTableHolder.descriptor()).build();
 
         // Add Positions in the Table
         trucoRoomEvent.getTable().setPositions(trucoTableHolder.getPositions());
 
         amqpSender.joinToChannel(AMQPSenderImpl.CHANNEL_ROOM_ID + roomId, user, trucoRoomEvent, AMQPSenderImpl.CHANNEL_ROOM_ID + roomId + AMQPSenderImpl.CHANNEL_TABLE_ID + tableId);
+
+        // Reconnect
+        if (reconnect){
+            trucoRoomHolder.getTrucoTableHolder(tableId).reconnect(user);
+        }
+
 
         logger.debug("User [" + user.getUsername() + "] joined to the room [" + roomId + "]");
         return trucoRoomEvent;

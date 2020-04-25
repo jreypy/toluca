@@ -57,4 +57,8 @@ public class Event {
     public static String PLAY_RESPONSE = "PLAY_RESPONSE";
 
 
+    public static String RECONNECT_GAME = "RECONNECT_GAME";
+
+
+
 }

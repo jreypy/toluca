@@ -74,21 +74,38 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
     }
 
 
-    public void joinUser(TrucoUser user) {
+    public boolean joinUser(TrucoUser user) {
         updated = System.currentTimeMillis();
+        // Check If user is player
         getUsers().add(user);
+        if (TrucoRoomTable.IN_PROGRESS.equalsIgnoreCase(target.getStatus())) {
+            for (TrucoUser player : trucoGameHolder.getPositions()) {
+                if (player != null && user.getUsername().equalsIgnoreCase(player.getId())) {
+                    // Require reconnect
+                    logger.debug("Requiere reconnect [" + player.getUsername() + "]");
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void reconnect(TrucoUser user) {
+        trucoGameHolder.reconnect(user);
+
     }
 
     public boolean leaveUser(TrucoUser user) {
-        sitDownPlayer(user, null);
-        if (target.getOwner().equals(user)) {
-            if (TrucoRoomTable.IN_PROGRESS.equalsIgnoreCase(getStatus())) {
-                throw new IllegalArgumentException("Game is in Progress");
-            }
-            getUsers().remove(user);
-            return true;
+        if (TrucoRoomTable.IN_PROGRESS.equalsIgnoreCase(getStatus())) {
+            throw new IllegalArgumentException("Game is in Progress");
+        } else {
+            sitDownPlayer(user, null);
         }
         getUsers().remove(user);
+
+        if (target.getOwner().equals(user)) {
+            return true;
+        }
         return false;
     }
 
@@ -125,7 +142,7 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
     @Override
     public void setStatus(String status) {
         target.setStatus(status);
-        try{
+        try {
             TrucoRoomTableEvent trucoRoomTableEvent = new TrucoRoomTableEvent();
             trucoRoomTableEvent.setEventName(Event.ROOM_TABLE_STATUS_UPDATED);
             trucoRoomTableEvent.setMessage("Room Table Status [" + target.getId() + "] updated [" + target.getStatus() + "]");
@@ -134,7 +151,7 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
             tableDescriptor.setPositions(getPositions());
             trucoRoomTableEvent.setTable(tableDescriptor);
             amqpSender.convertAndSend(AMQPSenderImpl.CHANNEL_ROOM_ID + target.getRoomId(), trucoRoomTableEvent);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
 

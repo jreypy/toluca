@@ -233,6 +233,7 @@ public class TrucoGameHolder implements TrucoListener {
         TrucoGameEvent trucoGameEvent = new TrucoGameEvent();
         trucoGameEvent.setPlayer(new Player(event.getPlayer().getId(), event.getPlayer().getName()));
         trucoGameData.setHandNumber(event.getNumberOfHand());
+        events = new ArrayList<>();
         convertAndSend(Event.HAND_STARTED, trucoGameEvent);
     }
 
@@ -281,6 +282,8 @@ public class TrucoGameHolder implements TrucoListener {
         return null;
     }
 
+    List<TrucoGameEvent> events = new ArrayList<>();
+
     public void convertAndSend(String eventName, TrucoGameEvent trucoGameEvent) {
         trucoGameEvent.setEventName(eventName);
         trucoGameEvent.setRoomId(trucoTableHolder.getRoomId());
@@ -289,9 +292,22 @@ public class TrucoGameHolder implements TrucoListener {
 
         // TODO Change to Table
         logger.debug("firing TrucoGame Event  [" + trucoGameEvent + "]");
+        events.add(trucoGameEvent);
         amqpSender.convertAndSend(trucoGameEvent);
 
 
+    }
+
+    public void reconnect(TrucoUser user) {
+        TrucoGameEvent reconnectEvent = new TrucoGameEvent();
+        reconnectEvent.setEventName(Event.RECONNECT_GAME);
+        reconnectEvent.setGame(trucoGameData);
+        reconnectEvent.setRoomId(trucoTableHolder.getRoomId());
+        reconnectEvent.setTableId(Integer.toString(target.getTableNumber()));
+        reconnectEvent.setEvents(events);
+        // TODO Change to Table
+        logger.debug("firing Reconnect TrucoGame Event  [" + reconnectEvent + "]");
+        amqpSender.convertAndSendDirectMessage(user.getId(), reconnectEvent);
     }
 
     public void convertAndSendDirectMessage(String eventName, TrucoUser trucoUser, TrucoGameEvent trucoGameEvent) {
@@ -467,4 +483,6 @@ public class TrucoGameHolder implements TrucoListener {
             this.trucoGameRequest = trucoGameRequest;
         }
     }
+
+
 }
