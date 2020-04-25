@@ -1,6 +1,7 @@
 package py.com.roshka.truco.server.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import py.com.roshka.truco.api.*;
 import py.com.roshka.truco.server.beans.holder.TrucoRoomHolder;
@@ -41,6 +42,23 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
         this.roomsHolder.put(trucoRoom.getId(), new TrucoRoomHolder(trucoRoom, amqpSender, objectMapper));
     }
 
+
+    @Scheduled(cron = "0 0/10 * * * *")
+    protected void cleanTables() {
+        TrucoUser trucoUser = new TrucoUser("null", "** Admin **");
+        logger.info("Clean Tables!!");
+        for (TrucoRoomHolder trucoRoomHolder : roomsHolder.values()) {
+            for (TrucoRoomTableDescriptor roomTable : new HashSet<>(trucoRoomHolder.getTables())) {
+                TrucoTableHolder trucoTableHolder = trucoRoomHolder.getTrucoTableHolder(roomTable.getId());
+                if (System.currentTimeMillis() - trucoTableHolder.getUpdated() > 600_000) {
+                    // 30 seconds
+                    trucoRoomHolder.removeTable(roomTable.getId(), null);
+                    TrucoRoomEvent destroyTableEvent = TrucoRoomEvent.builder(Event.ROOM_TABLE_DESTROYED).user(trucoUser).room(trucoRoomHolder.descriptor()).table(trucoTableHolder.descriptor()).build();
+                    amqpSender.convertAndSend(AMQPSenderImpl.CHANNEL_ROOM_ID + trucoRoomHolder.getId(), destroyTableEvent);
+                }
+            }
+        }
+    }
 
     @Override
     public TrucoRoomEvent findAllRooms() {
@@ -222,7 +240,7 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
                     TrucoTableHolder trucoTableHolder = trucoRoomHolder.getTrucoTableHolder(table.getId());
                     if (trucoTableHolder.getUsers().contains(trucoRoomUser.getUser())) {
                         try {
-                            leaveTable(trucoRoomHolder, trucoRoomUser.getUser(),  table.getId());
+                            leaveTable(trucoRoomHolder, trucoRoomUser.getUser(), table.getId());
                         } catch (Exception e) {
                             logger.warn(e.getMessage(), e);
                         }

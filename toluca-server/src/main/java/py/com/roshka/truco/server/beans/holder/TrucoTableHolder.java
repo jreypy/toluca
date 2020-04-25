@@ -18,6 +18,8 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
     private ObjectMapper objectMapper;
     final private AMQPSender amqpSender;
 
+    long updated = System.currentTimeMillis();
+
     public TrucoTableHolder(TrucoRoomTable table, ObjectMapper objectMapper, AMQPSender amqpSender) {
         super(table);
         this.objectMapper = objectMapper;
@@ -40,7 +42,7 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
 
 
     public TrucoUser sitDownPlayer(TrucoUser trucoUser, Integer index) {
-
+        updated = System.currentTimeMillis();
         if (index != null && (index < 0 || index >= 6)) {
             throw new IllegalArgumentException("Position is invalid [" + index + "] [0-6]");
         }
@@ -65,11 +67,13 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
     }
 
     public void play(TrucoGamePlay trucoGamePlay) {
+        updated = System.currentTimeMillis();
         trucoGameHolder.play(trucoGamePlay);
     }
 
 
     public void joinUser(TrucoUser user) {
+        updated = System.currentTimeMillis();
         getUsers().add(user);
     }
 
@@ -82,7 +86,6 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
             getUsers().remove(user);
             return true;
         }
-
         getUsers().remove(user);
         return false;
     }
@@ -127,9 +130,11 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
     }
 
     public void startGame() {
+        updated = System.currentTimeMillis();
         try {
             trucoGameHolder.startGame();
             target.setStatus(TrucoRoomTable.IN_PROGRESS);
+
         } catch (Exception e) {
             // TODO Cannot be started
         }
@@ -149,5 +154,9 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
     public int hashCode() {
 
         return Objects.hash(super.hashCode(), target);
+    }
+
+    public long getUpdated() {
+        return updated;
     }
 }

@@ -73,7 +73,7 @@ public class TrucoRoomTableSvcImpl implements TrucoRoomTableSvc {
     public TrucoGameEvent play(String roomId, String tableId, TrucoGamePlay trucoGamePlay) {
         TrucoRoomHolder trucoRoomHolder = trucoRoomSvc.getTrucoRoomHolder(roomId);
         trucoGamePlay.setPlayer(new Player(trucoUserService.getTrucoUser().getId(), trucoUserService.getTrucoUser().getUsername()));
-        trucoRoomHolder.getTrucoTableHolder(tableId).getTrucoGameHolder().play(trucoGamePlay);
+        trucoRoomHolder.getTrucoTableHolder(tableId).play(trucoGamePlay);
         TrucoGameEvent trucoGameEvent = new TrucoGameEvent();
         trucoGameEvent.setEventName(Event.PLAY_RESPONSE);
         trucoGameEvent.setMessage("Playing [" + tableId + "]");
