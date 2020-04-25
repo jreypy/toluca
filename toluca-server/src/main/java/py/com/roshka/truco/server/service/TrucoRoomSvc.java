@@ -20,6 +20,8 @@ public interface TrucoRoomSvc {
 
     TrucoRoomEvent joinRoomTable(String roomId, String tableId);
 
+    TrucoRoomEvent leaveRoomTable(String roomId, String tableId);
+
     TrucoRoomTableEvent setTablePosition(String roomId, String tableId, Integer position);
 
     TrucoRoomTable deleteTable(String roomId, String tableId);

@@ -36,4 +36,10 @@ public class TrucoRoomTableController {
     }
 
 
+    @PostMapping("/{tableId}/leave")
+    public TrucoRoomEvent leaveTrucoRoomTable(@PathVariable("roomId") String roomId, @PathVariable("tableId") String tableId) {
+        return trucoRoomSvc.leaveRoomTable(roomId, tableId);
+    }
+
+
 }

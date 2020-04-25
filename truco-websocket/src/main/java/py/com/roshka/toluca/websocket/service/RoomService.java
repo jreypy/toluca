@@ -21,6 +21,8 @@ public interface RoomService {
 
     Map joinRoomTable(JoinRoomTableRequest trucoRoomTable);
 
+    Map leaveRoomTable(LeaveRoomTableRequest trucoRoomTable);
+
     Map startGame(StartGameRequest startGameRequest);
 
     Map startHand(StartHandRequest startHandquest);

@@ -40,6 +40,8 @@ public class CommandProcessorImpl extends Processor implements CommandProcessor 
             return getCommandResponse(command, roomService.startGame(objectMapper.convertValue(command.getData(), StartGameRequest.class)));
         } else if (JOIN_ROOM_TABLE.equalsIgnoreCase(command.getCommand())) {
             return getCommandResponse(command, roomService.joinRoomTable(objectMapper.convertValue(command.getData(), JoinRoomTableRequest.class)));
+        }else if (LEAVE_ROOM_TABLE.equalsIgnoreCase(command.getCommand())){
+            return getCommandResponse(command, roomService.leaveRoomTable(objectMapper.convertValue(command.getData(), LeaveRoomTableRequest.class)));
         } else if (CREATE_ROOM_TABLE.equalsIgnoreCase(command.getCommand())) {
             return getCommandResponse(command, roomService.createRoomTable(objectMapper.convertValue(command.getData(), TrucoRoomTable.class)));
         } else if (SET_TABLE_POSITION.equalsIgnoreCase(command.getCommand())) {

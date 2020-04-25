@@ -58,6 +58,11 @@ public class WSRoomServiceImpl implements RoomService {
     }
 
     @Override
+    public Map leaveRoomTable(LeaveRoomTableRequest leaveRoomTableRequest) {
+        return restTemplate.postForObject(trucoServerHost + "/api/room/" + leaveRoomTableRequest.getRoomId() + "/table/" + leaveRoomTableRequest.getTableId() + "/leave", null, Map.class);
+    }
+
+    @Override
     public Map startGame(StartGameRequest startGameRequest) {
         return restTemplate.postForObject(trucoServerHost + "/api/room/" + startGameRequest.getRoomId() + "/table/" + startGameRequest.getTableId() + "/start-game", null, Map.class);
     }

@@ -138,7 +138,7 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
     @Override
     public TrucoRoomEvent joinRoomTable(String roomId, String tableId) {
         TrucoUser user = trucoUserService.getTrucoUser();
-        logger.debug("User [" + user.getUsername() + "] joining to room [" + roomId + "]");
+        logger.debug("User [" + user.getUsername() + "] is joining to table [" + roomId + "].[" + tableId + "]");
         TrucoRoomHolder trucoRoomHolder = getTrucoRoomHolder(roomId);
         TrucoTableHolder trucoTableHolder = trucoRoomHolder.getTrucoTableHolder(tableId);
         trucoRoomHolder.getTrucoTableHolder(tableId).joinUser(user);
@@ -150,6 +150,30 @@ public class TrucoRoomSvcImpl implements TrucoRoomSvc {
         amqpSender.joinToChannel(AMQPSenderImpl.CHANNEL_ROOM_ID + roomId, user, trucoRoomEvent, AMQPSenderImpl.CHANNEL_ROOM_ID + roomId + AMQPSenderImpl.CHANNEL_TABLE_ID + tableId);
 
         logger.debug("User [" + user.getUsername() + "] joined to the room [" + roomId + "]");
+        return trucoRoomEvent;
+    }
+
+    @Override
+    public TrucoRoomEvent leaveRoomTable(String roomId, String tableId) {
+        TrucoUser user = trucoUserService.getTrucoUser();
+        logger.debug("User [" + user.getUsername() + "] is leaving the table [" + roomId + "].[" + tableId + "]");
+        TrucoRoomHolder trucoRoomHolder = getTrucoRoomHolder(roomId);
+        TrucoTableHolder trucoTableHolder = trucoRoomHolder.getTrucoTableHolder(tableId);
+
+        TrucoRoomEvent trucoRoomEvent = TrucoRoomEvent.builder(Event.USER_LEFT_TABLE).user(user).room(trucoRoomHolder.descriptor()).table(trucoTableHolder.descriptor()).build();
+        trucoRoomEvent.getTable().setPositions(trucoTableHolder.getPositions());
+
+        if (trucoRoomHolder.getTrucoTableHolder(tableId).leaveUser(user)) {
+            // Destroy Table
+            trucoRoomHolder.removeTable(tableId, user);
+            TrucoRoomEvent destroyTableEvent = TrucoRoomEvent.builder(Event.ROOM_TABLE_DESTROYED).user(user).room(trucoRoomHolder.descriptor()).table(trucoTableHolder.descriptor()).build();
+            amqpSender.convertAndSend(AMQPSenderImpl.CHANNEL_ROOM_ID + roomId, destroyTableEvent);
+        } else {
+            amqpSender.convertAndSend(AMQPSenderImpl.CHANNEL_ROOM_ID + roomId, trucoRoomEvent);
+        }
+
+        logger.debug("User [" + user.getUsername() + "] joined to the room [" + roomId + "]");
+
         return trucoRoomEvent;
     }
 

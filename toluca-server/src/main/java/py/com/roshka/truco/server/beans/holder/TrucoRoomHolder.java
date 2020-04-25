@@ -43,6 +43,12 @@ public class TrucoRoomHolder extends TrucoRoomDescriptor {
         return trucoRoomTable;
     }
 
+    public boolean removeTable(String tableId, TrucoUser user) {
+        TrucoTableHolder trucoTableHolder = tableDescriptorList.get(tableId);
+        tableDescriptorList.remove(tableId);
+        boolean value = getTables().remove(trucoTableHolder.getTable());
+        return value;
+    }
 
     public TrucoTableHolder getTrucoTableHolder(String tableId) {
         TrucoTableHolder trucoTableHolder = tableDescriptorList.get(tableId);

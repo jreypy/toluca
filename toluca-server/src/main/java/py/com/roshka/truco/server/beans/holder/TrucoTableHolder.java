@@ -8,6 +8,7 @@ import py.com.roshka.truco.api.TrucoUser;
 import py.com.roshka.truco.server.service.AMQPSender;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class TrucoTableHolder extends TrucoRoomTableDescriptor {
@@ -67,6 +68,18 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
         getUsers().add(user);
     }
 
+    public boolean leaveUser(TrucoUser user) {
+        if (target.getOwner().equals(user)) {
+            if (TrucoRoomTable.IN_PROGRESS.equalsIgnoreCase(getStatus())) {
+                throw new IllegalArgumentException("Game is in Progress");
+            }
+            getUsers().remove(user);
+            return true;
+        }
+        getUsers().remove(user);
+        return false;
+    }
+
     @Override
     public Set<TrucoUser> getUsers() {
         return target.getUsers();
@@ -113,5 +126,21 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
         } catch (Exception e) {
             // TODO Cannot be started
         }
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        TrucoTableHolder that = (TrucoTableHolder) o;
+        return Objects.equals(target, that.target);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(super.hashCode(), target);
     }
 }
