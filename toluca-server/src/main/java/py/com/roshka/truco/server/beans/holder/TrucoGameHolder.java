@@ -23,6 +23,9 @@ public class TrucoGameHolder implements TrucoListener {
     static final int TEAM_1 = 0;
     static final int TEAM_2 = 1;
 
+    static final String TEAM_1_NAME = "Red";
+    static final String TEAM_2_NAME = "Blue";
+
     Logger logger = LoggerFactory.getLogger(TrucoGameHolder.class);
     int MAX = 6;
 
@@ -249,6 +252,13 @@ public class TrucoGameHolder implements TrucoListener {
     TrucoGameTeam getTrucoGameTeam(int index) {
         TrucoTeam trucoTeam = target.getTeam(index);
         TrucoGameTeam trucoGameTeam = new TrucoGameTeam();
+
+        if (TEAM_1 == index) {
+            trucoGameTeam.setName(TEAM_1_NAME);
+        } else {
+            trucoGameTeam.setName(TEAM_2_NAME);
+        }
+
         for (Object o : trucoTeam.getPlayers()) {
             TrucoPlayer player = (TrucoPlayer) o;
             trucoGameTeam.getPlayers().add(getPlayer(player));

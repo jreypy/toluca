@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TrucoGameTeam {
+
     private List<Player> players = new ArrayList<>();
 
     public List<Player> getPlayers() {
@@ -14,7 +15,7 @@ public class TrucoGameTeam {
         this.players = players;
     }
 
-
+    private String name;
     private Integer points = 0;
 
 
@@ -26,10 +27,20 @@ public class TrucoGameTeam {
         this.points = points;
     }
 
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         return "TrucoGameTeam{" +
-                "players=" + players +
+                "players=" + players + "," +
+                "name=" + name  +
                 '}';
     }
 }
