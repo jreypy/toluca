@@ -418,13 +418,11 @@ public class TrucoGameHolder implements TrucoListener {
                 trucoPlay.setType(TrucoPlay.PASO_ENVIDO);
                 playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.SAY_PASO_ENVIDO, "Paso")));
             }
-
-            {
-                TrucoPlay trucoPlay = getTrucoPlay(trucoEvent.getTrucoPlayer());
-                trucoPlay.setType(TrucoPlay.PASO_FLOR);
-                playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.SAY_PASO_FLOR, "Paso")));
-            }
-
+//            {
+//                TrucoPlay trucoPlay = getTrucoPlay(trucoEvent.getTrucoPlayer());
+//                trucoPlay.setType(TrucoPlay.PASO_FLOR);
+//                playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.SAY_PASO_FLOR, "Paso")));
+//            }
             {
                 TrucoPlay trucoPlay = getTrucoPlay(trucoEvent.getTrucoPlayer());
                 trucoPlay.setType(TrucoPlay.CERRARSE);
@@ -437,7 +435,6 @@ public class TrucoGameHolder implements TrucoListener {
                 trucoPlay.setValue(envido);
                 playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.SAY_ENVIDO_VALUE, Integer.toString(envido), envido)));
             }
-
             {
                 TrucoPlay trucoPlay = getTrucoPlay(trucoEvent.getTrucoPlayer());
                 trucoPlay.setType(TrucoPlay.FLOR);

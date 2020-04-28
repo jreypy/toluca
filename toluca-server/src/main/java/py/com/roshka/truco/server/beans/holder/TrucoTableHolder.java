@@ -49,6 +49,10 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
             throw new IllegalArgumentException("Position is invalid [" + index + "] [0-6]");
         }
 
+        if (TrucoRoomTable.IN_PROGRESS.equalsIgnoreCase(getStatus())){
+            throw new IllegalArgumentException("Status invalid to change the positions in the table");
+        }
+
         TrucoUser[] positions = trucoGameHolder.getPositions();
 
         for (int i = 0; i < positions.length; i++) {
@@ -60,11 +64,13 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
             }
 
         }
+
         if (index != null) {
             trucoGameHolder.getPositions()[index] = trucoUser;
             getUsers().add(trucoUser);
             target.setPositions(trucoGameHolder.getPositions());
         }
+
         return trucoUser;
     }
 
