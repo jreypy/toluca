@@ -182,8 +182,10 @@ public class WebSocketSessionManager extends TextWebSocketHandler {
 
     protected void sendEvent(WebSocketSession session, Event event) {
         try {
-            if (session.isOpen()) {
-                session.sendMessage(new TextMessage(objectMapper.writeValueAsString(event)));
+            synchronized (session) {
+                if (session.isOpen()) {
+                    session.sendMessage(new TextMessage(objectMapper.writeValueAsString(event)));
+                }
             }
         } catch (Exception e) {
             logger.error("Event could not be sent [" + event + "]", e);
@@ -197,6 +199,7 @@ public class WebSocketSessionManager extends TextWebSocketHandler {
     public void sendCommandResponse(CommandResponse commandResponse) throws IOException {
         SecurityContext sc = SecurityContextHolder.getContext();
         WebSocketPrincipal webSocketPrincipal = ((WebSocketPrincipal) sc.getAuthentication().getPrincipal());
+
         webSocketPrincipal.getHandler().sendMessage(new TextMessage(objectMapper.writeValueAsString(commandResponse)));
     }
 

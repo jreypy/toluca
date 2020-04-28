@@ -121,7 +121,9 @@ public class WebSocketSessionHandler implements WebSocketSession {
 
     @Override
     public void sendMessage(WebSocketMessage<?> webSocketMessage) throws IOException {
-        target.sendMessage(webSocketMessage);
+        synchronized (target) {
+            target.sendMessage(webSocketMessage);
+        }
     }
 
     @Override
