@@ -14,7 +14,7 @@ public class TrucoGameEvent extends TrucoRoomTableEvent {
     private TrucoGameData game;
     private List<TrucoGameMessage> messages = new ArrayList<>();
     private List<TrucoGameEvent> events = null;
-
+    private TrucoRoomTableDescriptor table;
 
     public Player getPlayer() {
         return player;
@@ -81,10 +81,22 @@ public class TrucoGameEvent extends TrucoRoomTableEvent {
         this.events = events;
     }
 
+
+    @Override
+    public TrucoRoomTableDescriptor getTable() {
+        return table;
+    }
+
+    @Override
+    public void setTable(TrucoRoomTableDescriptor table) {
+        this.table = table;
+    }
+
     @Override
     public String toString() {
         return "TrucoGameEvent{" +
                 "player=" + player +
+                ", table=" + table +
                 ", cards=" + cards +
                 ", card=" + card +
                 ", request='" + options + '\'' +

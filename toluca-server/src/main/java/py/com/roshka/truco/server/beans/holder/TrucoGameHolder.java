@@ -318,6 +318,7 @@ public class TrucoGameHolder implements TrucoListener {
         reconnectEvent.setRoomId(trucoTableHolder.getRoomId());
         reconnectEvent.setTableId(Integer.toString(target.getTableNumber()));
         reconnectEvent.setEvents(events);
+        reconnectEvent.setTable(trucoTableHolder.getTable());
         // TODO Change to Table
         logger.debug("firing Reconnect TrucoGame Event  [" + reconnectEvent + "]");
         amqpSender.convertAndSendDirectMessage(user.getId(), reconnectEvent);
