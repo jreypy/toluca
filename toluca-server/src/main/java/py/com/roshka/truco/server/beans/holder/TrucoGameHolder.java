@@ -84,7 +84,8 @@ public class TrucoGameHolder implements TrucoListener {
                     users.add(user);
                 }
             }
-            trucoGameData.setPositions(users.toArray(new TrucoUser[users.size()]));
+            positions = users.toArray(new TrucoUser[users.size()]);
+            trucoGameData.setPositions(positions);
             trucoGameData.setSize(trucoGameTeam1.getPlayers().size() + trucoGameTeam2.getPlayers().size());
         }
 

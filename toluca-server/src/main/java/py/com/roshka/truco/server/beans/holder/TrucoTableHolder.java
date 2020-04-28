@@ -163,15 +163,23 @@ public class TrucoTableHolder extends TrucoRoomTableDescriptor {
         return target.getStatus();
     }
 
+
+    @Override
+    public void setPositions(TrucoUser[] positions) {
+        target.setPositions(positions);
+    }
+
     @Override
     public TrucoUser[] getPositions() {
         return target.getPositions();
     }
 
+
     public void startGame() {
         updated = System.currentTimeMillis();
         try {
             trucoGameHolder.startGame();
+            target.setPositions(trucoGameHolder.getPositions());
             setStatus(TrucoRoomTable.IN_PROGRESS);
         } catch (Exception e) {
             // TODO Cannot be started
