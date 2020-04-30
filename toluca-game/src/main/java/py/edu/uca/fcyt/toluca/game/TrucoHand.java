@@ -291,6 +291,7 @@ public class TrucoHand {
 
     protected void nextPlayTurn() {
         cartasJugadas++;
+
         if (cartasJugadas % cantidadDePlayers == 0) {
             winRound[numeroDeRonda - 1] = statusTable
                     .resultadoRonda(numeroDeRonda); /* fin de ronda */
@@ -305,8 +306,10 @@ public class TrucoHand {
 
             statusTable.terminoRonda();
 
+            // Retornar true si termino la Ronda
             if (finDeRonda())
                 return;
+
             numeroDeRonda++;
             volverAEstadoDeJuego();
         } else {
@@ -510,6 +513,7 @@ public class TrucoHand {
             points[1] = points[1] + pointsOfHand;
         }
         displayFinDeMano();
+        logger.info("Fire end of Hand");
         game.fireEndOfHandEvent();
         game.EndOfHandEvent();
     }
@@ -1391,6 +1395,7 @@ public class TrucoHand {
 
         //if (this instanceof TrucoHandClient) {
         //if ()
+        logger.info("player [" + tp.getPlayer() + "]played [" + tp.getCard() + "]");
         game.firePlayEvent(playTurn, tp.getCard(), TrucoEvent.JUGAR_CARTA);
         /*
          * } else {
