@@ -264,6 +264,11 @@ public class TolucaHelper {
         if (TrucoGamePlay.SAY_QUIERO.equalsIgnoreCase(trucoGamePlay.getType())){
             trucoPlay.setType(TrucoPlay.QUIERO);
         }
+
+        if (TrucoGamePlay.SAY_QUIERO_PLUS.equalsIgnoreCase(trucoGamePlay.getType())){
+            trucoPlay.setType(TrucoPlay.QUIERO);
+        }
+
         if (TrucoGamePlay.SAY_NO_QUIERO.equalsIgnoreCase(trucoGamePlay.getType())){
             trucoPlay.setType(TrucoPlay.NO_QUIERO);
         }

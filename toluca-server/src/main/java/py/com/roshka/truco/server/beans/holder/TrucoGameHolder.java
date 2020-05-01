@@ -8,6 +8,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import py.com.roshka.truco.api.*;
 import py.com.roshka.truco.api.game.TrucoGameRequest;
 import py.com.roshka.truco.api.helper.TolucaHelper;
+import py.com.roshka.truco.server.beans.holder.game.TrucoGameImpl2;
 import py.com.roshka.truco.server.service.AMQPSender;
 import py.com.roshka.truco.server.service.impl.AMQPSenderImpl;
 import py.edu.uca.fcyt.toluca.event.TrucoEvent;
@@ -18,7 +19,7 @@ import java.util.*;
 
 
 public class TrucoGameHolder implements TrucoListener {
-
+    Logger logger = LoggerFactory.getLogger(TrucoGameHolder.class);
 
     static final int TEAM_1 = 0;
     static final int TEAM_2 = 1;
@@ -26,7 +27,7 @@ public class TrucoGameHolder implements TrucoListener {
     static final String TEAM_1_NAME = "Red";
     static final String TEAM_2_NAME = "Blue";
 
-    Logger logger = LoggerFactory.getLogger(TrucoGameHolder.class);
+
     int MAX = 6;
     int eventId = 0;
 
@@ -72,7 +73,7 @@ public class TrucoGameHolder implements TrucoListener {
 
         if (target == null) {
 
-            target = new TrucoGameImpl(teams[0], teams[1], trucoTableHolder.getTable().getPoints());
+            target = new TrucoGameImpl2(teams[0], teams[1], trucoTableHolder.getTable().getPoints());
             target.addTrucoListener(this);
             target.setTableNumber(Integer.parseInt(trucoTableHolder.getTable().getId()));
             trucoGameData = new TrucoGameData();
@@ -167,7 +168,8 @@ public class TrucoGameHolder implements TrucoListener {
 
     @Override
     public void play(TrucoEvent event) {
-        logger.info("=========   Send Play Event");
+        logger.info("=========   Send Play Event ===");
+        logger.debug("TrucoEvent" + event + "===");
         TrucoGameEvent trucoGameEvent = TolucaHelper.trucoEvent(event);
         convertAndSend(trucoGameEvent.getEventName(), trucoGameEvent);
     }
@@ -175,6 +177,10 @@ public class TrucoGameHolder implements TrucoListener {
     @Override
     public void playResponse(TrucoEvent event) {
         logger.debug("Play Response [" + trucoTableHolder.getTable().getId() + "]");
+        if (TrucoEvent.CANTO_ENVIDO == event.getType()){
+            TrucoGameEvent trucoGameEvent = TolucaHelper.trucoEvent(event);
+            convertAndSend(trucoGameEvent.getEventName(), trucoGameEvent);
+        }
     }
 
     @Override
@@ -183,7 +189,18 @@ public class TrucoGameHolder implements TrucoListener {
         TrucoGameEvent trucoGameEvent = new TrucoGameEvent();
 
         ///Get cards
-        trucoGameEvent.setOptions(OptionsHelper.getOptions(target, event));
+        int envido = -1;
+        if (TrucoEvent.TURNO_RESPONDER_ENVIDO  == event.getType()
+                || TrucoEvent.TURNO_RESPONDER_REALENVIDO  == event.getType()
+                || TrucoEvent.TURNO_RESPONDER_FALTAENVIDO  == event.getType()
+                ){
+            envido = event.getValue();
+        }
+            //            public static final byte TURNO_RESPONDER_ENVIDO = 58;
+//        public static final byte TURNO_RESPONDER_REALENVIDO = 59;
+//        public static final byte TURNO_RESPONDER_FALTAENVIDO = 60;
+
+        trucoGameEvent.setOptions(OptionsHelper.getOptions(target, event, envido));
         // Options
 
 
@@ -350,12 +367,10 @@ public class TrucoGameHolder implements TrucoListener {
 
         }
 
-        static public List<TrucoGameRequest> getOptions(TrucoGame trucoGame, TrucoEvent trucoEvent) {
+        static public List<TrucoGameRequest> getOptions(TrucoGame trucoGame, TrucoEvent trucoEvent, int envido) {
             List<TrucoGameRequest> options = new ArrayList<>();
-
             TrucoCard trucoCard = trucoGame.getCardNoPlayed(trucoEvent.getTrucoPlayer());
-
-            for (TrucoGameRequestPair pair : getTrucoPlay(trucoEvent, trucoCard, trucoGame.getValorEnvido(trucoEvent.getTrucoPlayer()))) {
+            for (TrucoGameRequestPair pair : getTrucoPlay(trucoEvent, trucoCard, envido)) {
                 if (trucoGame.esPosibleJugar(pair.getTrucoPlay())) {
                     options.add(pair.getTrucoGameRequest());
                 }
@@ -397,10 +412,17 @@ public class TrucoGameHolder implements TrucoListener {
                 trucoPlay.setType(TrucoPlay.VALE_CUATRO);
                 playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.SAY_VALECUATRO, "Quiero ValeCuatro")));
             }
-            {
+
+            if (envido < 0){
                 TrucoPlay trucoPlay = getTrucoPlay(trucoEvent.getTrucoPlayer());
                 trucoPlay.setType(TrucoPlay.QUIERO);
                 playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.SAY_QUIERO, "Quiero")));
+            }
+            else {
+                TrucoPlay trucoPlay = getTrucoPlay(trucoEvent.getTrucoPlayer());
+                trucoPlay.setType(TrucoPlay.QUIERO);
+                trucoPlay.setValue(envido);
+                playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.SAY_QUIERO_PLUS, "Quiero "+envido)));
             }
             {
                 TrucoPlay trucoPlay = getTrucoPlay(trucoEvent.getTrucoPlayer());

@@ -1557,8 +1557,11 @@ public class TrucoHand {
         }
         game.firePlayEvent(tp.getPlayer(), tp.getType());
         esperarRespuesta();
+
         int numeroDePlayer = getNumberOfPlayer(playTurn);
+
         if (primerTurnoNumber == numeroDePlayer) {
+            /* Enviar el Turno con el Valor de Envido */
             game.fireTurnEvent(playTurn, respuesta, statusTable
                     .getValueOfEnvido(numeroDePlayer));
         } else {

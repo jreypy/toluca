@@ -602,7 +602,7 @@ public class TrucoEvent {
                 ", cards=" + Arrays.toString(cards) +
                 ", card=" + card +
                 ", tableNumber=" + tableNumber +
-                ", value=" + value +
+                ", value=[" + value +"]" +
                 '}';
     }
 } // end TrucoEvent

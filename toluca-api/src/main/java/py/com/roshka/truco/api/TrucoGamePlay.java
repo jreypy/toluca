@@ -15,6 +15,8 @@ public class TrucoGamePlay {
     static public final String SAY_VALECUATRO = "SAY_VALECUATRO";
 
     static public final String SAY_QUIERO = "SAY_QUIERO";
+    static public final String SAY_QUIERO_PLUS = "SAY_QUIERO_PLUS";
+
     static public final String SAY_NO_QUIERO = "SAY_NO_QUIERO";
 
     static public final String SAY_ENVIDO = "SAY_ENVIDO";
@@ -27,11 +29,6 @@ public class TrucoGamePlay {
 
     static public final String SAY_FLOR = "SAY_FLOR";
     static public final String SAY_PASO_FLOR = "SAY_PASO_FLOR";
-
-
-
-
-
 
 
     private String tableId;
