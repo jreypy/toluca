@@ -186,13 +186,19 @@ public class TrucoGameHolder implements TrucoListener {
 
         ///Get cards
         int envido = -1;
-        if (TrucoEvent.TURNO_RESPONDER_ENVIDO  == event.getType()
-                || TrucoEvent.TURNO_RESPONDER_REALENVIDO  == event.getType()
-                || TrucoEvent.TURNO_RESPONDER_FALTAENVIDO  == event.getType()
-                ){
+
+        if (TrucoEvent.TURNO_RESPONDER_ENVIDO == event.getType()
+                || TrucoEvent.TURNO_RESPONDER_REALENVIDO == event.getType()
+                || TrucoEvent.TURNO_RESPONDER_FALTAENVIDO == event.getType()
+                ) {
             envido = event.getValue();
+
         }
-            //            public static final byte TURNO_RESPONDER_ENVIDO = 58;
+        if (TrucoEvent.TURNO_CANTAR_ENVIDO == event.getType()) {
+            envido = target.getValorEnvido(event.getTrucoPlayer());
+        }
+
+        //            public static final byte TURNO_RESPONDER_ENVIDO = 58;
 //        public static final byte TURNO_RESPONDER_REALENVIDO = 59;
 //        public static final byte TURNO_RESPONDER_FALTAENVIDO = 60;
 
@@ -352,7 +358,6 @@ public class TrucoGameHolder implements TrucoListener {
     }
 
 
-
     public Player getPlayer(TrucoPlayer player) {
         return new Player(player.getId(), player.getName());
     }
@@ -409,16 +414,15 @@ public class TrucoGameHolder implements TrucoListener {
                 playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.SAY_VALECUATRO, "Quiero ValeCuatro")));
             }
 
-            if (envido < 0){
+            if (envido < 0) {
                 TrucoPlay trucoPlay = getTrucoPlay(trucoEvent.getTrucoPlayer());
                 trucoPlay.setType(TrucoPlay.QUIERO);
                 playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.SAY_QUIERO, "Quiero")));
-            }
-            else {
+            } else {
                 TrucoPlay trucoPlay = getTrucoPlay(trucoEvent.getTrucoPlayer());
                 trucoPlay.setType(TrucoPlay.QUIERO);
                 trucoPlay.setValue(envido);
-                playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.SAY_QUIERO_PLUS, "Quiero "+envido)));
+                playList.add(new TrucoGameRequestPair(trucoPlay, getTrucoGameRequest(TrucoGamePlay.SAY_QUIERO_PLUS, "Quiero " + envido)));
             }
             {
                 TrucoPlay trucoPlay = getTrucoPlay(trucoEvent.getTrucoPlayer());

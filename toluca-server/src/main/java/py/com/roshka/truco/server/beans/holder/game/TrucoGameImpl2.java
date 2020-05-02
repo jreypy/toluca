@@ -39,10 +39,12 @@ public class TrucoGameImpl2 extends TrucoGameImpl {
         logger.debug("Firing Play Response event [" + event + "]");
         if (TrucoEvent.CANTO_ENVIDO == event.getType()) {
             firePlayEvent(event);
+        } else if (TrucoEvent.JUGAR_CARTA == event.getType()) {
+            logger.warn("Mostrar Juego de Envido o Flor");
+            firePlayEvent(event);
         } else {
             logger.warn("PlayResponse have to be fixed [" + event + "]");
         }
-
     }
 
 }
