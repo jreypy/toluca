@@ -177,10 +177,6 @@ public class TrucoGameHolder implements TrucoListener {
     @Override
     public void playResponse(TrucoEvent event) {
         logger.debug("Play Response [" + trucoTableHolder.getTable().getId() + "]");
-        if (TrucoEvent.CANTO_ENVIDO == event.getType()){
-            TrucoGameEvent trucoGameEvent = TolucaHelper.trucoEvent(event);
-            convertAndSend(trucoGameEvent.getEventName(), trucoGameEvent);
-        }
     }
 
     @Override

@@ -2,6 +2,8 @@ package py.com.roshka.truco.server.beans.holder.game;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import py.com.roshka.truco.api.TrucoGameEvent;
+import py.com.roshka.truco.api.helper.TolucaHelper;
 import py.com.roshka.truco.server.beans.holder.TrucoGameHolder;
 import py.edu.uca.fcyt.toluca.event.TrucoEvent;
 import py.edu.uca.fcyt.toluca.event.TrucoListener;
@@ -26,4 +28,21 @@ public class TrucoGameImpl2 extends TrucoGameImpl {
             trucoListener.turn(event1);
         }
     }
+
+    @Override
+    public void firePlayResponseEvent(TrucoPlayer pl, byte type, int value) {
+        TrucoEvent event = new TrucoEvent(this, numberOfHand, pl, type, value);
+        firePlayResponseEvent(event);
+    }
+
+    protected void firePlayResponseEvent(TrucoEvent event) {
+        logger.debug("Firing Play Response event [" + event + "]");
+        if (TrucoEvent.CANTO_ENVIDO == event.getType()) {
+            firePlayEvent(event);
+        } else {
+            logger.warn("PlayResponse have to be fixed [" + event + "]");
+        }
+
+    }
+
 }
