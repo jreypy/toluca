@@ -215,7 +215,7 @@ public class TolucaHelper {
         }
         else if (event.getType() == TrucoEvent.ME_VOY_AL_MAZO){
             trucoGameEvent.setEventName(TrucoGamePlay.PLAY_ME_VOY_AL_MAZO);
-            trucoGameEvent.setText("Me voy al maso");
+            trucoGameEvent.setText("Me voy al Mazo");
         }
         else {
             throw new IllegalArgumentException("Event [" + event + "] not found");
